@@ -164,8 +164,8 @@ ORGANISATION_BANK_CONNECTION = {"PC" : "123",
             "ESR" : ""}
 SHARE_PRICE = "750"
 
-BYLAWS = '/static/docs/bylaws.pdf'
-BUSINESS_REGULATIONS = '/static/docs/business_regulations.pdf'
+BYLAWS = '/static/gartenberg/docs/bylaws.pdf'
+BUSINESS_REGULATIONS = '/static/gartenberg/docs/business_regulations.pdf'
 
 INFO_EMAIL = "info@gartenberg.ch"
 SERVER_URL = "www.gartenberg.ch"
