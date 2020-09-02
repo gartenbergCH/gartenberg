@@ -172,3 +172,4 @@ SERVER_URL = "www.gartenberg.ch"
 ADMINPORTAL_NAME = "Gartenberg"
 ADMINPORTAL_SERVER_URL = "my.gartenberg.ch"
 STYLE_SHEET = "/static/gartenberg/css/customize.css"
+FAVICON = '/static/gartenberg/img/gartenbergfavicon.ico'
