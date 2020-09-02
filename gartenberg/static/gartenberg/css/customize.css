@@ -6,3 +6,32 @@
     width: 580px;
     height: 300px;
 }
+
+a {
+    color: #9ac23d;
+}
+
+.page-title h3, .allcontent h3 {
+    margin-top: 0;
+    margin-bottom: 40px;
+    color: #9ac23d;
+    font-size: 30pt;
+}
+
+.nav-link.active, .nav-link.active:focus {
+    color: #9ac23d;
+}
+
+.nav-link:hover {
+    color: #9ac23d;
+}
+
+/* arrows for collapsible list elements */
+.details-control, .shown .details-control {
+    font-family: 'Font Awesome 5 Free';
+    font-style: normal;
+    font-weight: 900;
+    font-size: 27px;
+    line-height: 1;
+    color: #9ac23d;
+}
