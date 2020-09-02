@@ -153,7 +153,7 @@ ORGANISATION_NAME = "Gartenberg"
 ORGANISATION_LONG_NAME = "Gartenberg"
 ORGANISATION_ADDRESS = {"name":"Gartenberg", 
             "street" : "Altenberg",
-            "number" : "123",
+            "number" : "307",
             "zip" : "5063",
             "city" : "Wölflwinswil",
             "extra" : ""}
@@ -162,10 +162,10 @@ ORGANISATION_BANK_CONNECTION = {"PC" : "123",
             "BIC" : "123",
             "NAME" : "Raif",
             "ESR" : ""}
-SHARE_PRICE = "100"
+SHARE_PRICE = "750"
 
 INFO_EMAIL = "info@gartenberg.ch"
-SERVER_URL = "www.gartenberg.org"
+SERVER_URL = "www.gartenberg.ch"
 ADMINPORTAL_NAME = "Gartenberg"
 ADMINPORTAL_SERVER_URL = "my.gartenberg.ch"
 STYLE_SHEET = "/static/gartenberg/css/customize.css"
