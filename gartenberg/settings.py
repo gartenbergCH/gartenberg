@@ -164,8 +164,8 @@ ORGANISATION_BANK_CONNECTION = {"PC" : "123",
             "ESR" : ""}
 SHARE_PRICE = "750"
 
-BUSINESS_REGULATIONS = 'https://gartenbergch.files.wordpress.com/2020/08/gartenberg_betriebsreglement-1.pdf'
-BYLAWS = 'https://gartenbergch.files.wordpress.com/2020/08/gartenberg_statuten-1.pdf'
+BUSINESS_REGULATIONS = 'https://gartenbergch.files.wordpress.com/2020/10/gartenberg_betriebsreglement.pdf'
+BYLAWS = 'https://gartenbergch.files.wordpress.com/2020/10/gartenberg_statuten.pdf'
 FAQ_DOC = 'https://gartenbergch.files.wordpress.com/2020/07/projektbeschrieb-gartenberg.pdf'
 
 INFO_EMAIL = "info@gartenberg.ch"
