@@ -157,11 +157,7 @@ ORGANISATION_ADDRESS = {"name":"Gartenberg",
             "zip" : "5063",
             "city" : "Wölflwinswil",
             "extra" : ""}
-ORGANISATION_BANK_CONNECTION = {"PC" : "123",
-            "IBAN" : "123",
-            "BIC" : "123",
-            "NAME" : "Raif",
-            "ESR" : ""}
+ORGANISATION_BANK_CONNECTION = {"IBAN" : "CH02 8080 8004 4102 8510 0"}
 SHARE_PRICE = "750"
 
 BUSINESS_REGULATIONS = 'https://gartenbergch.files.wordpress.com/2020/10/gartenberg_betriebsreglement.pdf'
