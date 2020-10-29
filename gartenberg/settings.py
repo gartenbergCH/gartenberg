@@ -157,7 +157,7 @@ ORGANISATION_ADDRESS = {"name":"Gartenberg",
             "zip" : "5063",
             "city" : "Wölflwinswil",
             "extra" : ""}
-ORGANISATION_BANK_CONNECTION = {"IBAN" : "CH02 8080 8004 4102 8510 0"}
+ORGANISATION_BANK_CONNECTION = {"IBAN" : "https://gartenbergch.files.wordpress.com/2020/10/einzahlungsschein_genossenschaft_gartenberg_pdf.pdf"}
 SHARE_PRICE = "750"
 
 BUSINESS_REGULATIONS = 'https://gartenbergch.files.wordpress.com/2020/10/gartenberg_betriebsreglement.pdf'
