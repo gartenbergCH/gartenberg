@@ -157,7 +157,11 @@ ORGANISATION_ADDRESS = {"name":"Gartenberg",
             "zip" : "5063",
             "city" : "Wölflwinswil",
             "extra" : ""}
-ORGANISATION_BANK_CONNECTION = {"IBAN" : "https://gartenbergch.files.wordpress.com/2020/10/einzahlungsschein_genossenschaft_gartenberg_pdf.pdf"}
+ORGANISATION_BANK_CONNECTION = {"PC" : "",
+            "IBAN" : "CH02 8080 8004 4102 8510 0",
+            "BIC" : "",
+            "NAME" : "Genossenschaft GartenBerg c/o Katharina Maurer, Erlinsbacherstrasse 83, CH-5000 Aarau",
+            "ESR" : ""}
 SHARE_PRICE = "750"
 
 BUSINESS_REGULATIONS = 'https://gartenbergch.files.wordpress.com/2020/10/gartenberg_betriebsreglement.pdf'
