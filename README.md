@@ -1,27 +1,30 @@
-Juntagrico Heroku Template for cookiecutter
+Juntagrico for Gartenberg
 ===========
 
-This template sets up a project to be used with juntagrico.science as hosting.
+This repository sets up a project to be used with juntagrico.science as hosting.
 
 # Setting up locally to test setup
 
-On any environment install Python 3, and add it to your path
+Install Python 3, and add it to your path (tested with python 3.9.1)
 
-## UNIX
+## Linux
 
 ### Set your environment variables
 
 
 ### Installing requirements
 
+In order to compile python-psycopg2, you need to install the postgresql libraries. Otherwise the following error will appear: Error: pg_config executable not found Under Archlinux the following command can be used: `sudo pacman -S postgresql-libs-13.1-3`
+
     sudo easy_install pip
     sudo pip install virtualenv
-    virtualenv --distribute venv
+    virtualenv venv
     source ./venv/bin/activate
     pip install --upgrade -r requirements.txt
 
 ### Setup DB
 
+    chmod +x manage.py
     ./manage.py migrate
     
 ### Setup Admin User
@@ -80,12 +83,6 @@ More complex
 
     python -m manage runserver
     
-#Heroku
+# Heroku
 
 you have to login to a heroku bash and setup the db and create the admin user as desbribed in the UNIX section
-    
-    
-
-
-
-
