@@ -11,8 +11,7 @@ Install Python 3, and add it to your path (tested with python 3.9.1)
 
 ### Set your environment variables
 
-The following environment variables can be defined (just to start a test environment, you don't need to define any):
-
+The following environment variables can be defined:
 | Key | Description | Default Value |
 | --------------- | --------------- | --------------- |
 | JUNTAGRICO_SECRET_KEY | Used by Django for cryptographic signing | - |
@@ -30,7 +29,9 @@ The following environment variables can be defined (just to start a test environ
 | JUNTAGRICO_EMAIL_TLS | Use a TLS connection to the mailserver | False |
 | JUNTAGRICO_EMAIL_SSL | Use a SSL connection to the mailserver | False |
 
-Note: JUNTAGRICO_EMAIL_TLS and JUNTAGRICO_EMAIL_SSL are mutually exclusive, you can only set one of them to true at any given time.
+Note: 
+ * JUNTAGRICO_EMAIL_TLS and JUNTAGRICO_EMAIL_SSL are mutually exclusive, you can only set one of them to true at any given time.
+ * To startup an environment, you only need to define JUNTAGRICO_SECRET_KEY. you can do this as follows under linux `export JUNTAGRICO_SECRET_KEY="password"`
 
 ### Installing requirements
 
