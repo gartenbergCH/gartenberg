@@ -166,7 +166,7 @@ SHARE_PRICE = "750"
 
 BUSINESS_REGULATIONS = 'https://gartenbergch.files.wordpress.com/2020/10/gartenberg_betriebsreglement.pdf'
 BYLAWS = 'https://gartenbergch.files.wordpress.com/2020/10/gartenberg_statuten.pdf'
-FAQ_DOC = 'https://gartenbergch.files.wordpress.com/2020/07/projektbeschrieb-gartenberg.pdf'
+FAQ_DOC = 'https://gartenbergch.files.wordpress.com/2020/11/projektbeschrieb-gartenberg-1.pdf'
 
 INFO_EMAIL = "info@gartenberg.ch"
 SERVER_URL = "www.gartenberg.ch"
