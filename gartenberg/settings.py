@@ -12,9 +12,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 
 SECRET_KEY = os.environ.get('JUNTAGRICO_SECRET_KEY')
-DEBUG = os.environ.get("JUNTAGRICO_DEBUG", 'True')=='True'
+DEBUG = os.environ.get("JUNTAGRICO_DEBUG", 'True') == 'True'
 
-ALLOWED_HOSTS = ['my.gartenberg.ch','gartenberg.juntagrico.science', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['my.gartenberg.ch', 'gartenberg.juntagrico.science', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -37,12 +37,12 @@ ROOT_URLCONF = 'gartenberg.urls'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('JUNTAGRICO_DATABASE_ENGINE','django.db.backends.sqlite3'), 
-        'NAME': os.environ.get('JUNTAGRICO_DATABASE_NAME','gartenberg.db'), 
-        'USER': os.environ.get('JUNTAGRICO_DATABASE_USER'), #''junatagrico', # The following settings are not used with sqlite3:
-        'PASSWORD': os.environ.get('JUNTAGRICO_DATABASE_PASSWORD'), #''junatagrico',
-        'HOST': os.environ.get('JUNTAGRICO_DATABASE_HOST'), #'localhost', # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': os.environ.get('JUNTAGRICO_DATABASE_PORT', False), #''', # Set to empty string for default.
+        'ENGINE': os.environ.get('JUNTAGRICO_DATABASE_ENGINE', 'django.db.backends.sqlite3'),
+        'NAME': os.environ.get('JUNTAGRICO_DATABASE_NAME', 'gartenberg.db'),
+        'USER': os.environ.get('JUNTAGRICO_DATABASE_USER'),
+        'PASSWORD': os.environ.get('JUNTAGRICO_DATABASE_PASSWORD'),
+        'HOST': os.environ.get('JUNTAGRICO_DATABASE_HOST'),
+        'PORT': os.environ.get('JUNTAGRICO_DATABASE_PORT', False),
     }
 }
 
@@ -64,7 +64,7 @@ TEMPLATES = [
                 'django.template.loaders.filesystem.Loader',
                 'django.template.loaders.app_directories.Loader'
             ],
-            'debug' : True
+            'debug': True
         },
     },
 ]
@@ -85,7 +85,7 @@ USE_I18N = True
 # calendars according to the current locale.
 USE_L10N = True
 
-DATE_INPUT_FORMATS =['%d.%m.%Y',]
+DATE_INPUT_FORMATS = ['%d.%m.%Y',]
 
 AUTHENTICATION_BACKENDS = (
     'juntagrico.util.auth.AuthenticateWithEmail',
@@ -105,13 +105,14 @@ MIDDLEWARE = [
 EMAIL_HOST = os.environ.get('JUNTAGRICO_EMAIL_HOST')
 EMAIL_HOST_USER = os.environ.get('JUNTAGRICO_EMAIL_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('JUNTAGRICO_EMAIL_PASSWORD')
-EMAIL_PORT = int(os.environ.get('JUNTAGRICO_EMAIL_PORT', '25' ))
-EMAIL_USE_TLS = os.environ.get('JUNTAGRICO_EMAIL_TLS', 'False')=='True'
-EMAIL_USE_SSL = os.environ.get('JUNTAGRICO_EMAIL_SSL', 'False')=='True'
+EMAIL_PORT = int(os.environ.get('JUNTAGRICO_EMAIL_PORT', '25'))
+EMAIL_USE_TLS = os.environ.get('JUNTAGRICO_EMAIL_TLS', 'False') == 'True'
+EMAIL_USE_SSL = os.environ.get('JUNTAGRICO_EMAIL_SSL', 'False') == 'True'
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
 WHITELIST_EMAILS = []
+
 
 def whitelist_email_from_env(var_env_name):
     email = os.environ.get(var_env_name)
@@ -123,7 +124,6 @@ if DEBUG is True:
     for key in os.environ.keys():
         if key.startswith("JUNTAGRICO_EMAIL_WHITELISTED"):
             whitelist_email_from_env(key)
-            
 
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
@@ -153,16 +153,16 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 ORGANISATION_NAME = "Gartenberg"
 ORGANISATION_LONG_NAME = "Gartenberg"
 ORGANISATION_ADDRESS = {"name":"Gartenberg", 
-            "street" : "Altenberg",
-            "number" : "307",
-            "zip" : "5063",
-            "city" : "Wölflwinswil",
-            "extra" : ""}
-ORGANISATION_BANK_CONNECTION = {"PC" : "",
-            "IBAN" : "CH02 8080 8004 4102 8510 0",
-            "BIC" : "",
-            "NAME" : "Genossenschaft GartenBerg c/o Katharina Maurer, Erlinsbacherstrasse 83, CH-5000 Aarau",
-            "ESR" : ""}
+            "street": "Altenberg",
+            "number": "307",
+            "zip": "5063",
+            "city": "Wölflwinswil",
+            "extra": ""}
+ORGANISATION_BANK_CONNECTION = {"PC": "",
+            "IBAN": "CH02 8080 8004 4102 8510 0",
+            "BIC": "",
+            "NAME": "Genossenschaft GartenBerg c/o Katharina Maurer, Erlinsbacherstrasse 83, CH-5000 Aarau",
+            "ESR": ""}
 SHARE_PRICE = "750"
 
 BUSINESS_REGULATIONS = 'https://gartenbergch.files.wordpress.com/2021/02/betriebsreglement.pdf'

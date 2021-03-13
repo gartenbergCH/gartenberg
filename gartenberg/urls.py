@@ -1,6 +1,6 @@
 """gartenberg URL Configuration
 
-The `urlpatterns` list routes URLs to views. 
+The `urlpatterns` list routes URLs to views.
 Examples:
 Function views
     1. Add an import:  from my_app import views
