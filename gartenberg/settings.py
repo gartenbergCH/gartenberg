@@ -7,8 +7,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
-
 # SECURITY WARNING: keep the secret key used in production secret!
 
 SECRET_KEY = os.environ.get('JUNTAGRICO_SECRET_KEY')
@@ -85,7 +83,7 @@ USE_I18N = True
 # calendars according to the current locale.
 USE_L10N = True
 
-DATE_INPUT_FORMATS = ['%d.%m.%Y',]
+DATE_INPUT_FORMATS = ['%d.%m.%Y', ]
 
 AUTHENTICATION_BACKENDS = (
     'juntagrico.util.auth.AuthenticateWithEmail',
@@ -152,17 +150,17 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 """
 ORGANISATION_NAME = "Gartenberg"
 ORGANISATION_LONG_NAME = "Gartenberg"
-ORGANISATION_ADDRESS = {"name":"Gartenberg", 
-            "street": "Altenberg",
-            "number": "307",
-            "zip": "5063",
-            "city": "Wölflwinswil",
-            "extra": ""}
+ORGANISATION_ADDRESS = {"name": "Gartenberg",
+                        "street": "Altenberg",
+                        "number": "307",
+                        "zip": "5063",
+                        "city": "Wölflwinswil",
+                        "extra": ""}
 ORGANISATION_BANK_CONNECTION = {"PC": "",
-            "IBAN": "CH02 8080 8004 4102 8510 0",
-            "BIC": "",
-            "NAME": "Genossenschaft GartenBerg c/o Katharina Maurer, Erlinsbacherstrasse 83, CH-5000 Aarau",
-            "ESR": ""}
+                                "IBAN": "CH02 8080 8004 4102 8510 0",
+                                "BIC": "",
+                                "NAME": "Genossenschaft GartenBerg c/o Katharina Maurer, Erlinsbacherstrasse 83, CH-5000 Aarau",
+                                "ESR": ""}
 SHARE_PRICE = "750"
 
 BUSINESS_REGULATIONS = 'https://gartenbergch.files.wordpress.com/2021/02/betriebsreglement.pdf'
