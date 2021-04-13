@@ -180,4 +180,5 @@ EMAILS = {
     's_created': 'gartenberg_emails/member/share_created.txt',
 }
 
-DEFAULT_MAILER = 'gartenberg.mailer.Mailer'
+# Use a custom mailer, e. g. https://github.com/ortoloco/ortoloco/blob/master/ortoloco/mailer.py
+# DEFAULT_MAILER = 'gartenberg.mailer.Mailer'
