@@ -179,3 +179,5 @@ EMAILS = {
     'co_welcome': 'gartenberg_emails/member/co_member_welcome.txt',
     's_created': 'gartenberg_emails/member/share_created.txt',
 }
+
+DEFAULT_MAILER = 'gartenberg.mailer.Mailer'
