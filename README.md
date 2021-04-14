@@ -15,7 +15,7 @@ The following environment variables can be defined:
 | Key | Description | Default Value |
 | --------------- | --------------- | --------------- |
 | JUNTAGRICO_SECRET_KEY | Used by Django for cryptographic signing | - |
-| JUNTAGRICO_DEBUG | Enables the debug mode of the instance (should not be used in production) | True |
+| JUNTAGRICO_DEBUG | Enables the debug mode of the instance (should not be used in production) | False |
 | JUNTAGRICO_DATABASE_ENGINE | The database engine to be used | django.db.backends.sqlite3 |
 | JUNTAGRICO_DATABASE_NAME | The name of the database | 'gartenberg.db' |
 | JUNTAGRICO_DATABASE_USER | The user to connect to the database | - |
@@ -37,7 +37,6 @@ Note:
 
 In order to compile python-psycopg2, you need to install the postgresql libraries. Otherwise the following error will appear: `Error: pg_config executable not found`. Under Archlinux the following command can be used: `sudo pacman -S postgresql-libs-13.1-3`
 
-    sudo easy_install pip
     sudo pip install virtualenv
     virtualenv venv
     source ./venv/bin/activate
@@ -59,51 +58,10 @@ Simple
 
     ./manage.py generate_testdata
 
-More complex
+More complex (needs faker)
 
     ./manage.py generate_testdata_advanced
     
 ### Run the server
 
     ./manage.py runserver
-
-## Windows
-
-### Set your environment variables
-
-This should do it for your local setup:
-
-
-### Installing requirements
-
-    pip install virtualenv
-    virtualenv --distribute venv
-    venv\Scripts\activate.bat
-    pip install --upgrade -r requirements.txt
-
-### Setup DB
-
-    python -m manage migrate
-    
-### Setup Admin User
-
-    python -m manage createsuperuser
-    python -m manage create_member_for_superusers
-    
-### Create Tesdata (not required)
-
-Simple
-
-    python -m manage generate_testdata
-
-More complex
-
-    python -m manage generate_testdata_advanced
-    
-### Run the server
-
-    python -m manage runserver
-    
-# Heroku
-
-you have to login to a heroku bash and setup the db and create the admin user as desbribed in the Linux section

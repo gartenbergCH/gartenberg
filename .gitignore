@@ -7,4 +7,4 @@ static/*
 ssl/*
 /.project
 *.db
-gartenberg.log
+gartenberg.log*

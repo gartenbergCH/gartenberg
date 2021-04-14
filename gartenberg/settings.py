@@ -10,7 +10,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 
 SECRET_KEY = os.environ.get('JUNTAGRICO_SECRET_KEY')
-DEBUG = os.environ.get("JUNTAGRICO_DEBUG", 'True') == 'True'
+
+DEBUG = os.environ.get("JUNTAGRICO_DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = ['my.gartenberg.ch', 'gartenberg.juntagrico.science', 'localhost', '127.0.0.1']
 
@@ -61,8 +62,7 @@ TEMPLATES = [
             'loaders': [
                 'django.template.loaders.filesystem.Loader',
                 'django.template.loaders.app_directories.Loader'
-            ],
-            'debug': True
+            ]
         },
     },
 ]
@@ -92,6 +92,7 @@ AUTHENTICATION_BACKENDS = (
 
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware', # Serve static files
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -109,20 +110,9 @@ EMAIL_USE_SSL = os.environ.get('JUNTAGRICO_EMAIL_SSL', 'False') == 'True'
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
-WHITELIST_EMAILS = []
-
-
-def whitelist_email_from_env(var_env_name):
-    email = os.environ.get(var_env_name)
-    if email:
-        WHITELIST_EMAILS.append(email.replace('@gmail.com', '(\+\S+)?@gmail.com'))
-
-
-if DEBUG is True:
-    for key in os.environ.keys():
-        if key.startswith("JUNTAGRICO_EMAIL_WHITELISTED"):
-            whitelist_email_from_env(key)
-
+# The white list only applies if the application is executed in debug mode and
+# prevents mails from being sent to other adresses
+WHITELIST_EMAILS = ['info@gartenberg.ch', 'gartenberg-test@uhlme.ch']
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
@@ -180,5 +170,35 @@ EMAILS = {
     's_created': 'gartenberg_emails/member/share_created.txt',
 }
 
-# Use a custom mailer, e. g. https://github.com/ortoloco/ortoloco/blob/master/ortoloco/mailer.py
-# DEFAULT_MAILER = 'gartenberg.mailer.Mailer'
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'gartenberg.log',
+            'maxBytes': 1024*1024*5, # 5 MB
+            'backupCount': 5,
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file', 'console'],
+            'propagate': True,
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO')
+        },
+        'juntagrico.mailer': {
+            'handlers': ['file', 'console'],
+            'propagate': True,
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO')
+        },
+    },
+}
+
+# Needed if you use sqlite to display certain sites
+if os.environ.get('JUNTAGRICO_DATABASE_ENGINE', 'django.db.backends.sqlite3') == 'django.db.backends.sqlite3':
+    USE_TZ = True
