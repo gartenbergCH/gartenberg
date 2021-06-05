@@ -165,8 +165,6 @@ STYLE_SHEET = "/static/gartenberg/css/customize.css"
 FAVICON = '/static/gartenberg/img/gartenbergfavicon.ico'
 
 EMAILS = {
-    'welcome': 'gartenberg_emails/member/member_welcome.txt',
-    'co_welcome': 'gartenberg_emails/member/co_member_welcome.txt',
     's_created': 'gartenberg_emails/member/share_created.txt',
 }
 
