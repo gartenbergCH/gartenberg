@@ -29,7 +29,7 @@ INSTALLED_APPS = [
     'juntagrico',
     'impersonate',
     'crispy_forms',
-    'adminsorttable2',
+    'adminsortable2',
     'gartenberg',
 ]
 
