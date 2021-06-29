@@ -74,7 +74,15 @@ WSGI_APPLICATION = 'gartenberg.wsgi.application'
 LANGUAGE_CODE = 'de'
 TIME_ZONE = 'Europe/Zurich'
 
+# The default site is example.com out-of-the-box
 SITE_ID = 1
+
+# This is used by Django, for example if you reset the password
+DEFAULT_FROM_EMAIL = 'info@gartenberg.ch'
+# This is used by Django, for example in the subject of the password reset mail.
+# It changes the example.com from site id 1 to this domain
+# -> funktioniert leider nicht (siehe https://github.com/juntagrico/juntagrico/issues/418)
+DEFAULT_FROM_DOMAIN = 'gartenberg.ch'
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
