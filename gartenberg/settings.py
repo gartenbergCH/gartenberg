@@ -76,6 +76,9 @@ TIME_ZONE = 'Europe/Zurich'
 
 SITE_ID = 1
 
+# This is used by Django, for example if you reset the password
+DEFAULT_FROM_EMAIL = 'info@gartenberg.ch'
+
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True
