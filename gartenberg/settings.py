@@ -168,6 +168,7 @@ FAVICON = '/static/gartenberg/img/gartenbergfavicon.ico'
 EMAILS = {
     's_created': 'gartenberg_emails/member/share_created.txt',
     'd_changed': 'gartenberg_emails/member/depot_changed.txt',
+}
 
 LOGGING = {
     'version': 1,
