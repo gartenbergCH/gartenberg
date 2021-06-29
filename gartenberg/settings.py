@@ -78,6 +78,8 @@ SITE_ID = 1
 
 # This is used by Django, for example if you reset the password
 DEFAULT_FROM_EMAIL = 'info@gartenberg.ch'
+# This is used by Django, for example in the subject of the password reset mail
+SITE_NAME = 'my.gartenberg.ch'
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
