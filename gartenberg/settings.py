@@ -162,6 +162,13 @@ ORGANISATION_BANK_CONNECTION = {"PC": "",
                                 "ESR": ""}
 SHARE_PRICE = "750"
 
+# The business year starts with the calendar year
+BUSINESS_YEAR_START = {'day': 1, 'month': 1}
+# Subscriptions can be cancelled until September
+BUSINESS_YEAR_CANCELATION_MONTH = 9
+# Members leave at the end of the year.
+MEMBERSHIP_END_MONTH = 12
+
 BUSINESS_REGULATIONS = 'https://gartenbergch.files.wordpress.com/2021/02/betriebsreglement.pdf'
 BYLAWS = 'https://gartenbergch.files.wordpress.com/2020/10/gartenberg_statuten.pdf'
 FAQ_DOC = 'https://gartenbergch.files.wordpress.com/2020/11/projektbeschrieb-gartenberg-1.pdf'
