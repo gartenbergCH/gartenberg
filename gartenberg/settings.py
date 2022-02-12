@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'impersonate',
     'crispy_forms',
     'adminsortable2',
+    'polymorphic',
     'gartenberg',
 ]
 
@@ -107,6 +108,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.contrib.sites.middleware.CurrentSiteMiddleware',
     'impersonate.middleware.ImpersonateMiddleware'
 ]
 
@@ -175,10 +177,9 @@ FAQ_DOC = 'https://gartenbergch.files.wordpress.com/2020/11/projektbeschrieb-gar
 
 INFO_EMAIL = "info@gartenberg.ch"
 SERVER_URL = "www.gartenberg.ch"
-ADMINPORTAL_NAME = "Gartenberg"
-ADMINPORTAL_SERVER_URL = "my.gartenberg.ch"
-STYLE_SHEET = "/static/gartenberg/css/customize.css"
+STYLES = {'static': ['/static/gartenberg/css/customize.css']}
 FAVICON = '/static/gartenberg/img/gartenbergfavicon.ico'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 EMAILS = {
     's_created': 'gartenberg_emails/member/share_created.txt',
