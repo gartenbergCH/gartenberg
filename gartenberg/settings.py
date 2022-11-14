@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'adminsortable2',
     'polymorphic',
     'gartenberg',
+    'juntagrico_assignment_request',
 ]
 
 ROOT_URLCONF = 'gartenberg.urls'
