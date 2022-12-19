@@ -171,6 +171,8 @@ BUSINESS_YEAR_START = {'day': 1, 'month': 1}
 BUSINESS_YEAR_CANCELATION_MONTH = 9
 # Members leave at the end of the year.
 MEMBERSHIP_END_MONTH = 12
+# Need to cancel until september
+MEMBERSHIP_END_NOTICE_PERIOD = 3
 
 BUSINESS_REGULATIONS = 'https://gartenbergch.files.wordpress.com/2021/02/betriebsreglement.pdf'
 BYLAWS = 'https://gartenbergch.files.wordpress.com/2020/10/gartenberg_statuten.pdf'
