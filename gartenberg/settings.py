@@ -180,7 +180,7 @@ FAQ_DOC = 'https://gartenbergch.files.wordpress.com/2020/11/projektbeschrieb-gar
 
 INFO_EMAIL = "info@gartenberg.ch"
 SERVER_URL = "www.gartenberg.ch"
-STYLES = {'static': ['css/customize.css']}
+STYLES = {'static': ['gartenberg/css/customize.css']}
 FAVICON = '/static/gartenberg/img/gartenbergfavicon.ico'
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
