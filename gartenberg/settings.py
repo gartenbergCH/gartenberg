@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'polymorphic',
     'gartenberg',
     'juntagrico_assignment_request',
+    'juntagrico_billing',
 ]
 
 ROOT_URLCONF = 'gartenberg.urls'

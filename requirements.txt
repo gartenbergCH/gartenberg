@@ -3,3 +3,4 @@ gunicorn==20.1.0
 psycopg2==2.9.5
 whitenoise==6.2.0
 juntagrico-assignment-request==1.5.0
+juntagrico-billing==1.5.5
