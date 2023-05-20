@@ -5,7 +5,7 @@ This repository sets up a project to be used with juntagrico.science as hosting.
 
 # Setting up locally to test setup
 
-Install Python 3, and add it to your path (tested with python 3.9.1)
+Install Python 3, and add it to your path (tested with python 3.10)
 
 ## Linux
 
@@ -33,35 +33,9 @@ Note:
  * JUNTAGRICO_EMAIL_TLS and JUNTAGRICO_EMAIL_SSL are mutually exclusive, you can only set one of them to true at any given time.
  * To startup an environment, you only need to define JUNTAGRICO_SECRET_KEY. you can do this as follows under linux `export JUNTAGRICO_SECRET_KEY="password"`
 
-### Installing requirements
+### Run Juntagrico locally
 
-In order to compile python-psycopg2, you need to install the postgresql libraries. Otherwise the following error will appear: `Error: pg_config executable not found`. Under Archlinux the following command can be used: `sudo pacman -S postgresql-libs-13.1-3`
-
-    sudo pip install virtualenv
-    virtualenv venv
-    source ./venv/bin/activate
-    pip install --upgrade -r requirements.txt
-
-### Setup DB
-
-    chmod +x manage.py
-    ./manage.py migrate
-    
-### Setup Admin User
-
-    ./manage.py createsuperuser
-    ./manage.py create_member_for_superusers
-    
-### Create Tesdata (not required)
-
-Simple
-
-    ./manage.py generate_testdata
-
-More complex (needs faker)
-
-    ./manage.py generate_testdata_advanced
-    
-### Run the server
-
-    ./manage.py runserver
+Execute
+```
+run_docker.sh
+```
