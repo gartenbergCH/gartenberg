@@ -26,12 +26,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'gartenberg',
     'juntagrico',
     'impersonate',
     'crispy_forms',
     'adminsortable2',
     'polymorphic',
-    'gartenberg',
     'juntagrico_assignment_request',
     'juntagrico_billing',
 ]
@@ -52,6 +52,8 @@ DATABASES = {
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'OPTIONS': {
             'context_processors': [
                 'django.contrib.auth.context_processors.auth',
@@ -63,10 +65,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
             ],
-            'loaders': [
-                'django.template.loaders.filesystem.Loader',
-                'django.template.loaders.app_directories.Loader'
-            ]
         },
     },
 ]

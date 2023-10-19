@@ -39,3 +39,5 @@ Execute
 ```
 run_docker.sh
 ```
+
+It is started on port 8000
