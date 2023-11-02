@@ -15,6 +15,8 @@
 {% blocktrans with sc=shares|length%}Du hast bei {{ v_d_enriched_organisation }} {{sc}} {{ v_share_pl }} bestellt{% endblocktrans %}:
 {% for share in shares %}{% blocktrans with sid=share.id %}{{ v_share }} mit Systemnummer {{ sid }}{% endblocktrans %}
 {% endfor %}
+{% blocktrans %}Falls Du dich für einen Probekorb angemeldet hast kannst du dieses E-Mail ignorieren und musst den Anteilschein nicht bezahlen. Andernfalls bitte weiterlesen.{% endblocktrans %} 
+
 {% blocktrans with sc=shares|length %}Bitte überweise {{sc}} Mal den Betrag von {{ c_currency }} {{ c_share_price }} mit folgendem Einzahlungsschein{% endblocktrans %}:
 https://gartenbergch.files.wordpress.com/2020/10/einzahlungsschein_genossenschaft_gartenberg_pdf.pdf
 
@@ -24,7 +26,7 @@ Gib im Betreff die Systemnummer an und die Emailadresse der Halterin oder des Ha
 
 {% blocktrans %}Sobald du den Betrag von {{ c_currency }} {{ c_share_price }} überwiesen hast, bist Du offizielles Genossenschaftsmitglied bei GartenBerg. Damit bist Du berechtigt einen Ernteanteil zu beziehen.{% endblocktrans %} 
 {% blocktrans %}Für den Ernteanteil - Betrag  (Gemüseabo) wirst Du zu einem späteren Zeitpunkt eine Rechnung erhalten.
-Bis der Ernteanteil bezahlt ist wirst Du auf die Warteliste gesetzt.{% endblocktrans %} 
+Bis der Anteilschein bezahlt ist wirst Du auf die Warteliste gesetzt.{% endblocktrans %} 
 
 
 {% blocktrans trimmed %}
