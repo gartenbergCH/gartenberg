@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+
+    juntagrico:
+      build:
+        context: .
+        args:
+          juntagrico_username: test
+          juntagrico_email: test@test.ch
+          juntagrico_password: test
+          juntagrico_secret_key: test
+      environment:
+        - JUNTAGRICO_EMAIL_HOST=mailhog
+        - JUNTAGRICO_EMAIL_PORT=1025
+      ports:
+        - "8000:8000"
+
+    mailhog:
+      image: mailhog/mailhog
+      ports:
+        - "8025:8025"

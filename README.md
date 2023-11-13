@@ -35,9 +35,11 @@ Note:
 
 ### Run Juntagrico locally
 
+This requires a docker installation.
+
 Execute
 ```
-run_docker.sh
+run.sh
 ```
 
-It is started on port 8000
+It is started on port 8000. A mailtrap is started on port 8025
