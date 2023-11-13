@@ -1,11 +1,10 @@
-Juntagrico for Gartenberg
-===========
+# Juntagrico for Gartenberg
 
 This repository sets up a project to be used with juntagrico.science as hosting.
 
-# Setting up locally to test setup
+# # Setting up locally to test setup
 
-Install Python 3, and add it to your path (tested with python 3.10)
+Install Python 3, and add it to your path (tested with python 3.10, supported by Django 4.0)
 
 ## Linux
 
@@ -43,3 +42,12 @@ run.sh
 ```
 
 It is started on port 8000. A mailtrap is started on port 8025
+
+### Test Cases
+
+* Login with existing user: test/test
+* Arbeitseinsatz melden (E-Mail)
+* Neuen Einsatz erstellen
+* Für Einsatz eintragen (E-Mail)
+* Register a new member (2 E-Mails)
+* 
