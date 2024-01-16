@@ -155,7 +155,7 @@ ORGANISATION_ADDRESS = {"name": "Gartenberg",
                         "street": "Altenberg",
                         "number": "307",
                         "zip": "5063",
-                        "city": "Wölflwinswil",
+                        "city": "Wölflinswil",
                         "extra": ""}
 ORGANISATION_BANK_CONNECTION = {"PC": "",
                                 "IBAN": "CH02 8080 8004 4102 8510 0",
