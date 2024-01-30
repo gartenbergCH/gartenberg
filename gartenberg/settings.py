@@ -151,12 +151,12 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 """
 ORGANISATION_NAME = "Gartenberg"
 ORGANISATION_LONG_NAME = "Gartenberg"
-ORGANISATION_ADDRESS = {"name": "Gartenberg",
-                        "street": "Altenberg",
-                        "number": "307",
-                        "zip": "5063",
-                        "city": "Wölflinswil",
-                        "extra": ""}
+ORGANISATION_ADDRESS = {"name": "Genossenschaft GartenBerg",
+                        "street": "Erlinsbacherstrasse",
+                        "number": "83",
+                        "zip": "5000",
+                        "city": "Aarau",
+                        "extra": "c/o Katharina Maurer"}
 ORGANISATION_BANK_CONNECTION = {"PC": "",
                                 "IBAN": "CH02 8080 8004 4102 8510 0",
                                 "BIC": "",
