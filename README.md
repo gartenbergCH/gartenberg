@@ -2,9 +2,29 @@
 
 This repository sets up a project to be used with juntagrico.science as hosting.
 
-# # Setting up locally to test setup
+## Setting up locally to test setup
 
 Install Python 3, and add it to your path (tested with python 3.10, supported by Django 4.0)
+
+## Vorgenommene Anpassungen/Konfigurationen
+
+* Assignment Request und Billing Plugin installiert
+* Name, Adresse, Bankverbindungsdaten
+* Preis pro Anteilschein
+* Link zu Betriebsreglement und Statuten
+* Logo
+
+Angepasste Emails
+* share_created.txt -> Hinweis das ignorieren mit Probekorb
+* depot_changed.txt -> Hinweis das der Änderungswunsch auch per Mail gesendet werden soll
+
+Angepasste Seiten
+* signup.html -> Hinweis auf Probekorb
+* createsubscription -> select_shares.html -> Hinweis auf Probekorb
+* createsubscription -> select_start_date.html -> Hinweis auf Probekorb
+* createsubscription -> summary -> Hinweis auf Probekorb
+* messages -> unpaid_shares.html -> Hinweis auf Probeabo
+* info -> unpaid_shares.html -> Hinweis auf Probeabo
 
 ## Linux
 
