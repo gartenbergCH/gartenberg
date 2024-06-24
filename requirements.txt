@@ -1,4 +1,4 @@
-juntagrico ~=1.5.8
+juntagrico ~=1.6.1
 gunicorn==22.0.0
 psycopg2==2.9.9
 whitenoise==6.6.0
