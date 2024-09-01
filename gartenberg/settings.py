@@ -175,7 +175,7 @@ MEMBERSHIP_END_NOTICE_PERIOD = 3
 
 BUSINESS_REGULATIONS = 'https://gartenberg.ch/wp-content/uploads/2024/06/2024_03_21_betriebsreglement-1.pdf'
 BYLAWS = 'https://gartenberg.ch/wp-content/uploads/2023/02/statuten.pdf'
-FAQ_DOC = 'https://gartenbergch.files.wordpress.com/2020/11/projektbeschrieb-gartenberg-1.pdf'
+FAQ_DOC = 'https://gartenberg.ch/faq'
 
 INFO_EMAIL = "info@gartenberg.ch"
 SERVER_URL = "www.gartenberg.ch"
