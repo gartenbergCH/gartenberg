@@ -27,13 +27,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'gartenberg',
+    'juntagrico_billing',
+    'juntagrico_assignment_request',
     'juntagrico',
+    'fontawesomefree',  # benötigt ab 1.6
+    'import_export',  # benötigt ab 1.6
     'impersonate',
     'crispy_forms',
     'adminsortable2',
     'polymorphic',
-    'juntagrico_assignment_request',
-    'juntagrico_billing',
+
+
 ]
 
 ROOT_URLCONF = 'gartenberg.urls'
@@ -132,7 +136,7 @@ IMPERSONATE = {
     'REDIRECT_URL': '/my/profile',
 }
 
-LOGIN_REDIRECT_URL = "/my/home"
+LOGIN_REDIRECT_URL = "/"
 
 """
     File & Storage Settings
@@ -177,11 +181,24 @@ BUSINESS_REGULATIONS = 'https://gartenberg.ch/wp-content/uploads/2024/06/2024_03
 BYLAWS = 'https://gartenberg.ch/wp-content/uploads/2023/02/statuten.pdf'
 FAQ_DOC = 'https://gartenberg.ch/faq'
 
-INFO_EMAIL = "info@gartenberg.ch"
-SERVER_URL = "www.gartenberg.ch"
+CONTACTS = {
+    "general": "info@gartenberg.ch"
+}
+ORGANISATION_WEBSITE = {
+    'name': "GartenBerg",
+    'url': "https://www.gartenberg.org"
+}
 STYLES = {'static': ['gartenberg/css/customize.css']}
 FAVICON = '/static/gartenberg/img/gartenbergfavicon.ico'
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage",
+    },
+}
 
 EMAILS = {
     's_created': 'gartenberg_emails/member/share_created.txt',
@@ -216,6 +233,8 @@ LOGGING = {
         },
     },
 }
+
+IMPORT_EXPORT_EXPORT_PERMISSION_CODE = 'view'
 
 # Needed if you use sqlite to display certain sites
 if os.environ.get('JUNTAGRICO_DATABASE_ENGINE', 'django.db.backends.sqlite3') == 'django.db.backends.sqlite3':

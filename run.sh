@@ -2,4 +2,4 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-docker-compose up --build
+BUILDKIT_PROGRESS=plain docker compose up --build

@@ -1,4 +1,3 @@
-version: "3.8"
 services:
 
     juntagrico:
@@ -12,11 +11,14 @@ services:
       environment:
         - JUNTAGRICO_EMAIL_HOST=mailhog
         - JUNTAGRICO_EMAIL_PORT=1025
+        #- JUNTAGRICO_DEBUG=false
+
+      depends_on: 
+        - mailhog
       ports:
         - "8000:8000"
 
     mailhog:
       image: mailhog/mailhog
-      depends_on: juntagrico
       ports:
         - "8025:8025"

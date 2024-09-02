@@ -2,10 +2,6 @@
 
 This repository sets up a project to be used with juntagrico.science as hosting.
 
-## Setting up locally to test setup
-
-Install Python 3, and add it to your path (tested with python 3.10, supported by Django 4.0)
-
 ## Vorgenommene Anpassungen/Konfigurationen
 
 * Assignment Request und Billing Plugin installiert
@@ -52,7 +48,7 @@ Note:
  * JUNTAGRICO_EMAIL_TLS and JUNTAGRICO_EMAIL_SSL are mutually exclusive, you can only set one of them to true at any given time.
  * To startup an environment, you only need to define JUNTAGRICO_SECRET_KEY. you can do this as follows under linux `export JUNTAGRICO_SECRET_KEY="password"`
 
-### Run Juntagrico locally
+### Run Juntagrico locally - Sqlite
 
 This requires a docker installation.
 
@@ -63,11 +59,28 @@ run.sh
 
 It is started on port 8000. A mailtrap is started on port 8025
 
+### Run Juntagrico locally - Postgres
+
+* ```cd testsystem```
+* add a backup file as dump.sql to the folder data
+* insert the following two lines at the top of data/dump.sql
+```
+CREATE ROLE gartenberg superuser;
+ALTER ROLE gartenberg WITH LOGIN;
+```
+* run ```docker run -v ./data:/docker-entrypoint-initdb.d -p 5432:5432 -e POSTGRES_PASSWORD='postgres' postgres:16.2-alpine``` to start the database and wait until it is started. 
+* run ```BUILDKIT_PROGRESS=plain docker compose -f compose-testsystem.yml up --build```
+
+It is started on port 8000. A mailtrap is started on port 8025
+
 ### Test Cases
 
 * Login with existing user: test/test
-* Arbeitseinsatz melden (E-Mail)
+* Arbeitseinsatz melden (E-Mail an Verantwortlichen wird gesendet)
 * Neuen Einsatz erstellen
-* Für Einsatz eintragen (E-Mail)
-* Register a new member (2 E-Mails)
-* 
+* Für Einsatz eintragen (E-Mail Bestätigung wird gesendet)
+* Depot wechseln, Auf Liste bestätigen (Wird per Email bestätigt)
+* Abo kündigen. Informiert Koordi per Mail
+* Mitgliedschaft kündigen. Informiert Koordi per Mail
+* Listen erzeugen mit Stichtag
+* Anmelden. Informiert Koordi über neues Abo und neuen Anteilschein, Informiert Mitglied

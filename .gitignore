@@ -9,3 +9,4 @@ ssl/*
 *.db
 gartenberg.log*
 build.log
+data/dump.sql
