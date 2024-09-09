@@ -1,4 +1,4 @@
-FROM python:3.12
+FROM python:3.11
 WORKDIR /opt
 COPY ./gartenberg /opt/gartenberg
 COPY ./manage.py /opt/manage.py

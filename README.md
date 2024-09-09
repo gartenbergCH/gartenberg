@@ -57,7 +57,7 @@ Execute
 run.sh
 ```
 
-It is started on port 8000. A mailtrap is started on port 8025
+It is started on port 8000. A mailtrap is started on port 8025. Login with user "test", password "test".
 
 ### Run Juntagrico locally - Postgres
 
@@ -71,7 +71,13 @@ ALTER ROLE gartenberg WITH LOGIN;
 * run ```docker run -v ./data:/docker-entrypoint-initdb.d -p 5432:5432 -e POSTGRES_PASSWORD='postgres' postgres:16.2-alpine``` to start the database and wait until it is started. 
 * run ```BUILDKIT_PROGRESS=plain docker compose -f compose-testsystem.yml up --build```
 
-It is started on port 8000. A mailtrap is started on port 8025
+It is started on port 8000. A mailtrap is started on port 8025. Login with your user.
+
+Develop in the container
+* ```docker ps``` -> check the container id
+* ```docker exec -i -t containerid /bin/bash```
+* ```apt-get update```
+* ```apt-get install nano```
 
 ### Test Cases
 
