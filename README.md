@@ -22,6 +22,9 @@ Angepasste Seiten
 * messages -> unpaid_shares.html -> Hinweis auf Probeabo
 * info -> unpaid_shares.html -> Hinweis auf Probeabo
 
+Angepasste Bilder
+* static/juntagrico/img/single_core.png -> roter Balken durch grünen Balken ersetzt.
+
 ## Linux
 
 ### Set your environment variables
@@ -81,6 +84,7 @@ Develop in the container
 
 ### Test Cases
 
+* Depotlisten sehen alle gleich aus wie in der vorherigen Version (alte Listen auf pCloud abgelegt)
 * Login with existing user: test/test
 * Arbeitseinsatz melden (E-Mail an Verantwortlichen wird gesendet)
 * Neuen Einsatz erstellen
