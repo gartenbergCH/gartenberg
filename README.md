@@ -2,6 +2,8 @@
 
 This repository sets up a project to be used with juntagrico.science as hosting.
 
+Siehe [[CHANGELOG]]
+
 ## Vorgenommene Anpassungen/Konfigurationen
 
 * Assignment Request und Billing Plugin installiert
