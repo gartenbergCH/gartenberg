@@ -2,7 +2,7 @@
 
 This repository sets up a project to be used with juntagrico.science as hosting.
 
-Siehe [Changelog](CHANGELOG)
+Siehe [Changelog](CHANGELOG.md)
 
 ## Vorgenommene Anpassungen/Konfigurationen
 
