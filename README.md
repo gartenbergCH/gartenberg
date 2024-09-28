@@ -66,14 +66,13 @@ It is started on port 8000. A mailtrap is started on port 8025. Login with user 
 
 ### Run Juntagrico locally - Postgres
 
-* ```cd testsystem```
 * add a backup file as dump.sql to the folder data
 * insert the following two lines at the top of data/dump.sql
 ```
 CREATE ROLE gartenberg superuser;
 ALTER ROLE gartenberg WITH LOGIN;
 ```
-* run ```docker run -v ./data:/docker-entrypoint-initdb.d -p 5432:5432 -e POSTGRES_PASSWORD='postgres' postgres:16.2-alpine``` to start the database and wait until it is started. 
+* run ```docker run -v ./data:/docker-entrypoint-initdb.d -p 5432:5432 -e POSTGRES_PASSWORD='postgres' postgres:17-alpine``` to start the database and wait until it is started. 
 * run ```BUILDKIT_PROGRESS=plain docker compose -f compose-testsystem.yml up --build```
 
 It is started on port 8000. A mailtrap is started on port 8025. Login with your user.
