@@ -189,6 +189,7 @@ ORGANISATION_WEBSITE = {
     'url': "https://www.gartenberg.org"
 }
 STYLES = {'static': ['gartenberg/css/customize.css']}
+SCRIPTS = {'template': 'js/statistics.html'}
 FAVICON = '/static/gartenberg/img/gartenbergfavicon.ico'
 
 STORAGES = {
