@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.4 - 03.10.2024
+
+* Aktualisierung auf [Juntagrico 1.6.5](https://github.com/juntagrico/juntagrico/releases/tag/1.6.5)
+
 ## 3.0.3 - 15.09.2024
 
 * Automatische Generierung der Depotliste deaktiviert. Diese kann seit Juntagrico 1.6 per Knopfdruck generiert werden.
