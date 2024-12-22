@@ -86,6 +86,7 @@ Develop in the container
 ### Test Cases
 
 * Depotlisten sehen alle gleich aus wie in der vorherigen Version (alte Listen auf pCloud abgelegt)
+* Neuregistrierung mit Mitbezüger. Informiert Koordi über neues Abo und neuen Anteilschein, Informiert Mitglied
 * Login with existing user: test/test
 * Arbeitseinsatz melden (E-Mail an Verantwortlichen wird gesendet)
 * Neuen Einsatz erstellen
@@ -94,4 +95,3 @@ Develop in the container
 * Abo kündigen. Informiert Koordi per Mail
 * Mitgliedschaft kündigen. Informiert Koordi per Mail
 * Listen erzeugen mit Stichtag
-* Anmelden. Informiert Koordi über neues Abo und neuen Anteilschein, Informiert Mitglied
