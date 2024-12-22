@@ -156,15 +156,15 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 ORGANISATION_NAME = "Gartenberg"
 ORGANISATION_LONG_NAME = "Gartenberg"
 ORGANISATION_ADDRESS = {"name": "Genossenschaft GartenBerg",
-                        "street": "Erlinsbacherstrasse",
-                        "number": "83",
+                        "street": "Girixweg",
+                        "number": "40",
                         "zip": "5000",
                         "city": "Aarau",
-                        "extra": "c/o Katharina Maurer"}
+                        "extra": "c/o Patrick Uhlmann"}
 ORGANISATION_BANK_CONNECTION = {"PC": "",
                                 "IBAN": "CH02 8080 8004 4102 8510 0",
                                 "BIC": "",
-                                "NAME": "Genossenschaft GartenBerg c/o Katharina Maurer, Erlinsbacherstrasse 83, CH-5000 Aarau",
+                                "NAME": "Genossenschaft GartenBerg c/o Patrick Uhlmann, Girixweg 40, CH-5000 Aarau",
                                 "ESR": ""}
 SHARE_PRICE = "750"
 
@@ -186,7 +186,7 @@ CONTACTS = {
 }
 ORGANISATION_WEBSITE = {
     'name': "GartenBerg",
-    'url': "https://www.gartenberg.org"
+    'url': "https://www.gartenberg.ch"
 }
 STYLES = {'static': ['gartenberg/css/customize.css']}
 SCRIPTS = {'template': 'js/statistics.html'}
