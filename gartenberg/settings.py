@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'gartenberg',
     'juntagrico_billing',
     'juntagrico_assignment_request',
+    'juntagrico_pg',
     'juntagrico',
     'fontawesomefree',  # benötigt ab 1.6
     'import_export',  # benötigt ab 1.6

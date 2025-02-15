@@ -1,5 +1,34 @@
 # Changelog
 
+## 3.0.9 - 15.02.2025
+
+* [juntagrico-pg](https://github.com/juntagrico/juntagrico-pg) installieren
+
+## 3.0.8 - 10.02.2025
+
+* Bump whitenoise from 6.8.2 to 6.9.0
+
+## 3.0.7 - 24.01.2025
+
+Update auf Juntagrico 1.6.9
+* Bugfix: Im Email über den Abowechsel wird neu der richtige Abotyp angezeigt
+* Bugfix: Depots mit Koordinaten werden neu auf der Karte angezeigt auch wenn einzelne Depots keine Koordinaten haben
+* Bugfix: Zeigt Links um Jobs zu erstellen auch für nicht Admins an (sofern diese über die Berechtigung dafür verfügen)
+* Bugfix: Bei der Erstellung eines neuen Abos wurde auch bei Probeabos jeweils der Zusatz pro Jahr angezeigt. Dies ist neu nicht mehr der Fall.
+
+## 3.0.6 - 22.12.2024
+
+* bug beheben (Server Error 500) bei Neuregistrierungen mit Mitbezügern
+* Genossenschaftsadresse von Kathrin auf Patrick wechseln
+* Webseitenadresse korrekt setzen
+
+## 3.0.5 - 22.12.2024
+
+* Bump juntagrico-billing from 1.6.3 to 1.6.4
+* Bump whitenoise from 6.6.0 to 6.8.2
+* Bump juntagrico-assignment-request from 1.6.3 to 1.6.4
+* Update juntagrico requirement from ~=1.6.5 to ~=1.6.8
+
 ## 3.0.4 - 03.10.2024
 
 * Aktualisierung auf [Juntagrico 1.6.5](https://github.com/juntagrico/juntagrico/releases/tag/1.6.5)
