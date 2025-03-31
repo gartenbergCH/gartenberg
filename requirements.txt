@@ -1,5 +1,5 @@
 #git+https://github.com/patrickuhlmann/juntagrico.git@main
-juntagrico ~=1.6.9
+juntagrico ~=1.6.10
 
 gunicorn==23.0.0
 psycopg>=3.1.8
