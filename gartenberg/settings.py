@@ -69,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
+                'juntagrico.context_processors.vocabulary',
             ],
         },
     },
@@ -154,8 +155,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 """
      juntagrico Settings
 """
-ORGANISATION_NAME = "Gartenberg"
-ORGANISATION_LONG_NAME = "Gartenberg"
+ORGANISATION_NAME = "GartenBerg"
+ORGANISATION_LONG_NAME = "GartenBerg"
 ORGANISATION_ADDRESS = {"name": "Genossenschaft GartenBerg",
                         "street": "Girixweg",
                         "number": "40",
@@ -177,6 +178,10 @@ BUSINESS_YEAR_CANCELATION_MONTH = 9
 MEMBERSHIP_END_MONTH = 12
 # Need to cancel until september
 MEMBERSHIP_END_NOTICE_PERIOD = 3
+# Können Mitglieder sich selber wieder von Jobs abmelden?
+ALLOW_JOB_UNSUBSCRIBE = False
+# Wieviele Anteilscheine werden bei einer Anmeldung zwingend benötigt (unabhängig von der notwendigen Anzahl für ein Abo)?
+REQUIRED_SHARES = 0
 
 BUSINESS_REGULATIONS = 'https://gartenberg.ch/wp-content/uploads/2024/06/2024_03_21_betriebsreglement-1.pdf'
 BYLAWS = 'https://gartenberg.ch/wp-content/uploads/2023/02/statuten.pdf'
@@ -202,10 +207,11 @@ STORAGES = {
     },
 }
 
-EMAILS = {
-    's_created': 'gartenberg_emails/member/share_created.txt',
-    'd_changed': 'gartenberg_emails/member/depot_changed.txt',
-}
+# Hier könnten Emails angepasst werden.
+#EMAILS = {
+#    's_created': 'gartenberg_emails/member/share_created.txt',
+#    'd_changed': 'gartenberg_emails/member/depot_changed.txt',
+#}
 
 LOGGING = {
     'version': 1,

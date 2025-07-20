@@ -1,5 +1,64 @@
 # Changelog
 
+* Todo: Templates durchgehen!
+
+## 4.0.0 - ???
+
+* Bump Juntagrico to 1.7.0
+* Bump juntagrico-billing to 1.7.1
+* Bump juntagrico-pg to 1.7.0
+* Bump juntagrico-assignment-request to 1.7.0
+* Der Organisationsname GartenBerg wird neu überall als GartenBerg geschrieben (vorher teilweise Gartenberg)
+
+
+Rechnungen
+* Erlaubt bei Rechnungen dem Admin die MWST zu aktualisieren oder die Rechnung mit einer Ausgleichszahlung auszugleichen
+
+Arbeitseinsätze
+* Es kann konfiguriert werden ob zukünftige Einsätze schon zählen oder nicht: https://juntagrico.readthedocs.io/en/latest/reference/templates.html#juntagrico-widgets-assignment-progress-html-progress
+* Darstellung der meine Einsätze Seite verbessert. Es wird nun eine Tabelle verwendet wie auch auf anderen Einsatzseiten. Dadurch sind mehr Informationen sichtbar und es kann auch sortiert und gefiltert werden. Zudem gibt es neu eine Jahresauswahl wodurch eine Kontrolle einfacher ist und es gibt einen Hinweis auf Mitbezüger und einen Link auf die Seite wo auch deren Einsätze sichtbar sind.
+* Mitglieder können sich neu selber von angemeldeten Einsätzen wieder abmelden und die Anzahl Teilnehmer ändern. Der Arbeitseinsatzkontakt erhält eine Benachrichtigung darüber per Email (sofern mit der Einstellung DISABLE_NOTIFICATIONS nicht deaktiviert). Die Funktion kann mit der Einstellung ALLOW_JOB_UNSUBSCRIBE global deaktiviert werden.
+* Verbesserung der Performanz der Job Tabelle falls es sehr viele Jobs gibt. Diese werden neu schneller geladen/angezeigt
+* Neu können die Gärtner/Koordis direkt auf dem Arbeitseinsatz in der "Dabei sind" Liste Anpassungen vornehmen. D. h. abmelden oder mehr Teilnehmer eintragen.
+* Die Erfassung von neuen Einsätzen wurde verbessert: Felder sinnvoller angeordnet. Zeigt die Standardwerte und Beschreibung der Jobart an.
+* Auf der Arbeitseinsatzübersicht kann neu mit von/bis Datum oder dem Jahr gefiltert werden.
+
+Abos
+* Es gibt die neue Seite "Letze Änderungen", wo aufgelistet wird welche Änderungen an Abos es in einem wählbaren Datumsbereich gegeben hat
+* Es gibt eine Seite "Pendente Änderungen" wo aufgelistet wird was noch bearbeitet werden muss (fehlendes Aktivierungs- oder Deaktivierungsdatum)
+* Auf der Aboseite des Benutzers werden Links auf die Dokumente (FAQ, Betriebsreglement, AGB) angezeigt
+
+Sicherheit
+* Deaktivierte Benutzer können ihr Passwort nicht mehr zurücksetzen lassen
+
+Export
+* Datum und Zahlen werden neu nicht mehr als Zeichenfolgen, sondern in ihrem richtigen Format exportiert. Dadurch kann beispielsweise nach Datum sortiert werden in Excel oder Formeln verwendet werden)
+
+Mitgliedschaftseite
+* Zeigt Links auf die Dokumente (FAQ, Betriebsreglement, AGB) an.
+* Zeigt eine klarere Beschreibung an falls die Mitgliedschaft nicht gekündet werden kann (weil der Anteilschein noch für ein Abo benötigt wird)
+* Die Admins können neue eine Mitgliedernummer vergeben, welche auf der Mitgliedschaftseite angezeigt wird.
+
+Änderungen Anteilscheine
+* Unbezahlte Anteilscheine die nicht für ein Abo benötigt werden können neu gekündigt werden. Nützlich falls man bspw. aus Versehen einen Anteilschein zuviel bestellt.
+* Die Koordis erhalten eine Meldung über gekündigte Anteilscheine
+
+Anmeldeprozess
+* Mit der Option REQUIRED_SHARES kann neu definiert werden wieviele Anteilscheine bei der Registrierung mindestens bestellt werden müssen. Dadurch ist es möglich für Probeabos keine Anteilscheine mehr zu benötigen (Minimum 0)
+* Der eingegebene Kommentar wurde früher nur per E-Mail versendet. Neu wird er auch auf dem Mitglied gespeichert und bleibt somit erhalten/einsehbar
+* Falls es für ein Depot Zusatzkosten (= Lieferkosten) gibt wird dies neu während dem Anmeldeprozess angezeigt.
+
+Depot
+* Die Depotbeschreibung kann bei der Anmeldung gelesen werden (= öffentlich). Alle "sensitiven" Informationen müssen im Feld "Zugriffsbeschreibung" enthalten sein
+* Für die Depots können Abholzeiten angegeben werden. Diese werden auch bei der Anmeldung angezeigt.
+
+Technisch
+* Python 3.8 wird nicht mehr unterstützt
+
+## 3.0.10 - 13.06.2025
+
+* Bump Juntagrico to 1.6.10
+
 ## 3.0.9 - 15.02.2025
 
 * [juntagrico-pg](https://github.com/juntagrico/juntagrico-pg) installieren

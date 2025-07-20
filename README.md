@@ -6,26 +6,15 @@ Siehe [Changelog](CHANGELOG.md)
 
 ## Vorgenommene Anpassungen/Konfigurationen
 
-* Assignment Request und Billing Plugin installiert
+* Assignment Request, Billing und Postgres Plugin installiert
 * Name, Adresse, Bankverbindungsdaten
 * Preis pro Anteilschein
 * Link zu Betriebsreglement und Statuten
 * Logo
 
-Angepasste Emails
-* share_created.txt -> Hinweis das ignorieren mit Probekorb
-* depot_changed.txt -> Hinweis das der Änderungswunsch auch per Mail gesendet werden soll
-
 Angepasste Seiten
 * signup.html -> Hinweis auf Probekorb
-* createsubscription -> select_shares.html -> Hinweis auf Probekorb
-* createsubscription -> select_start_date.html -> Hinweis auf Probekorb
-* createsubscription -> summary -> Hinweis auf Probekorb
-* messages -> unpaid_shares.html -> Hinweis auf Probeabo
-* info -> unpaid_shares.html -> Hinweis auf Probeabo
-
-Angepasste Bilder
-* static/juntagrico/img/single_core.png -> roter Balken durch grünen Balken ersetzt.
+* createsubscription -> select_start_date.html -> Hinweis auf sofort möglichen Start
 
 ## Linux
 
