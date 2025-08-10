@@ -1,8 +1,6 @@
 # Changelog
 
-* Todo: Templates durchgehen!
-
-## 4.0.0 - ???
+## 4.0.0 - 10.08.2025
 
 * Bump Juntagrico to 1.7.0
 * Bump juntagrico-billing to 1.7.1
@@ -10,14 +8,13 @@
 * Bump juntagrico-assignment-request to 1.7.0
 * Der Organisationsname GartenBerg wird neu überall als GartenBerg geschrieben (vorher teilweise Gartenberg)
 
-
 Rechnungen
 * Erlaubt bei Rechnungen dem Admin die MWST zu aktualisieren oder die Rechnung mit einer Ausgleichszahlung auszugleichen
 
 Arbeitseinsätze
 * Es kann konfiguriert werden ob zukünftige Einsätze schon zählen oder nicht: https://juntagrico.readthedocs.io/en/latest/reference/templates.html#juntagrico-widgets-assignment-progress-html-progress
 * Darstellung der meine Einsätze Seite verbessert. Es wird nun eine Tabelle verwendet wie auch auf anderen Einsatzseiten. Dadurch sind mehr Informationen sichtbar und es kann auch sortiert und gefiltert werden. Zudem gibt es neu eine Jahresauswahl wodurch eine Kontrolle einfacher ist und es gibt einen Hinweis auf Mitbezüger und einen Link auf die Seite wo auch deren Einsätze sichtbar sind.
-* Mitglieder können sich neu selber von angemeldeten Einsätzen wieder abmelden und die Anzahl Teilnehmer ändern. Der Arbeitseinsatzkontakt erhält eine Benachrichtigung darüber per Email (sofern mit der Einstellung DISABLE_NOTIFICATIONS nicht deaktiviert). Die Funktion kann mit der Einstellung ALLOW_JOB_UNSUBSCRIBE global deaktiviert werden.
+* (deaktiviert, Entscheid Koordi vom 08.08.2025): Mitglieder können sich neu selber von angemeldeten Einsätzen wieder abmelden und die Anzahl Teilnehmer ändern. Der Arbeitseinsatzkontakt erhält eine Benachrichtigung darüber per Email (sofern mit der Einstellung DISABLE_NOTIFICATIONS nicht deaktiviert). Die Funktion kann mit der Einstellung ALLOW_JOB_UNSUBSCRIBE global deaktiviert werden.
 * Verbesserung der Performanz der Job Tabelle falls es sehr viele Jobs gibt. Diese werden neu schneller geladen/angezeigt
 * Neu können die Gärtner/Koordis direkt auf dem Arbeitseinsatz in der "Dabei sind" Liste Anpassungen vornehmen. D. h. abmelden oder mehr Teilnehmer eintragen.
 * Die Erfassung von neuen Einsätzen wurde verbessert: Felder sinnvoller angeordnet. Zeigt die Standardwerte und Beschreibung der Jobart an.
