@@ -3,7 +3,7 @@ juntagrico ~=1.7.7
 
 gunicorn==23.0.0
 psycopg>=3.1.8
-whitenoise==6.9.0
+whitenoise==6.11.0
 juntagrico-assignment-request==1.7.0
 juntagrico-billing==1.7.2
 juntagrico-pg==1.7.0
