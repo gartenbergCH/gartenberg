@@ -250,3 +250,7 @@ DEPOT_LIST_GENERATION_DAYS = []
 # Needed if you use sqlite to display certain sites
 if os.environ.get('JUNTAGRICO_DATABASE_ENGINE', 'django.db.backends.sqlite3') == 'django.db.backends.sqlite3':
     USE_TZ = True
+
+# Avoid sending emails on the staging environment
+if os.environ.get('JUNTAGRICO_STAGING') == '1':
+EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"
