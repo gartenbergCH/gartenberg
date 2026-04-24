@@ -115,8 +115,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.contrib.sites.middleware.CurrentSiteMiddleware',
-    'impersonate.middleware.ImpersonateMiddleware'
+    'impersonate.middleware.ImpersonateMiddleware',
+    'gartenberg.middleware.EmailAuditMiddleware',
 ]
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_HOST = os.environ.get('JUNTAGRICO_EMAIL_HOST')
 EMAIL_HOST_USER = os.environ.get('JUNTAGRICO_EMAIL_USER')
@@ -216,6 +219,12 @@ STORAGES = {
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'timestamped': {
+            'format': '%(asctime)s %(levelname)s %(name)s %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
+    },
     'handlers': {
         'file': {
             'level': 'INFO',
@@ -223,9 +232,11 @@ LOGGING = {
             'filename': 'gartenberg.log',
             'maxBytes': 1024*1024*5, # 5 MB
             'backupCount': 5,
+            'formatter': 'timestamped',
         },
         'console': {
             'class': 'logging.StreamHandler',
+            'formatter': 'timestamped',
         },
     },
     'loggers': {
