@@ -1,0 +1,43 @@
+services:
+
+  juntagrico:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+      args:
+        juntagrico_username: test
+        juntagrico_email: test@test.ch
+        juntagrico_password: test
+        juntagrico_secret_key: e2e-secret-key
+    environment:
+      - JUNTAGRICO_EMAIL_HOST=mailhog
+      - JUNTAGRICO_EMAIL_PORT=1025
+    depends_on:
+      - mailhog
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/accounts/login/')"]
+      interval: 5s
+      timeout: 10s
+      retries: 12
+      start_period: 30s
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"
+
+  playwright:
+    image: mcr.microsoft.com/playwright/python:v1.50.0-noble
+    working_dir: /e2e
+    volumes:
+      - .:/e2e
+    environment:
+      - BASE_URL=http://juntagrico:8000
+      - MAILHOG_URL=http://mailhog:8025
+    command: >
+      bash -c "pip install -r requirements.txt --quiet &&
+               playwright install chromium &&
+               pytest tests/ -v --html=report.html --self-contained-html"
+    depends_on:
+      juntagrico:
+        condition: service_healthy

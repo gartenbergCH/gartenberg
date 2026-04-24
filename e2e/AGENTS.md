@@ -1,0 +1,124 @@
+# E2E Test Lessons Learned
+
+Erkenntnisse aus der Implementierung der Playwright E2E Tests für GartenBerg / Juntagrico.
+
+---
+
+## Cookie-Consent-Banner
+
+Der Juntagrico-Browser lädt beim ersten Seitenaufruf einen Cookie-Consent-Banner (`cc-window`, Position: bottom). Dieser überlagert Elemente am unteren Seitenrand und blockiert Klick-Aktionen.
+
+**Fix:** Cookie vor dem ersten Seitenaufruf im Browser-Kontext setzen, damit der Banner nie erscheint:
+
+```python
+context.add_cookies([{
+    "name": "cookieconsent_status",
+    "value": "dismiss",
+    "domain": urlparse(BASE_URL).hostname,
+    "path": "/",
+}])
+```
+
+---
+
+## Bootstrap 4 Custom Checkboxes
+
+Juntagrico rendert Checkboxen (u.a. AGB) als Bootstrap 4 Custom Controls:
+
+```html
+<input type="checkbox" id="id_agb" class="custom-control-input" />
+<label for="id_agb" class="custom-control-label">...</label>
+```
+
+Das `<input>` hat `opacity: 0` und ist damit für Playwright nicht klickbar. `page.locator("label[for='id_agb']").click()` trifft oft einen Link im Label-Text statt den Toggle.
+
+**Fix:** `force=True` auf dem Hidden-Input:
+
+```python
+page.locator("input[name='agb']").check(force=True)
+```
+
+---
+
+## bootstrap-input-spinner
+
+Auf den Seiten für Subscription-Auswahl (`/my/create/subscription/`) und Shares (`/my/share/manage/`) wird das `<input type="number">` durch die `bootstrap-input-spinner`-Bibliothek ersetzt. Das originale Input wird versteckt (`display: none` o.ä.); Playwright kann es nicht füllen.
+
+**Fix:** Den `+`-Button des Spinners anklicken statt das Input zu füllen:
+
+```python
+page.wait_for_load_state("networkidle")  # Spinner muss initialisiert sein
+page.locator(".btn-increment").first.click()  # Wert von 0 auf 1 erhöhen
+```
+
+Für Shares ist der Default-Wert already auf das benötigte Minimum gesetzt (`value="{{ shares.total_required }}"`) — dort reicht ein direktes Klicken auf "Weiter".
+
+---
+
+## Mailhog MIME-Struktur
+
+Mailhog liefert für einfache (nicht-Multipart) E-Mails `"MIME": null` zurück. `msg.get("MIME", {})` gibt in diesem Fall `None` zurück (der Key existiert, sein Wert ist `null`), nicht `{}`.
+
+**Fix:** Immer `or {}` als Fallback verwenden:
+
+```python
+mime = msg.get("MIME") or {}
+parts = mime.get("Parts") or []
+# Bei keinen MIME-Parts liegt der Body in Content.Body:
+content = msg.get("Content") or {}
+body = content.get("Body", "")
+```
+
+---
+
+## Juntagrico Signup: kein Passwort-Feld
+
+Die Signup-Seite (`/my/signup/`) enthält **kein Passwort-Feld**. Das Passwort wird nach Abschluss des Wizards auto-generiert und per E-Mail verschickt.
+
+**Folge:** Nach dem Wizard muss die Welcome-E-Mail aus Mailhog gelesen werden, um:
+1. Das generierte Passwort zu extrahieren (`Passwort: XXXXXXXX`)
+2. Den Bestätigungslink zu extrahieren und aufzurufen (`Bestätigungslink: http://...`)
+
+Danach erst ist ein Login möglich.
+
+---
+
+## Signup-Formular: POST 200 vs. 302
+
+Ein erfolgreicher Signup gibt HTTP **302** zurück (Redirect auf `/my/create/subscription/`). Bei Validierungsfehlern wird HTTP **200** zurückgegeben (Seite neu gerendert mit Fehlermeldungen).
+
+`wait_for_url("**/my/create/subscription/")` hängt ewig wenn der POST 200 zurückgab. Nach dem Klick auf "Anmelden" besser explizit prüfen:
+
+```python
+page.wait_for_load_state("networkidle")
+if "/my/signup/" in page.url:
+    errors = page.locator(".alert-danger, .invalid-feedback, .errorlist").all_text_contents()
+    raise AssertionError(f"Signup fehlgeschlagen: {errors}")
+```
+
+---
+
+## Docker Container-Wiederverwendung / E-Mail-Kollision
+
+Docker Compose stoppt Container bei `--abort-on-container-exit`, löscht sie aber nicht. Beim nächsten `docker compose up` werden dieselben gestoppten Container neugestartet — die SQLite-Datenbank enthält dann noch den Benutzer vom vorherigen Run.
+
+**Fixes:**
+1. **Pro Run eine eindeutige E-Mail** generieren:
+   ```python
+   import uuid
+   MEMBER_EMAIL = f"e2e.{uuid.uuid4().hex[:8]}@gartenberg-e2e.local"
+   ```
+
+2. **`--force-recreate`** in der `docker compose`-Befehlszeile erzwingt neue Container aus dem Image:
+   ```bash
+   docker compose -f e2e/compose-e2e.yml up --build --force-recreate \
+     --exit-code-from playwright --abort-on-container-exit
+   ```
+
+---
+
+## Session-scoped Fixtures
+
+Um wiederholten Login über mehrere Tests zu vermeiden, werden `browser` und `BrowserContext` als `scope="session"`-Fixtures angelegt. Jeder Test erhält über `context.new_page()` eine neue Tab-Instanz — Cookies/Auth bleiben im Context erhalten.
+
+Der `playwright`-Fixture aus `pytest-playwright` ist bereits session-scoped und kann direkt für `playwright.chromium.launch()` genutzt werden.
