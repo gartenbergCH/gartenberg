@@ -5,6 +5,14 @@ CMD="${1:-}"
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 case "$CMD" in
+  test)
+    docker run --rm -i \
+      -v "${PROJECT_ROOT}:/opt" \
+      -w /opt \
+      -e JUNTAGRICO_SECRET_KEY=dummy \
+      python:3.11 \
+      sh -c "pip install --quiet -r requirements.txt && python manage.py test gartenberg"
+    ;;
   manage)
     # Run any Django management command, e.g.: ./tooling/docker.sh manage makemigrations gartenberg
     docker run --rm -i \
@@ -15,9 +23,10 @@ case "$CMD" in
       sh -c "pip install --quiet -r requirements.txt && python manage.py ${*:2}"
     ;;
   *)
-    echo "Usage: $0 {manage <django-command> [args...]}"
+    echo "Usage: $0 {test|manage <django-command> [args...]}"
     echo ""
     echo "Examples:"
+    echo "  $0 test"
     echo "  $0 manage makemigrations gartenberg"
     echo "  $0 manage migrate"
     echo "  $0 manage showmigrations"
