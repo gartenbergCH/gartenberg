@@ -1,0 +1,1 @@
+docker compose -f e2e/compose-e2e.yml up --build --force-recreate --exit-code-from playwright --abort-on-container-exit
