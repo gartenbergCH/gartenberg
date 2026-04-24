@@ -30,3 +30,21 @@ jobs:
       env:
         JUNTAGRICO_SECRET_KEY: dummy
       run: python manage.py test gartenberg
+
+  e2e:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run E2E tests
+      run: |
+        docker compose -f e2e/compose-e2e.yml up --build --force-recreate --exit-code-from playwright --abort-on-container-exit
+    - name: Upload test report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-report
+        path: |
+          e2e/report.html
+          e2e/screenshots/
