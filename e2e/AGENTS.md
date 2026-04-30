@@ -119,6 +119,20 @@ page.wait_for_load_state("networkidle")
 
 ---
 
+## Django ForeignKey-Select: Index 0 ist die Leer-Option
+
+Wenn ein Formularfeld ein `ForeignKey` mit `blank=True, null=True` ist, rendert Django automatisch eine leere Option als erste Wahl:
+
+```html
+<option value="">---------</option>
+<option value="1">Ernten</option>
+<option value="2">Jäten</option>
+```
+
+`select_option(index=0)` wählt deshalb die leere Option, nicht den ersten echten Wert. Für den ersten echten Eintrag `index=1` verwenden.
+
+---
+
 ## DataTables: alphabetische Sortierung ist nicht chronologisch
 
 Die Jobs-Tabelle (`#filter-table`) hat keine `data-order`-Attribute auf den Datumszellen. DataTables sortiert deshalb alphabetisch nach dem Zellentext (`"D d.m.Y"`, z.B. `"Di 01.06.2027"`). Das Tageskürzel steht vorne — `"Di"` (Dienstag) < `"Do"` (Donnerstag) — daher landet ein Dienstag-2027-Job **vor** einem Donnerstag-2026-Job in der sortierten Tabelle.
