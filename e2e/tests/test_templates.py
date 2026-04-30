@@ -1,3 +1,4 @@
+import uuid
 from contextlib import contextmanager
 from urllib.parse import urlparse
 
@@ -6,6 +7,7 @@ from playwright.sync_api import Page, Playwright
 from conftest import BASE_URL, shot
 from pages.admin_subscription_page import AdminMemberPage
 from pages.config_page import ConfigPage
+from pages.wizard_page import SignupWizardPage
 
 _COOKIE_CONSENT = {
     "name": "cookieconsent_status",
@@ -68,3 +70,29 @@ def test_signup_template(playwright: Playwright):
         # Betriebsreglement-Link
         assert anon.locator("a[href*='betriebsreglement']").count() > 0, \
             "Link zum Betriebsreglement fehlt im signup-Template"
+
+
+def test_select_start_date_template(playwright: Playwright):
+    email = f"e2e.wizard.{uuid.uuid4().hex[:8]}@gartenberg-e2e.local"
+    with _anon_page(playwright) as anon:
+        wizard = SignupWizardPage(anon)
+        wizard.fill_personal_data(email)
+        wizard.select_first_subscription_type()
+        wizard.select_first_depot()  # waits for /start/ internally
+        shot(anon, "template_03_select_start_date")
+
+        try:
+            assert wizard.is_on_start_date_step(), \
+                f"Wizard sollte auf /start/ sein, war: '{anon.url}'"
+
+            content = anon.content()
+            assert "Normalerweise ist der" in content, \
+                "Custom Intro-Text 'Normalerweise ist der' fehlt im select_start_date-Template"
+            assert "Geschäftsjahres" in content, \
+                "Custom Intro-Text 'Geschäftsjahres' fehlt im select_start_date-Template"
+            assert "freie Plätze" in content, \
+                "Custom Intro-Text 'freie Plätze' fehlt im select_start_date-Template"
+            assert anon.locator("input[name='start_date']").count() > 0, \
+                "Datumsfeld 'start_date' fehlt im select_start_date-Template"
+        finally:
+            wizard.abort()
