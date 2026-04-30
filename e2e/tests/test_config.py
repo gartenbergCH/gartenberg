@@ -1,6 +1,7 @@
+from contextlib import contextmanager
 from urllib.parse import urlparse
 
-from playwright.sync_api import Playwright
+from playwright.sync_api import Page, Playwright
 
 from conftest import BASE_URL, shot
 from pages.config_page import ConfigPage
@@ -11,6 +12,22 @@ _COOKIE_CONSENT = {
     "domain": urlparse(BASE_URL).hostname,
     "path": "/",
 }
+
+
+@contextmanager
+def _anon_page(playwright: Playwright) -> Page:
+    # SignupView calls logout() for authenticated users — never reuse a shared
+    # admin/member context for /my/signup/. Use a fresh anonymous context instead.
+    browser = playwright.chromium.launch(headless=True)
+    context = browser.new_context(base_url=BASE_URL)
+    context.add_cookies([_COOKIE_CONSENT])
+    page = context.new_page()
+    try:
+        yield page
+    finally:
+        page.close()
+        context.close()
+        browser.close()
 
 _EXPECTED_BANK = [
     "CH02 8080 8004 4102 8510 0",
@@ -28,22 +45,27 @@ _EXPECTED_ADDRESS = [
 
 
 def test_share_price(playwright: Playwright):
-    # SignupView calls logout() for authenticated users, so never use a shared
-    # admin/member context here — create a one-off anonymous page instead.
-    browser = playwright.chromium.launch(headless=True)
-    context = browser.new_context(base_url=BASE_URL)
-    context.add_cookies([_COOKIE_CONSENT])
-    anon_page = context.new_page()
-    try:
-        page = ConfigPage(anon_page)
+    with _anon_page(playwright) as anon:
+        page = ConfigPage(anon)
         page.navigate_signup()
-        shot(anon_page, "config_03_signup_share_price")
+        shot(anon, "config_03_signup_share_price")
         assert "750" in page.content(), \
             "Anteilsscheinpreis '750' (CHF) fehlt auf /my/signup/"
-    finally:
-        anon_page.close()
-        context.close()
-        browser.close()
+
+
+def test_signup_without_required_shares(playwright: Playwright):
+    with _anon_page(playwright) as anon:
+        page = ConfigPage(anon)
+        page.navigate_signup()
+        shot(anon, "config_04_signup_probe")
+
+        content = page.content()
+        assert "Probe Mitgliedschaft" in content, \
+            "Probe-Mitgliedschaft-Block fehlt auf /my/signup/"
+        assert "keinen Anteilschein" in content, \
+            "Hinweis 'keinen Anteilschein' fehlt auf /my/signup/ (REQUIRED_SHARES=0)"
+        assert anon.locator("a[href*='probe-mitgliedschaft']").count() > 0, \
+            "Link zur Probe-Mitgliedschaft fehlt auf /my/signup/"
 
 
 def test_organisation_bank_connection(member_page):
