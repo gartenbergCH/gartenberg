@@ -4,6 +4,7 @@ from urllib.parse import urlparse
 from playwright.sync_api import Page, Playwright
 
 from conftest import BASE_URL, shot
+from pages.admin_subscription_page import AdminMemberPage
 from pages.config_page import ConfigPage
 
 _COOKIE_CONSENT = {
@@ -26,6 +27,21 @@ def _anon_page(playwright: Playwright) -> Page:
         page.close()
         context.close()
         browser.close()
+
+
+def test_statistics_template(admin_page):
+    # Any page using base.html includes the statistics snippet via
+    # SCRIPTS = {'template': 'js/statistics.html'} — use a stable admin page.
+    AdminMemberPage(admin_page).navigate()
+    shot(admin_page, "template_02_statistics")
+
+    source = admin_page.content()
+    assert "statistics.gartenberg.ch" in source, \
+        "Plausible-Domain 'statistics.gartenberg.ch' fehlt im HTML (SCRIPTS-Template nicht eingebunden?)"
+    assert "script.js" in source, \
+        "Plausible-Script-Tag fehlt im HTML"
+    assert "pixel.gif" in source, \
+        "Plausible-Noscript-Pixel fehlt im HTML"
 
 
 def test_signup_template(playwright: Playwright):
