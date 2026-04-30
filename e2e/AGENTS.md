@@ -133,6 +133,55 @@ Wenn ein Formularfeld ein `ForeignKey` mit `blank=True, null=True` ist, rendert 
 
 ---
 
+## `SignupView` loggt authentifizierte User aus
+
+Juntagrico's `SignupView.dispatch` ruft `logout(request)` auf, wenn ein bereits eingeloggter
+User `/my/signup/` besucht. Der Effekt ist tückisch: die Seite selbst lädt ohne Fehler (sie ist
+öffentlich), aber die Session des eingeloggten Users wird ungültig. Der Schaden zeigt sich erst
+beim **nächsten** Test, der dieselbe `admin_context`- oder `member_context`-Session verwendet —
+dort schlägt dann ein scheinbar unverwandter Test mit einer Redirect-auf-Login-Seite fehl.
+
+**Fix:** Niemals `admin_page` oder `member_page` für `/my/signup/` verwenden. Stattdessen einen
+frischen anonymen Browser-Kontext mit dem `playwright`-Fixture erstellen:
+
+```python
+@contextmanager
+def _anon_page(playwright: Playwright) -> Page:
+    browser = playwright.chromium.launch(headless=True)
+    context = browser.new_context(base_url=BASE_URL)
+    context.add_cookies([_COOKIE_CONSENT_COOKIE])
+    page = context.new_page()
+    try:
+        yield page
+    finally:
+        page.close()
+        context.close()
+        browser.close()
+```
+
+---
+
+## Juntagrico `auth.User.username` ist nicht die E-Mail
+
+Juntagrico erstellt den Django-`auth.User` mit einem zufällig generierten Username nach dem
+Schema `{slugify(first_name)}_{slugify(last_name)}_{random_seed}` (max. 30 Zeichen), z.B.
+`e2e_testperson_a3f9c1b2`. Die E-Mail-Adresse steckt am `Member`-Model (`member.email`),
+**nicht** am `auth.User` — das Feld `auth.User.email` bleibt leer.
+
+**Konsequenz:** Jede Suche oder Abfrage, die nach dem User über die E-Mail-Adresse sucht
+(z.B. django-impersonate Search), findet nichts. Stattdessen nach dem slugifizierten
+Nachnamen suchen, der fix im generierten Username enthalten ist:
+
+```python
+# Nicht: page.navigate_search(MEMBER_EMAIL)  → keine Treffer
+page.navigate_search(MEMBER_LAST.lower())    # trifft 'e2e_testperson_...' via username__icontains
+```
+
+Login funktioniert trotzdem mit der E-Mail, weil Juntagrico einen eigenen
+`AuthenticateWithEmail`-Backend registriert, der über `Member.objects.get(email=...)` geht.
+
+---
+
 ## DataTables: alphabetische Sortierung ist nicht chronologisch
 
 Die Jobs-Tabelle (`#filter-table`) hat keine `data-order`-Attribute auf den Datumszellen. DataTables sortiert deshalb alphabetisch nach dem Zellentext (`"D d.m.Y"`, z.B. `"Di 01.06.2027"`). Das Tageskürzel steht vorne — `"Di"` (Dienstag) < `"Do"` (Donnerstag) — daher landet ein Dienstag-2027-Job **vor** einem Donnerstag-2026-Job in der sortierten Tabelle.
