@@ -9,5 +9,9 @@ class ConfigPage:
         self.page.goto("/my/contact")
         self.page.wait_for_load_state("networkidle")
 
+    def navigate_unpaid_shares(self):
+        self.page.goto("/my/info/unpaidshares")
+        self.page.wait_for_load_state("networkidle")
+
     def content(self) -> str:
         return self.page.content()
