@@ -13,6 +13,11 @@ from playwright.sync_api import BrowserContext, Page, Playwright
 
 _SCREENSHOT_DIR = Path("/e2e/screenshots")
 
+
+def shot(page, name: str) -> None:
+    _SCREENSHOT_DIR.mkdir(parents=True, exist_ok=True)
+    page.screenshot(path=str(_SCREENSHOT_DIR / f"{name}.png"), full_page=True)
+
 BASE_URL = os.environ.get("BASE_URL", "http://localhost:8000")
 MAILHOG_URL = os.environ.get("MAILHOG_URL", "http://localhost:8025")
 

@@ -1,3 +1,5 @@
+* make sure to take screenshots at key moments for all tests that you write.
+
 # E2E Test Lessons Learned
 
 Nicht-offensichtliche Fallstricke aus der Implementierung der Playwright E2E Tests für GartenBerg / Juntagrico.
