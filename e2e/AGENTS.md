@@ -182,6 +182,43 @@ Login funktioniert trotzdem mit der E-Mail, weil Juntagrico einen eigenen
 
 ---
 
+## Django-Admin "Sichern" leitet auf Changelist weiter, nicht auf Change-Formular
+
+Der Standard-Submit-Button "Sichern" im Django-Admin speichert das Objekt und leitet
+**zurück zur Changelist** (`/admin/app/model/`). Das Change-Formular ist danach nicht
+mehr aktiv — `input[name='slots']` oder andere Felder existieren auf der Changelist nicht.
+
+**Konsequenz:** Assertions auf Formularfeld-Werte nach `save()` schlagen mit Timeout fehl,
+obwohl der Save erfolgreich war (Success-Banner ist auf der Changelist sichtbar, daher gibt
+`was_saved_successfully()` trotzdem `True` zurück).
+
+**Fix:** Entweder "Sichern und weiter bearbeiten" verwenden (hält den User auf dem
+Change-Formular), oder die Assertions gegen den **Changelist-Inhalt** richten:
+
+```python
+# Changelist-Inhalt prüfen (nach normalem "Sichern")
+assert "5" in admin_page.content()       # Slot-Wert taucht in der Listenzeile auf
+assert "2027" in admin_page.content()    # Jahr taucht in der Listenzeile auf
+```
+
+---
+
+## Subscription-Single-View für bestellte Abos rendert keinen Seiteninhalt
+
+`/my/subscription/{id}/` für ein noch **nicht aktiviertes** Abo (z.B. Startdatum 2027,
+Status "ordered") liefert HTTP 200 und hat `<body id="subscription-single">`, aber der
+eigentliche Seiteninhalt (Depot-Name, Abo-Bestandteile, etc.) fehlt im HTML — der Body
+ist nach dem Cookie-Consent-Skript leer.
+
+**Konsequenz:** Assertions wie `assert depot_name in member_page.content()` schlagen fehl,
+auch wenn das Abo korrekt angelegt ist und der Depot-Name in der Datenbank stimmt.
+
+**Kein Fix nötig** — das ist das erwartete Server-Rendering. Depot- und Abo-Informationen
+für bestellte (zukünftige) Abos müssen über eine andere Route geprüft werden, z.B. über
+die Depot-Detailseite (`/my/depot/{id}/`) oder die Admin-Abo-Übersicht.
+
+---
+
 ## DataTables: alphabetische Sortierung ist nicht chronologisch
 
 Die Jobs-Tabelle (`#filter-table`) hat keine `data-order`-Attribute auf den Datumszellen. DataTables sortiert deshalb alphabetisch nach dem Zellentext (`"D d.m.Y"`, z.B. `"Di 01.06.2027"`). Das Tageskürzel steht vorne — `"Di"` (Dienstag) < `"Do"` (Donnerstag) — daher landet ein Dienstag-2027-Job **vor** einem Donnerstag-2026-Job in der sortierten Tabelle.
