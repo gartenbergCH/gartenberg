@@ -13,5 +13,9 @@ class ConfigPage:
         self.page.goto("/my/info/unpaidshares")
         self.page.wait_for_load_state("networkidle")
 
+    def navigate_signup(self):
+        self.page.goto("/my/signup/")
+        self.page.wait_for_load_state("networkidle")
+
     def content(self) -> str:
         return self.page.content()
