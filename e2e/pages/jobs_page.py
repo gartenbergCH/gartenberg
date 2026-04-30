@@ -59,11 +59,16 @@ class JobDetailPage:
     def __init__(self, page: Page):
         self.page = page
 
-    def subscribe(self):
+    def subscribe(self) -> bool:
+        """Subscribe to the job. Returns False when the form is unavailable
+        (already subscribed, job full, or past) so callers can skip assertions."""
         self.page.wait_for_load_state("networkidle")
         slots_select = self.page.locator("#job-subscribe-form select[name='slots']")
         if slots_select.count() > 0:
             slots_select.select_option("1")
+        confirm_button = self.page.get_by_role("button", name="Bestätigen")
+        if confirm_button.count() == 0:
+            return False
         # Override window.confirm so initJob.js's confirmation dialog auto-accepts
         self.page.evaluate("window.confirm = () => true")
         # Wait for the GET response of the redirect target (not the POST's 302).
@@ -75,8 +80,20 @@ class JobDetailPage:
         with self.page.expect_response(
             lambda resp: "/my/jobs/" in resp.url and resp.request.method == "GET" and resp.status == 200
         ):
-            self.page.get_by_role("button", name="Bestätigen").click()
+            confirm_button.click()
         self.page.wait_for_load_state("networkidle")
+        return True
 
     def job_title(self) -> str:
         return self.page.locator("h3").first.inner_text()
+
+    def occupied_slots(self) -> int:
+        # Status div title attribute: "X von Y gebucht" — absent for infinite-slot jobs
+        loc = self.page.locator("[title*='von'][title*='gebucht']")
+        if loc.count() == 0:
+            return -1  # infinite-slot job; caller should skip slot assertions
+        title = loc.first.get_attribute("title") or ""
+        try:
+            return int(title.split()[0])
+        except (ValueError, IndexError):
+            return -1

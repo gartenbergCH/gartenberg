@@ -17,3 +17,11 @@ class SharesPage:
 
     def shares_count(self) -> int:
         return self.page.locator("#filter-table tbody tr").count()
+
+    def last_row_status(self) -> str:
+        """Return the status-column text of the last share row."""
+        rows = self.page.locator("#filter-table tbody tr")
+        return rows.last.locator("td:nth-child(2)").inner_text().strip()
+
+    def content(self) -> str:
+        return self.page.content()

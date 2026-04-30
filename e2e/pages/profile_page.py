@@ -20,3 +20,6 @@ class ProfilePage:
 
     def get_phone_value(self) -> str:
         return self.page.get_by_label("Telefonnummer").input_value()
+
+    def content(self) -> str:
+        return self.page.content()

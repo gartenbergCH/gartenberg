@@ -26,3 +26,7 @@ class AdminJobsPage:
 
     def was_saved_successfully(self) -> bool:
         return self.page.locator(".success").count() > 0 or "change" in self.page.url
+
+    def list_content(self) -> str:
+        """Return page content of the changelist shown after a successful save."""
+        return self.page.content()

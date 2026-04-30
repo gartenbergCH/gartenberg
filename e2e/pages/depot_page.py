@@ -14,3 +14,6 @@ class DepotPage:
 
     def heading(self) -> str:
         return self.page.locator("h3").first.inner_text()
+
+    def content(self) -> str:
+        return self.page.content()

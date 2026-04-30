@@ -17,3 +17,6 @@ class ContactPage:
 
     def is_sent(self) -> bool:
         return self.page.locator(".alert-success").count() > 0
+
+    def content(self) -> str:
+        return self.page.content()
