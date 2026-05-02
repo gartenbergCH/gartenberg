@@ -18,3 +18,10 @@ class AdminListPage:
 
     def was_successful(self) -> bool:
         return "Listen erstellt" in (self.page.locator(".alert-success").text_content() or "")
+
+    def open_first_generated_link(self):
+        self.page.locator(".alert-success a").first.click()
+        self.page.wait_for_load_state("networkidle")
+
+    def is_accessible(self) -> bool:
+        return self.page.locator("body").is_visible() and "404" not in self.page.title()

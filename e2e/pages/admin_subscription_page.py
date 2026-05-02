@@ -15,6 +15,9 @@ class AdminMemberPage:
     def contains_member(self, name: str) -> bool:
         return self.page.locator("#filter-table tbody").get_by_text(name).count() > 0
 
+    def has_admin_edit_links(self) -> bool:
+        return self.page.locator("#filter-table a[href*='/admin/juntagrico/member/']").count() > 0
+
 
 class AdminSubscriptionRecentPage:
     def __init__(self, page: Page):
@@ -30,6 +33,9 @@ class AdminSubscriptionRecentPage:
     def has_change_type(self, change_type: str) -> bool:
         return self.page.locator("#filter-table tbody").get_by_text(change_type).count() > 0
 
+    def tbody_text(self) -> str:
+        return self.page.locator("#filter-table tbody").inner_text()
+
 
 class AdminSubscriptionPendingPage:
     def __init__(self, page: Page):
@@ -41,3 +47,6 @@ class AdminSubscriptionPendingPage:
 
     def pending_row_count(self) -> int:
         return self.page.locator("#filter-table tbody tr").count()
+
+    def tbody_text(self) -> str:
+        return self.page.locator("#filter-table tbody").inner_text()
