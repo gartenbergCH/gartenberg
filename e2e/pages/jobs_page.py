@@ -52,7 +52,15 @@ class JobsPage:
         self.page.wait_for_load_state("networkidle")
 
     def job_in_member_list(self, job_name: str) -> bool:
-        return self.page.locator(f"#assignments-table a:has-text('{job_name}')").count() > 0
+        # Use wait_for so DataTables has time to finish its client-side initialisation
+        # (networkidle fires before DataTables re-renders tbody rows on slow CI runners).
+        try:
+            self.page.locator(f"#assignments-table a:has-text('{job_name}')").wait_for(
+                state="visible", timeout=10000
+            )
+            return True
+        except Exception:
+            return False
 
 
 class JobDetailPage:

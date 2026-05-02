@@ -219,6 +219,57 @@ die Depot-Detailseite (`/my/depot/{id}/`) oder die Admin-Abo-Übersicht.
 
 ---
 
+## DataTables `tbody` ist nach `networkidle` noch nicht gerendert
+
+`wait_for_load_state("networkidle")` feuert, sobald keine ausstehenden Netzwerkanfragen mehr
+laufen — DataTables kann danach noch client-seitig initialisieren: Es entfernt alle `<tr>` aus
+dem DOM und rendert nur die aktuelle Seite neu. Auf einem langsamen CI-Runner kann `.count()`
+oder `.inner_text()` in diesem Zwischenzustand aufgerufen werden und gibt 0 zurück, obwohl die
+Daten vorhanden sind.
+
+**Fix:** `wait_for(state="visible", timeout=10000)` statt `.count() > 0` verwenden:
+
+```python
+try:
+    self.page.locator("#assignments-table a:has-text('Ernten')").wait_for(
+        state="visible", timeout=10000
+    )
+    return True
+except Exception:
+    return False
+```
+
+Dieses Muster gilt für alle DataTables-Tabellen, auf denen nach dem Navigieren sofort
+Assertions gemacht werden.
+
+---
+
+## jpg SQL-Ergebnis ist eine ASCII-Tabelle, kein reiner Text
+
+`AdminPgPage.execute_sql()` liest den Inhalt von `textarea#textarea_id` aus. jpg rendert
+das Ergebnis als ASCII-Tabelle:
+
+```
++----------+
+| COUNT(*) |
++==========+
+| 8        |
++----------+
+ROWS: -1
+```
+
+`line.strip().isdigit()` findet daher keine Treffer — die Zahl steht zwischen Pipes.
+
+**Fix:** Regex auf Tabellenzellen anwenden:
+
+```python
+import re
+cell_values = re.findall(r'\|\s*(\d+)\s*\|', result)
+count = int(cell_values[0])
+```
+
+---
+
 ## DataTables: alphabetische Sortierung ist nicht chronologisch
 
 Die Jobs-Tabelle (`#filter-table`) hat keine `data-order`-Attribute auf den Datumszellen. DataTables sortiert deshalb alphabetisch nach dem Zellentext (`"D d.m.Y"`, z.B. `"Di 01.06.2027"`). Das Tageskürzel steht vorne — `"Di"` (Dienstag) < `"Do"` (Donnerstag) — daher landet ein Dienstag-2027-Job **vor** einem Donnerstag-2026-Job in der sortierten Tabelle.
