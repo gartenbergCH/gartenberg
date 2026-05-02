@@ -50,9 +50,30 @@ class JobsPage:
     def navigate_member_jobs(self):
         self.page.goto("/my/memberjobs")
         self.page.wait_for_load_state("networkidle")
+        # BusinessYearForm sets self.data['year'] = get_business_year() (e.g. 2026) when
+        # no GET param is present, even if 2026 is outside the valid choices (member only
+        # has assignments in 2027). An invalid choice makes is_valid() return False and
+        # assignments = QuerySet.none() — the table stays empty even though data exists.
+        # Fix: always pass the latest available year as an explicit GET parameter.
+        year_select = self.page.locator("select[name='year']")
+        if year_select.count() > 0:
+            options = year_select.evaluate(
+                "el => Array.from(el.options).map(o => o.value).filter(v => v)"
+            )
+            if options:
+                self.page.goto(f"/my/memberjobs?year={max(options, key=int)}")
+                self.page.wait_for_load_state("networkidle")
 
     def job_in_member_list(self, job_name: str) -> bool:
-        return self.page.locator(f"#assignments-table a:has-text('{job_name}')").count() > 0
+        # Use wait_for so DataTables has time to finish its client-side initialisation
+        # (networkidle fires before DataTables re-renders tbody rows on slow CI runners).
+        try:
+            self.page.locator(f"#assignments-table a:has-text('{job_name}')").wait_for(
+                state="visible", timeout=10000
+            )
+            return True
+        except Exception:
+            return False
 
 
 class JobDetailPage:

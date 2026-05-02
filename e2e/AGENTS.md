@@ -219,6 +219,78 @@ die Depot-Detailseite (`/my/depot/{id}/`) oder die Admin-Abo-Übersicht.
 
 ---
 
+## `/my/memberjobs` filtert per Default auf das aktuelle Geschäftsjahr
+
+`BusinessYearForm` setzt `year = get_business_year()` (= aktuelles Jahr), wenn kein
+GET-Parameter übergeben wird. Test-Jobs mit Datum 2027+ werden daher nicht angezeigt,
+obwohl die Assignments in der DB existieren.
+
+**Wichtig:** Der Vergleich `latest != current` reicht nicht. Wenn der Member nur Assignments
+in 2027 hat, ist 2027 die einzige Choice — aber `self.data['year']` = '2026' ist ungültig,
+`is_valid()` = False, und die Tabelle zeigt nichts. Das Select rendert trotzdem '2027' als
+aktuellen Wert, weil es die einzige Option ist. `input_value()` gibt also '2027' zurück,
+obwohl die Seite leer ist. Deshalb immer mit dem year-Parameter neu navigieren:
+
+```python
+options = year_select.evaluate("el => Array.from(el.options).map(o => o.value).filter(v => v)")
+if options:
+    self.page.goto(f"/my/memberjobs?year={max(options, key=int)}")
+    self.page.wait_for_load_state("networkidle")
+```
+
+---
+
+## DataTables `tbody` ist nach `networkidle` noch nicht gerendert
+
+`wait_for_load_state("networkidle")` feuert, sobald keine ausstehenden Netzwerkanfragen mehr
+laufen — DataTables kann danach noch client-seitig initialisieren: Es entfernt alle `<tr>` aus
+dem DOM und rendert nur die aktuelle Seite neu. Auf einem langsamen CI-Runner kann `.count()`
+oder `.inner_text()` in diesem Zwischenzustand aufgerufen werden und gibt 0 zurück, obwohl die
+Daten vorhanden sind.
+
+**Fix:** `wait_for(state="visible", timeout=10000)` statt `.count() > 0` verwenden:
+
+```python
+try:
+    self.page.locator("#assignments-table a:has-text('Ernten')").wait_for(
+        state="visible", timeout=10000
+    )
+    return True
+except Exception:
+    return False
+```
+
+Dieses Muster gilt für alle DataTables-Tabellen, auf denen nach dem Navigieren sofort
+Assertions gemacht werden.
+
+---
+
+## jpg SQL-Ergebnis ist eine ASCII-Tabelle, kein reiner Text
+
+`AdminPgPage.execute_sql()` liest den Inhalt von `textarea#textarea_id` aus. jpg rendert
+das Ergebnis als ASCII-Tabelle:
+
+```
++----------+
+| COUNT(*) |
++==========+
+| 8        |
++----------+
+ROWS: -1
+```
+
+`line.strip().isdigit()` findet daher keine Treffer — die Zahl steht zwischen Pipes.
+
+**Fix:** Regex auf Tabellenzellen anwenden:
+
+```python
+import re
+cell_values = re.findall(r'\|\s*(\d+)\s*\|', result)
+count = int(cell_values[0])
+```
+
+---
+
 ## DataTables: alphabetische Sortierung ist nicht chronologisch
 
 Die Jobs-Tabelle (`#filter-table`) hat keine `data-order`-Attribute auf den Datumszellen. DataTables sortiert deshalb alphabetisch nach dem Zellentext (`"D d.m.Y"`, z.B. `"Di 01.06.2027"`). Das Tageskürzel steht vorne — `"Di"` (Dienstag) < `"Do"` (Donnerstag) — daher landet ein Dienstag-2027-Job **vor** einem Donnerstag-2026-Job in der sortierten Tabelle.
