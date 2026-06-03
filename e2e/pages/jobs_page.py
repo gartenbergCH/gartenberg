@@ -1,6 +1,12 @@
-from datetime import date, datetime
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from playwright.sync_api import Page
+
+# Dates in the jobs table are rendered by Django using TIME_ZONE = 'Europe/Zurich'.
+# Using the same timezone here avoids off-by-one-day mismatches when the test runner
+# is in UTC and a job's UTC time falls on "today UTC" but "tomorrow CET".
+_DISPLAY_TZ = ZoneInfo('Europe/Zurich')
 
 
 class JobsPage:
@@ -21,7 +27,7 @@ class JobsPage:
         differs.  Scanning all rows and picking the minimum future date is robust
         against any DataTables sort order.
         """
-        today = date.today()
+        today = datetime.now(tz=_DISPLAY_TZ).date()
         rows = self.page.locator("#filter-table tbody tr")
         best_date = None
         best_href = None
