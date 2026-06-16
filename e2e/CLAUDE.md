@@ -30,7 +30,7 @@ page.locator("input[name='agb']").check(force=True)
 
 ## bootstrap-input-spinner
 
-Auf den Seiten für Subscription-Auswahl (`/my/create/subscription/`) und Shares (`/my/share/manage/`) versteckt die `bootstrap-input-spinner`-Bibliothek das native `<input type="number">`. Playwright kann es nicht füllen.
+Auf den Seiten für Subscription-Auswahl (`/subscription/create/parts/`, ab 2.0), Anteilscheine im Wizard (`/subscription/create/shares/`) und Shares (`/my/share/manage/`) versteckt die `bootstrap-input-spinner`-Bibliothek das native `<input type="number">`. Playwright kann es nicht füllen.
 
 **Fix:** Den `+`-Button des Spinners anklicken:
 
@@ -296,3 +296,85 @@ count = int(cell_values[0])
 Die Jobs-Tabelle (`#filter-table`) hat keine `data-order`-Attribute auf den Datumszellen. DataTables sortiert deshalb alphabetisch nach dem Zellentext (`"D d.m.Y"`, z.B. `"Di 01.06.2027"`). Das Tageskürzel steht vorne — `"Di"` (Dienstag) < `"Do"` (Donnerstag) — daher landet ein Dienstag-2027-Job **vor** einem Donnerstag-2026-Job in der sortierten Tabelle.
 
 **Konsequenz:** Den ersten DOM-Row zu nehmen reicht nicht. Stattdessen alle Rows scannen, das kleinste zukünftige Datum bestimmen und den Job über seinen `href` (nicht über die DOM-Position) ansprechen — so in `JobsPage._nearest_future_job_href()` implementiert.
+
+---
+
+# Juntagrico 2.0 Upgrade (von 1.7)
+
+Erkenntnisse aus der Migration der E2E-Tests von Juntagrico 1.7.x auf 2.0.7.
+
+## Signup-/Subscription-Wizard: alle URLs umbenannt
+
+Der komplette Anmelde-/Abo-Flow wurde in 2.0 unter `/subscription/create/` neu strukturiert. Die `wait_for_url`-Aufrufe in `conftest.py` (`member_context`) und `pages/wizard_page.py` mussten angepasst werden:
+
+| Schritt | 1.7 | 2.0 |
+|---|---|---|
+| Abo-Teile | `/my/create/subscription/` | `/subscription/create/parts/` |
+| (neu) Extras | – | `/subscription/create/extras/` |
+| Depot | `/selectdepot/` | `/subscription/create/depot/` |
+| Startdatum | `/start/` | `/subscription/create/start/` |
+| Co-Member | `/addmembers/` | `/subscription/create/comembers/` |
+| Anteilscheine | `/shares/` | `/subscription/create/shares/` |
+| Zusammenfassung | `/summary/` | `/subscription/create/summary/` |
+| Welcome | `/my/welcome` | `/signup/welcome` |
+| Abbrechen | `/my/create/subscription/cancel/` | `/subscription/create/cancel/` |
+
+Die Signup-Einstiegs-URL `/my/signup/` existiert in 2.0 als Backwards-Compat-Alias weiter (kanonisch ist `/signup/`).
+
+## Wizard-Flow ist dynamisch (`signup_manager.get_next_page()`)
+
+Welche Schritte erscheinen, entscheidet `get_next_page()` zur Laufzeit. Der **Extras-Schritt** erscheint nur, wenn ein Extra-Abo existiert (`SubscriptionType.objects.is_extra().visible().exists()`). Die `generate_testdata` legt **kein** Extra-Abo an → der Extras-Schritt wird übersprungen. Bei eigener Testdaten-Anpassung muss der Wizard-Pfad ggf. adaptiv (URL prüfen statt feste Sequenz) navigieren.
+
+## Co-Member-Seite: kein "Überspringen"-Link mehr
+
+In 2.0 (`add_member.html`) gibt es keinen `Überspringen`-Link. Ohne Co-Member weiterzukommen erfolgt über den `?next`-Link. Robust per href ansprechen, nicht per Text (übersetzungsabhängig):
+
+```python
+page.locator("a[href='?next']").first.click()
+```
+
+## Projekt-Template-Overrides: Pfade haben sich geändert
+
+Custom-Templates wurden in 2.0 verschoben/umbenannt. Ein Projekt-Override am alten Pfad wird **stillschweigend nicht mehr verwendet** (kein Fehler, der Custom-Inhalt verschwindet einfach):
+
+| Zweck | 1.7-Template | 2.0-Template |
+|---|---|---|
+| Signup-Formular | `signup.html` | `juntagrico/signup/member.html` |
+| Startdatum | `createsubscription/select_start_date.html` | `juntagrico/subscription/create/select_start_date.html` |
+
+Die Block-Struktur ist identisch geblieben — Override 1:1 auf den neuen Pfad verschieben.
+
+## Mail-Form: `/my/mails` → `/email/write/`, neue Empfänger-Logik
+
+Die Mail-Versand-Seite ist von `/my/mails` auf `/email/write/` umgezogen (Crispy-Form `juntagrico/email/write.html`). Das frühere "Einzeladresse senden" (`#allsingleemail`/`#singleemail`) gibt es nicht mehr — Empfänger sind jetzt Mitglieder/Tätigkeitsbereiche/Einsätze/Depots (select2) bzw. Listen (`to_list`-Checkboxen: `all_subscriptions`, `all_shares`) oder eine **Kopie an sich selbst** (`copy`-Checkbox). Für einen Test-Mailversand an den Admin ist `copy` am robustesten (Admin = Absender = Empfänger).
+
+Weitere Stolpersteine:
+- **Editor:** djrichtextfield nutzt weiterhin **TinyMCE** (`init_template: tinymce.js`), `tinymce.activeEditor.setContent(...)` + `tinymce.triggerSave()` funktionieren weiter. Aber: TinyMCE lädt **nur, wenn `DJRICHTEXTFIELD_CONFIG = richtextfield_config(LANGUAGE_CODE)` in `settings.py` gesetzt ist** (`from juntagrico.defaults import richtextfield_config`). Fehlt das, lädt das lokale `tinymce.min.js` nicht und der Editor initialisiert nie — `wait_for_function` auf `tinymce` läuft in den Timeout.
+- **Submit-Button:** Label wird per AJAX (`emailForm.js`) durch die Empfängerzahl ersetzt → per `#submit-id-submit` ansprechen, nicht per `name="Senden"`.
+- **Erfolg:** redirect auf `/email/sent` (kein `/result/<n>/` mehr) → Erfolg über die Ziel-URL prüfen.
+
+## Depot-Listen-Form: `/manage/list` → `/list`
+
+Die Depot-Listen-Seite ist auf `/list` umgezogen (`name='lists'`); `/manage/list` liefert **404**. Das Datumsfeld `input[name='for_date']` (`GenerateListForm`) und der Button "Listen Erzeugen" existieren weiter.
+
+Zwei Fallstricke nach erfolgreichem Submit (POST → 302):
+- juntagrico macht `HttpResponseRedirect('')` (leerer Location-Header). Chromium **folgt dem nicht** → leere Seite. Nach dem Submit explizit `goto("/list")`, um Ergebnis/Meldungen zu sehen.
+- Die Erfolgsmeldung lautet `Listen erfolgreich erstellt.` (nicht "Listen erstellt") und ist transient. Robuster: Erfolg über die generierten Download-Links (`a[href*='/list/']`) im `depot_lists`-Block prüfen, nicht über `.alert-success`.
+
+## EmailAuditMiddleware muss an neue Mail-URLs/Felder angepasst werden
+
+Der gartenberg-eigene `EmailAuditMiddleware` (`gartenberg/middleware.py`) hängt an den Mail-Versand-POSTs. In 2.0 änderten sich URLs (`/email/write/`, `/email/{to,depot,area,job}/<id>/`) **und** Feldnamen (`from_email` statt `sender`; Empfänger via `to_list`/`to_members`/`to_areas`/`to_jobs`/`to_depots`/`copy` statt `all*`/`recipients`). Echte Sends erkennt man am Submit-Feld `submit` im POST (Vorbefüll-POSTs mit `members` haben das nicht).
+
+**Regressions-Erkennung — zwei Ebenen nötig:** Die Unit-Tests (`gartenberg/tests.py`) prüfen die Middleware-Logik isoliert gegen **hartkodierte** POST-Daten — sie fangen Code-Fehler, aber **nicht** ein erneutes stilles Ändern der juntagrico-Mailform. Dafür braucht es den **Integrationscheck** in `tests/test_admin_mail.py`: nach dem realen Versand das EmailAuditLog-Admin-Changelist (`/admin/gartenberg/emailauditlog/`) öffnen und den Betreff verifizieren (echtes Formular → Middleware → Log).
+
+## Build-Falle: kaputtes `tzlocal 5.4.2`-Wheel
+
+`tzlocal 5.4.2` (transitiv über `pyHanko` ← `xhtml2pdf`) installiert nur das `.dist-info`, **nicht** das Paket-Verzeichnis → `ModuleNotFoundError: No module named 'tzlocal'` beim `manage.py migrate` im Docker-Build, obwohl pip "Successfully installed tzlocal-5.4.2" meldet. Symptom-Check im Container:
+
+```sh
+pip show tzlocal          # zeigt installiert an
+python -c "import tzlocal" # ModuleNotFoundError
+ls site-packages | grep tzlocal  # nur tzlocal-5.4.2.dist-info, kein tzlocal/
+```
+
+**Fix:** In `requirements.txt` `tzlocal<5.4` pinnen (5.3.1 / 5.2 importieren sauber).

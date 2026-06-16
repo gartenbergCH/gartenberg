@@ -1,9 +1,9 @@
-EMAIL_SEND_PATHS = {
-    '/my/mails/send',
-    '/my/mails/send/depot',
-    '/my/mails/send/area',
-    '/my/mails/send/job',
-}
+import re
+
+# Mail-Versand-Endpunkte ab juntagrico 2.0 (POST). Die Zähl-Endpunkte
+# (.../recipients/count) und die Ergebnisseite (/email/sent) sind bewusst
+# nicht enthalten. In 1.7 waren dies /my/mails/send[/depot|/area|/job].
+EMAIL_SEND_PATH_RE = re.compile(r'^/email/(write|to/\d+|depot/\d+|area/\d+|job/\d+)/$')
 
 
 class EmailAuditMiddleware:
@@ -11,20 +11,30 @@ class EmailAuditMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        if request.method == 'POST' and request.path in EMAIL_SEND_PATHS:
-            sender = request.POST.get('sender', '–')
+        # Nur echte Sende-Versuche auditieren: die Form trägt den Submit-Button
+        # 'submit'. Ein POST mit 'members' ohne 'submit' ist nur ein Vorbefüllen des
+        # Formulars (juntagrico.views.email.write behandelt es wie ein GET).
+        if (request.method == 'POST'
+                and EMAIL_SEND_PATH_RE.match(request.path)
+                and 'submit' in request.POST):
+            sender = request.POST.get('from_email', '–')
             subject = request.POST.get('subject', '–')
             groups = []
-            if request.POST.get('allsubscription') == 'on':
+            to_list = request.POST.getlist('to_list')
+            if 'all_subscriptions' in to_list:
                 groups.append('Abo-BezieherInnen')
-            if request.POST.get('allshares') == 'on':
+            if 'all_shares' in to_list:
                 groups.append('Anteilsschein-BesitzerInnen')
-            if request.POST.get('all') == 'on':
-                groups.append('Alle Mitglieder')
-            if request.POST.get('allsingleemail') == 'on':
-                groups.append('Einzeladressen')
-            if request.POST.get('recipients'):
-                groups.append('Vorausgefüllte Adressen')
+            if request.POST.getlist('to_members'):
+                groups.append('Einzelne Mitglieder')
+            if request.POST.getlist('to_areas'):
+                groups.append('Tätigkeitsbereiche')
+            if request.POST.getlist('to_jobs'):
+                groups.append('Einsätze')
+            if request.POST.getlist('to_depots'):
+                groups.append('Depots')
+            if request.POST.get('copy') == 'on':
+                groups.append('Kopie an Absender')
             try:
                 from gartenberg.models import EmailAuditLog
                 EmailAuditLog.objects.create(

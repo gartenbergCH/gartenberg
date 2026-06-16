@@ -141,34 +141,41 @@ def member_context(playwright: Playwright) -> BrowserContext:
     # Step 2: Subscription type
     # bootstrap-input-spinner hides the number input and shows +/- buttons;
     # click the + button once to set the first type's quantity from 0 to 1
-    page.wait_for_url("**/my/create/subscription/")
+    page.wait_for_url("**/subscription/create/parts/")
     page.wait_for_load_state("networkidle")
     page.locator(".btn-increment").first.click()
     page.get_by_role("button", name="Weiter").click()
 
     # Step 3: Depot
-    page.wait_for_url("**/selectdepot/")
+    page.wait_for_url("**/subscription/create/depot/")
     page.locator("select[name='depot']").select_option(index=0)
     page.get_by_role("button", name="Weiter").click()
 
     # Step 4: Start date
-    page.wait_for_url("**/start/")
+    page.wait_for_url("**/subscription/create/start/")
     page.locator("input[name='start_date']").fill("01.01.2027")
     page.get_by_role("button", name="Weiter").click()
 
     # Step 5: Co-members — skip
-    page.wait_for_url("**/addmembers/")
-    page.get_by_role("link", name="Überspringen").click()
+    # 2.0 dropped the "Überspringen" link; continuing without co-members is the
+    # "?next" link (rendered when no co-member has been added yet)
+    page.wait_for_url("**/subscription/create/comembers/")
+    page.locator("a[href='?next']").first.click()
 
-    # Step 6: Shares — the spinner is pre-set to the required minimum; just continue
-    page.wait_for_url("**/shares/")
+    # Step 6: Shares — in 2.0 the spinner is no longer pre-set to the subscription's
+    # required amount (initial = REQUIRED_SHARES = 0), but ShareOrderForm.clean()
+    # still requires >= the subscription's shares (testdata subtype 'Normales Abo'
+    # needs 2). Increment the of_member spinner to 2 before continuing.
+    page.wait_for_url("**/subscription/create/shares/")
     page.wait_for_load_state("networkidle")
+    for _ in range(2):
+        page.locator(".btn-increment").first.click()
     page.get_by_role("button", name="Weiter").click()
 
     # Step 7: Summary — confirm
-    page.wait_for_url("**/summary/")
+    page.wait_for_url("**/subscription/create/summary/")
     page.get_by_role("button", name="Verbindlich bestellen").click()
-    page.wait_for_url("**/my/welcome**")
+    page.wait_for_url("**/signup/welcome**")
 
     # Retrieve auto-generated password and confirmation link from welcome email
     email_body = wait_for_email(MEMBER_EMAIL)

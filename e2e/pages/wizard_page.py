@@ -21,22 +21,22 @@ class SignupWizardPage:
         self.page.wait_for_load_state("networkidle")
 
     def select_first_subscription_type(self):
-        self.page.wait_for_url("**/my/create/subscription/")
+        self.page.wait_for_url("**/subscription/create/parts/")
         self.page.wait_for_load_state("networkidle")
         self.page.locator(".btn-increment").first.click()
         self.page.get_by_role("button", name="Weiter").click()
 
     def select_first_depot(self):
-        self.page.wait_for_url("**/selectdepot/")
+        self.page.wait_for_url("**/subscription/create/depot/")
         # index=0 works here: the depot field has no blank option (not null=True)
         self.page.locator("select[name='depot']").select_option(index=0)
         self.page.get_by_role("button", name="Weiter").click()
-        self.page.wait_for_url("**/start/")
+        self.page.wait_for_url("**/subscription/create/start/")
         self.page.wait_for_load_state("networkidle")
 
     def is_on_start_date_step(self) -> bool:
-        return "/start/" in self.page.url
+        return "/subscription/create/start/" in self.page.url
 
     def abort(self):
-        self.page.goto("/my/create/subscription/cancel/")
+        self.page.goto("/subscription/create/cancel/")
         self.page.wait_for_load_state("networkidle")
