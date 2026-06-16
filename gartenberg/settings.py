@@ -4,6 +4,8 @@ Django settings for gartenberg project.
 
 import os
 
+from juntagrico.defaults import richtextfield_config
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -25,16 +27,18 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.admin',
+    'juntagrico.apps.JuntagricoAdminConfig',  # ersetzt django.contrib.admin ab 2.0
     'gartenberg',
     'juntagrico_billing',
     'juntagrico_assignment_request',
     'juntagrico_pg',
     'juntagrico',
-    'fontawesomefree',  # benötigt ab 1.6
     'import_export',  # benötigt ab 1.6
     'impersonate',
     'crispy_forms',
+    'crispy_bootstrap4',  # benötigt ab 2.0 (crispy-forms 2.x)
+    'django_select2',  # benötigt ab 2.0
+    'djrichtextfield',  # benötigt ab 2.0
     'adminsortable2',
     'polymorphic',
 
@@ -128,7 +132,11 @@ EMAIL_PORT = int(os.environ.get('JUNTAGRICO_EMAIL_PORT', '25'))
 EMAIL_USE_TLS = os.environ.get('JUNTAGRICO_EMAIL_TLS', 'False') == 'True'
 EMAIL_USE_SSL = os.environ.get('JUNTAGRICO_EMAIL_SSL', 'False') == 'True'
 
-SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+# juntagrico 2.0 bringt ein eigenes Mail-Backend (ersetzt DEFAULT_MAILER)
+EMAIL_BACKEND = 'juntagrico.backends.email.EmailBackend'
+
+# PickleSerializer wird ab juntagrico 2.0 / Django 5 nicht mehr unterstützt
+# -> Standard-Serializer (JSON) wird verwendet
 
 # The white list only applies if the application is executed in debug mode and
 # prevents mails from being sent to other adresses
@@ -153,7 +161,14 @@ MEDIA_ROOT = 'media'
 """
      Crispy Settings
 """
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap4'  # ab crispy-forms 2.x nötig
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+"""
+     Rich-Text-Editor (djrichtextfield, ab 2.0)
+     Lädt das lokale TinyMCE für die Mail-/Admin-Textfelder.
+"""
+DJRICHTEXTFIELD_CONFIG = richtextfield_config(LANGUAGE_CODE)
 
 """
      juntagrico Settings

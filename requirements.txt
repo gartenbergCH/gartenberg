@@ -1,9 +1,13 @@
 #git+https://github.com/patrickuhlmann/juntagrico.git@main
-juntagrico ~=1.7.9
+juntagrico ~=2.0.7
 
 gunicorn==23.0.0
 psycopg>=3.1.8
 whitenoise==6.11.0
-juntagrico-assignment-request==1.7.0
-juntagrico-billing==1.7.7
-juntagrico-pg==1.7.0
+juntagrico-assignment-request==2.0.0
+juntagrico-billing==2.0.0
+juntagrico-pg==2.0.0
+
+# transitive dependency (pyHanko <- xhtml2pdf): the tzlocal 5.4.2 wheel is broken
+# (installs only the .dist-info, not the package), causing ModuleNotFoundError at runtime
+tzlocal<5.4
