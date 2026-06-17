@@ -1,9 +1,9 @@
 #git+https://github.com/patrickuhlmann/juntagrico.git@main
 juntagrico ~=2.0.7
 
-gunicorn==23.0.0
+gunicorn==26.0.0
 psycopg>=3.1.8
-whitenoise==6.11.0
+whitenoise==6.12.0
 juntagrico-assignment-request==2.0.0
 juntagrico-billing==2.0.0
 juntagrico-pg==2.0.0

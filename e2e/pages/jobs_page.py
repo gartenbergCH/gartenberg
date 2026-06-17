@@ -71,12 +71,25 @@ class JobsPage:
                 self.page.wait_for_load_state("networkidle")
 
     def job_in_member_list(self, job_name: str) -> bool:
-        # Use wait_for so DataTables has time to finish its client-side initialisation
-        # (networkidle fires before DataTables re-renders tbody rows on slow CI runners).
+        # The page lands while DataTables is still enhancing the server-rendered
+        # table. DataTables re-renders <tbody>, briefly detaching the original
+        # <a> rows — a plain wait_for(visible) on the link races that redraw and
+        # can time out even though the data is present (flaky test_register_for_job).
+        # First wait for DataTables to finish (it wraps the table in
+        # #assignments-table_wrapper), then assert the row is present.
         try:
-            self.page.locator(f"#assignments-table a:has-text('{job_name}')").wait_for(
-                state="visible", timeout=10000
+            self.page.locator("#assignments-table_wrapper").wait_for(
+                state="attached", timeout=15000
             )
+        except Exception:
+            pass  # tolerate a changed wrapper id; the link wait below still guards us
+        # has_text does a case-insensitive substring match (the link text is the
+        # job type, e.g. "Ernten - Ernten") and avoids quote-injection from job_name.
+        job_link = self.page.locator(
+            "#assignments-table tbody a", has_text=job_name
+        ).first
+        try:
+            job_link.wait_for(state="visible", timeout=15000)
             return True
         except Exception:
             return False
