@@ -10,4 +10,4 @@ juntagrico-pg==2.0.0
 
 # transitive dependency (pyHanko <- xhtml2pdf): the tzlocal 5.4.2 wheel is broken
 # (installs only the .dist-info, not the package), causing ModuleNotFoundError at runtime
-tzlocal<5.4
+tzlocal<5.5
