@@ -186,7 +186,7 @@ ORGANISATION_BANK_CONNECTION = {"PC": "",
                                 "BIC": "",
                                 "NAME": "Genossenschaft GartenBerg c/o Patrick Uhlmann, Girixweg 40, CH-5000 Aarau",
                                 "ESR": ""}
-SHARE_PRICE = "750"
+SHARE_PRICE = "375"
 
 # The business year starts with the calendar year
 BUSINESS_YEAR_START = {'day': 1, 'month': 1}
