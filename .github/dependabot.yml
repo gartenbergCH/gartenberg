@@ -1,7 +1,21 @@
 version: 2
 updates:
+  # Python deps: app (/requirements.txt) and E2E suite (/e2e/requirements.txt).
+  # Listing both directories explicitly guarantees playwright (pinned in e2e) is tracked.
   - package-ecosystem: "pip"
-    directory: "/"
+    directories:
+      - "/"
+      - "/e2e"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    reviewers:
+      - "patrickuhlmann"
+
+  # Docker base image for the E2E playwright container (compose-e2e.yml). Keeps the
+  # image tag bumpable so it can be lifted together with the playwright pip pin.
+  - package-ecosystem: "docker-compose"
+    directory: "/e2e"
     schedule:
       interval: weekly
     open-pull-requests-limit: 10

@@ -1,4 +1,7 @@
 pytest==9.1.0
 pytest-playwright==0.8.0
+# Declare playwright explicitly (not just transitively via pytest-playwright) so Dependabot
+# tracks it. Keep this version in sync with the base image tag in compose-e2e.yml.
+playwright==1.60.0
 pytest-html==4.2.0
 requests==2.34.2

@@ -27,7 +27,8 @@ services:
       - "8025:8025"
 
   playwright:
-    image: mcr.microsoft.com/playwright/python:v1.50.0-noble
+    # Keep this tag in sync with the playwright pin in requirements.txt.
+    image: mcr.microsoft.com/playwright/python:v1.60.0-noble
     working_dir: /e2e
     volumes:
       - .:/e2e
