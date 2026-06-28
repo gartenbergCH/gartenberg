@@ -3,6 +3,10 @@
 Projekt-spezifische Anpassungen rund um die [Juntagrico](https://juntagrico.org/)-Plattform
 für die Genossenschaft GartenBerg.
 
+## Workflow
+
+- **Keine Feature Branches.** Es wird direkt auf `main` gearbeitet und committet.
+
 ## Dokumentation
 
 - [docs/e2e-reference.md](docs/e2e-reference.md) — Nicht-offensichtliche Fallstricke (Lessons
