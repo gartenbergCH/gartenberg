@@ -17,7 +17,9 @@ class SignupWizardPage:
         self.page.get_by_label("E-Mail-Adresse").fill(email)
         self.page.get_by_label("Geburtstag").fill("01.01.1990")
         self.page.locator("input[name='agb']").check(force=True)
-        self.page.get_by_role("button", name="Anmelden").click()
+        # Submit by stable crispy-forms id, not the button label: juntagrico relabeled
+        # this button ("Anmelden" -> "Weiter" in 2.0.8); the id "submit-id-submit" is constant.
+        self.page.locator("#submit-id-submit").click()
         self.page.wait_for_load_state("networkidle")
 
     def select_first_subscription_type(self):

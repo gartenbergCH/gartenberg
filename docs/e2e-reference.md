@@ -344,6 +344,22 @@ Custom-Templates wurden in 2.0 verschoben/umbenannt. Ein Projekt-Override am alt
 
 Die Block-Struktur ist identisch geblieben — Override 1:1 auf den neuen Pfad verschieben.
 
+## Submit-Buttons über `#submit-id-submit` ansprechen, nicht über das Label
+
+juntagrico/crispy-forms rendert den Submit-Button mit der stabilen id `submit-id-submit`.
+Das Button-**Label** ist dagegen nicht stabil: In 2.0.8 wurde der Submit-Button des
+Signup-Personendaten-Formulars (`/my/signup/`) von "Anmelden" auf "Weiter" umbenannt — ein
+reiner Patch-Release, der über ein loses Pinning (`~=2.0.7`) stillschweigend hereinkam und
+`get_by_role("button", name="Anmelden")` in den Timeout laufen liess.
+
+**Fix:** Auf Wizard-/Crispy-Formularen per id ansprechen:
+
+```python
+page.locator("#submit-id-submit").click()
+```
+
+(Die Login-Seite `/accounts/login/` ist kein Crispy-Form und heisst weiterhin "Anmelden".)
+
 ## Mail-Form: `/my/mails` → `/email/write/`, neue Empfänger-Logik
 
 Die Mail-Versand-Seite ist von `/my/mails` auf `/email/write/` umgezogen (Crispy-Form `juntagrico/email/write.html`). Das frühere "Einzeladresse senden" (`#allsingleemail`/`#singleemail`) gibt es nicht mehr — Empfänger sind jetzt Mitglieder/Tätigkeitsbereiche/Einsätze/Depots (select2) bzw. Listen (`to_list`-Checkboxen: `all_subscriptions`, `all_shares`) oder eine **Kopie an sich selbst** (`copy`-Checkbox). Für einen Test-Mailversand an den Admin ist `copy` am robustesten (Admin = Absender = Empfänger).
@@ -366,15 +382,3 @@ Zwei Fallstricke nach erfolgreichem Submit (POST → 302):
 Der gartenberg-eigene `EmailAuditMiddleware` (`gartenberg/middleware.py`) hängt an den Mail-Versand-POSTs. In 2.0 änderten sich URLs (`/email/write/`, `/email/{to,depot,area,job}/<id>/`) **und** Feldnamen (`from_email` statt `sender`; Empfänger via `to_list`/`to_members`/`to_areas`/`to_jobs`/`to_depots`/`copy` statt `all*`/`recipients`). Echte Sends erkennt man am Submit-Feld `submit` im POST (Vorbefüll-POSTs mit `members` haben das nicht).
 
 **Regressions-Erkennung — zwei Ebenen nötig:** Die Unit-Tests (`gartenberg/tests.py`) prüfen die Middleware-Logik isoliert gegen **hartkodierte** POST-Daten — sie fangen Code-Fehler, aber **nicht** ein erneutes stilles Ändern der juntagrico-Mailform. Dafür braucht es den **Integrationscheck** in `tests/test_admin_mail.py`: nach dem realen Versand das EmailAuditLog-Admin-Changelist (`/admin/gartenberg/emailauditlog/`) öffnen und den Betreff verifizieren (echtes Formular → Middleware → Log).
-
-## Build-Falle: kaputtes `tzlocal 5.4.2`-Wheel
-
-`tzlocal 5.4.2` (transitiv über `pyHanko` ← `xhtml2pdf`) installiert nur das `.dist-info`, **nicht** das Paket-Verzeichnis → `ModuleNotFoundError: No module named 'tzlocal'` beim `manage.py migrate` im Docker-Build, obwohl pip "Successfully installed tzlocal-5.4.2" meldet. Symptom-Check im Container:
-
-```sh
-pip show tzlocal          # zeigt installiert an
-python -c "import tzlocal" # ModuleNotFoundError
-ls site-packages | grep tzlocal  # nur tzlocal-5.4.2.dist-info, kein tzlocal/
-```
-
-**Fix:** In `requirements.txt` `tzlocal<5.4` pinnen (5.3.1 / 5.2 importieren sauber).

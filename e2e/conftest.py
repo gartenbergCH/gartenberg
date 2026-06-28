@@ -130,7 +130,9 @@ def member_context(playwright: Playwright) -> BrowserContext:
     # Bootstrap 4 custom checkbox: input is visually hidden (opacity: 0);
     # force=True bypasses actionability checks and directly dispatches the click
     page.locator("input[name='agb']").check(force=True)
-    page.get_by_role("button", name="Anmelden").click()
+    # Submit by stable crispy-forms id, not the button label: juntagrico relabeled
+    # this button ("Anmelden" -> "Weiter" in 2.0.8); the id "submit-id-submit" is constant.
+    page.locator("#submit-id-submit").click()
     page.wait_for_load_state("networkidle")
 
     # If form validation failed, the page stays on /my/signup/ — fail with a clear message
