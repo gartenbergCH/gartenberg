@@ -9,4 +9,4 @@ juntagrico-billing==2.0.0
 juntagrico-pg==2.0.0
 
 # transitive dependency (pyHanko <- xhtml2pdf), pinned so Dependabot gates upgrades via CI
-tzlocal==5.4.3
+tzlocal==5.4.4
