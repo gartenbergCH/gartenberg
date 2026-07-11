@@ -4,9 +4,13 @@ set -euo pipefail
 CMD="${1:-}"
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
+CURRENT_USER="$(id -u):$(id -g)"
+PYTHON_USER_ARGS=(--user "${CURRENT_USER}" -e HOME=/tmp)
+
 case "$CMD" in
   test)
     docker run --rm -i \
+      "${PYTHON_USER_ARGS[@]}" \
       -v "${PROJECT_ROOT}:/opt" \
       -w /opt \
       -e JUNTAGRICO_SECRET_KEY=dummy \
@@ -16,6 +20,7 @@ case "$CMD" in
   manage)
     # Run any Django management command, e.g.: ./tooling/docker.sh manage makemigrations gartenberg
     docker run --rm -i \
+      "${PYTHON_USER_ARGS[@]}" \
       -v "${PROJECT_ROOT}:/opt" \
       -w /opt \
       -e JUNTAGRICO_SECRET_KEY=dummy \

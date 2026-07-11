@@ -19,3 +19,12 @@ für die Genossenschaft GartenBerg.
 ## E2E-Tests
 
 - Bei allen E2E-Tests, die geschrieben werden, an Schlüsselmomenten Screenshots erstellen.
+
+## Tooling
+
+All runtime commands must be run via `tooling/docker.sh` — never call `python`/`pip`/`manage.py`
+directly. This ensures a consistent environment without requiring a local Python installation.
+
+Available commands:
+- `tooling/docker.sh test`            — run the Django test suite
+- `tooling/docker.sh manage ...`      — arbitrary Django management command
