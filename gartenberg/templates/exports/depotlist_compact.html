@@ -28,6 +28,9 @@
                 {% include "juntagrico/snippets/subscription/recipients.html" with subscription=sub %}
             </td>
             {% for product in products %}
+                {# Deliberately not .sorted (orders by units, interleaving "1kg"/"5kg" across
+                   varieties); default ordering follows sort_order, which admins already
+                   control via the ProductSizeInline drag-and-drop. #}
                 {% for size in product.sizes.on_depot_list %}
                     <td class="top-border left-border{% if forloop.parentloop.last and forloop.last %} right-border{% endif %}">{{ sub|parts_by_size:size|active_on:date|count|default:'' }}</td>
                 {% empty %}
