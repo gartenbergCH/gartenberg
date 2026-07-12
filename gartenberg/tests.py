@@ -1,5 +1,19 @@
-from django.test import RequestFactory, TestCase
+import datetime
 
+from django.core.files.storage import default_storage
+from django.core.management import call_command
+from django.test import RequestFactory, TestCase, override_settings
+
+from juntagrico.entity.depot import Depot
+from juntagrico.entity.location import Location
+from juntagrico.entity.member import Member
+from juntagrico.entity.subs import Subscription, SubscriptionPart
+from juntagrico.entity.subtypes import (
+    ProductSize, SubscriptionBundle, SubscriptionBundleProductSize, SubscriptionCategory, SubscriptionProduct,
+    SubscriptionType,
+)
+
+from gartenberg.depot_lists import DEPOT_LISTS
 from gartenberg.middleware import EmailAuditMiddleware
 from gartenberg.models import EmailAuditLog
 
@@ -89,3 +103,65 @@ class EmailAuditMiddlewareTest(TestCase):
         self.assertEqual(log.sender, '–')
         self.assertEqual(log.subject, '–')
         self.assertEqual(log.recipient_groups, '–')
+
+
+@override_settings(
+    DEPOT_LISTS=DEPOT_LISTS,
+    STORAGES={
+        'default': {'BACKEND': 'django.core.files.storage.InMemoryStorage'},
+        'staticfiles': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
+    },
+)
+class DepotListsPerCategoryTest(TestCase):
+    """Stellt sicher, dass die in gartenberg/depot_lists.py definierten Hofprodukte-Listen
+    (Kartoffeln, Mehl, Glarner Alpkäse) generiert werden können und korrekt nach Produkt filtern."""
+
+    @classmethod
+    def setUpTestData(cls):
+        location = Location.objects.create(name='Hof')
+        cls.depot = Depot.objects.create(name='Hofdepot', weekday=2, location=location)
+        cls.category = SubscriptionCategory.objects.create(name='Kategorie')
+        cls.gemuese_sub = cls._make_subscriber('Gemüse')
+        cls.kartoffeln_sub = cls._make_subscriber('Kartoffeln')
+
+    @classmethod
+    def _make_subscriber(cls, product_name):
+        product = SubscriptionProduct.objects.create(name=product_name)
+        product_size = ProductSize.objects.create(name='Normal', product=product)
+        bundle = SubscriptionBundle.objects.create(long_name=f'{product_name} Abo', category=cls.category)
+        SubscriptionBundleProductSize.objects.create(bundle=bundle, product_size=product_size)
+        sub_type = SubscriptionType.objects.create(
+            name=f'{product_name}-Typ', bundle=bundle, required_assignments=0, price=100,
+        )
+        today = datetime.date.today()
+        member = Member.objects.create(
+            first_name=product_name, last_name='Testperson', email=f'{product_name.lower()}@e2e-test.local',
+            addr_street='Teststrasse 1', addr_zipcode='5000', addr_location='Aarau',
+            phone='079 000 00 00', confirmed=True, reachable_by_email=False,
+        )
+        subscription = Subscription.objects.create(depot=cls.depot, activation_date=today, start_date=today)
+        SubscriptionPart.objects.create(subscription=subscription, type=sub_type, activation_date=today)
+        member.join_subscription(subscription, True)
+        return subscription
+
+    def test_extra_context_filters_by_product(self):
+        context = {'date': datetime.date.today()}
+
+        kartoffeln_context = DEPOT_LISTS['depotlist_kartoffeln']['extra_context'](context)
+        self.assertCountEqual(kartoffeln_context['subscriptions'], [self.kartoffeln_sub])
+        self.assertCountEqual(kartoffeln_context['products'].values_list('name', flat=True), ['Kartoffeln'])
+
+        gemuese_context = DEPOT_LISTS['depotlist']['extra_context'](context)
+        self.assertCountEqual(gemuese_context['subscriptions'], [self.gemuese_sub])
+        self.assertCountEqual(gemuese_context['products'].values_list('name', flat=True), ['Gemüse'])
+
+        # Kategorien ohne Bestellungen liefern eine leere Liste statt eines Fehlers
+        for list_name in ('depotlist_mehl', 'depotlist_alpkaese'):
+            empty_context = DEPOT_LISTS[list_name]['extra_context'](context)
+            self.assertCountEqual(empty_context['subscriptions'], [])
+            self.assertCountEqual(empty_context['products'], [])
+
+    def test_generate_depot_list_command_creates_all_category_pdfs(self):
+        call_command('generate_depot_list', '--force', '--no-future')
+        for file_name in ('depotlist', 'depotlist_kartoffeln', 'depotlist_mehl', 'depotlist_alpkaese'):
+            self.assertTrue(default_storage.exists(f'{file_name}.pdf'), f'{file_name}.pdf wurde nicht erzeugt')
