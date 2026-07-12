@@ -17,10 +17,18 @@ def _product_depotlist_context(product_name):
 
 
 DEPOT_LISTS = defaults.DEPOT_LISTS | {
-    # Weiterhin nur Gemüse, damit die Hauptliste nicht durch die
-    # Hofprodukte-Kategorien unübersichtlich wird.
+    # Weiterhin nur Gemüse, damit die Haupt-, Depot- und Mengenübersicht nicht durch
+    # die Hofprodukte-Kategorien unübersichtlich werden.
     'depotlist': {
         'template': 'exports/depotlist.html',
+        'extra_context': _product_depotlist_context('Gemüse'),
+    },
+    'depot_overview': {
+        'template': 'exports/depot_overview.html',
+        'extra_context': _product_depotlist_context('Gemüse'),
+    },
+    'amount_overview': {
+        'template': 'exports/amount_overview.html',
         'extra_context': _product_depotlist_context('Gemüse'),
     },
     'depotlist_kartoffeln': {

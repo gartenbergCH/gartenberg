@@ -151,9 +151,12 @@ class DepotListsPerCategoryTest(TestCase):
         self.assertCountEqual(kartoffeln_context['subscriptions'], [self.kartoffeln_sub])
         self.assertCountEqual(kartoffeln_context['products'].values_list('name', flat=True), ['Kartoffeln'])
 
-        gemuese_context = DEPOT_LISTS['depotlist']['extra_context'](context)
-        self.assertCountEqual(gemuese_context['subscriptions'], [self.gemuese_sub])
-        self.assertCountEqual(gemuese_context['products'].values_list('name', flat=True), ['Gemüse'])
+        # Haupt-, Depot- und Mengenübersicht bleiben wie bisher auf Gemüse beschränkt,
+        # damit sie durch die Hofprodukte-Kategorien nicht überladen werden
+        for list_name in ('depotlist', 'depot_overview', 'amount_overview'):
+            gemuese_context = DEPOT_LISTS[list_name]['extra_context'](context)
+            self.assertCountEqual(gemuese_context['subscriptions'], [self.gemuese_sub])
+            self.assertCountEqual(gemuese_context['products'].values_list('name', flat=True), ['Gemüse'])
 
         # Kategorien ohne Bestellungen liefern eine leere Liste statt eines Fehlers
         for list_name in ('depotlist_mehl', 'depotlist_alpkaese'):
@@ -163,5 +166,9 @@ class DepotListsPerCategoryTest(TestCase):
 
     def test_generate_depot_list_command_creates_all_category_pdfs(self):
         call_command('generate_depot_list', '--force', '--no-future')
-        for file_name in ('depotlist', 'depotlist_kartoffeln', 'depotlist_mehl', 'depotlist_alpkaese'):
+        file_names = (
+            'depotlist', 'depot_overview', 'amount_overview',
+            'depotlist_kartoffeln', 'depotlist_mehl', 'depotlist_alpkaese',
+        )
+        for file_name in file_names:
             self.assertTrue(default_storage.exists(f'{file_name}.pdf'), f'{file_name}.pdf wurde nicht erzeugt')
