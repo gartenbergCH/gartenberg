@@ -23,6 +23,8 @@
     <tr class="bottom-border">
         <td></td>
         {% for product in products %}
+            {# Deliberately not .sorted (orders by units); default ordering (sort_order) is
+               what admins already control via the ProductSizeInline drag-and-drop. #}
             {% for size in product.sizes.on_depot_list %}
                 <td class="small bottom-border {% if forloop.first %}left-border{% endif %}{% if forloop.parentloop.last and forloop.last %} right-border{% endif %}">{{ size.name }}</td>
             {% empty %}
