@@ -2,6 +2,7 @@ import datetime
 
 from django.core.files.storage import default_storage
 from django.core.management import call_command
+from django.template.loader import get_template
 from django.test import RequestFactory, TestCase, override_settings
 
 from juntagrico.entity.depot import Depot
@@ -172,3 +173,22 @@ class DepotListsPerCategoryTest(TestCase):
         )
         for file_name in file_names:
             self.assertTrue(default_storage.exists(f'{file_name}.pdf'), f'{file_name}.pdf wurde nicht erzeugt')
+
+    def test_mehl_und_alpkaese_verwenden_kompaktes_template(self):
+        # Mehl (10 Produktgrössen) und Glarner Alpkäse (8) sprengen das Standard-Layout mit
+        # "abgeholt"/"Tasche retour"-Spalten; Gemüse und Kartoffeln bleiben unverändert.
+        self.assertEqual(DEPOT_LISTS['depotlist_mehl']['template'], 'exports/depotlist_compact.html')
+        self.assertEqual(DEPOT_LISTS['depotlist_alpkaese']['template'], 'exports/depotlist_compact.html')
+        self.assertEqual(DEPOT_LISTS['depotlist']['template'], 'exports/depotlist.html')
+        self.assertEqual(DEPOT_LISTS['depotlist_kartoffeln']['template'], 'exports/depotlist.html')
+
+        context = {'date': datetime.date.today(), 'depots': [self.depot], 'messages': []}
+        compact_html = get_template('exports/depotlist_compact.html').render(
+            context | DEPOT_LISTS['depotlist_mehl']['extra_context'](context)
+        )
+        self.assertNotIn('abgeholt', compact_html)
+
+        regular_html = get_template('exports/depotlist.html').render(
+            context | DEPOT_LISTS['depotlist']['extra_context'](context)
+        )
+        self.assertIn('abgeholt', regular_html)

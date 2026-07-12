@@ -1,0 +1,163 @@
+@font-face {
+    font-family: Symbola, "Symbola";
+    src: url(/code/static/juntagrico/fonts/Symbola.ttf);
+}
+
+@page {
+    size: A4 landscape;
+    @frame content_frame {
+        left: 30pt;
+        width: 782pt;
+        top: 40pt;
+        height: 480pt;
+/*        -pdf-frame-border: 1;    */    /* for debugging the layout */
+    }
+
+    @frame header_frame {
+        -pdf-frame-content:header_content;
+        left: 30pt;
+        width: 782pt;
+        top: 15pt;
+        height: 20pt;
+        text-align:center;
+    }
+
+    @frame footer_frame {
+        -pdf-frame-content:footer_content;
+        left: 30pt;
+        width: 782pt;
+        top: 525pt;
+        height: 60pt;
+        text-align:center;
+    }
+}
+
+body {
+    font-family: Symbola;
+}
+
+table {
+    table-layout: fixed;
+    margin-bottom:5px;
+}
+
+th {
+    font-size: 14px;
+    vertical-align: top;
+    text-align: center;
+}
+
+td {
+    font-size: 14px;
+    line-height: 14px;
+    vertical-align: top;
+    text-align: center;
+}
+
+.page-break {
+    page-break-after: always;
+}
+
+/* borders */
+
+.full-border {
+    border: 1px black solid;
+}
+
+.left-border {
+    border-left: 1px black solid;
+}
+
+.top-border {
+    border-top: 1px black solid;
+}
+
+.right-border {
+    border-right: 1px black solid;
+}
+
+.bottom-border {
+    border-bottom: 1px black solid;
+}
+
+/* alignment */
+
+.vert-top {
+    vertical-align: top;
+}
+
+.vert-bottom {
+    vertical-align: bottom;
+}
+
+.horz-left, .text-left {
+    text-align: left;
+}
+
+.horz-center, .text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+/* size & space */
+
+.width-100 {
+    width: 100%;
+}
+
+.mb-5 {
+    margin-bottom: 5px;
+}
+
+.mt-40 {
+    margin-top: 40px;
+}
+
+.fontsmall {
+    font-size: 11px
+}
+
+.large {
+    font-size: 18px;
+}
+
+/* specific */
+
+.namecol {
+    width: 300px;
+}
+
+.message {
+    width: 100%;
+    text-align: center;
+    font-size: 18pt;
+}
+
+.depot {
+    font-size: 24px;
+    margin: 0;
+}
+
+.depotaddr {
+    font-size: 14px;
+    margin: 0;
+}
+
+.pickup-details {
+    font-weight: normal;
+}
+
+.gendate {
+    text-align: right;
+}
+
+.proddescr {
+    font-size:11px
+}
+
+.tour-name {
+    width: 200px;
+}

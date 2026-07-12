@@ -38,12 +38,15 @@ DEPOT_LISTS = defaults.DEPOT_LISTS | {
     },
     'depotlist_mehl': {
         'name': 'Mehl-Liste',
-        'template': 'exports/depotlist.html',
+        # Mehl (10 Produktgrössen) und Glarner Alpkäse (8) sprengen die Portrait-Tabelle;
+        # Querformat ohne "abgeholt"/"Tasche retour"-Spalten passt auf die Seite
+        # (siehe gartenberg/templates/exports/depotlist_compact.html).
+        'template': 'exports/depotlist_compact.html',
         'extra_context': _product_depotlist_context('Mehl'),
     },
     'depotlist_alpkaese': {
         'name': 'Glarner Alpkäse-Liste',
-        'template': 'exports/depotlist.html',
+        'template': 'exports/depotlist_compact.html',
         'extra_context': _product_depotlist_context('Glarner Alpkäse'),
     },
 }
