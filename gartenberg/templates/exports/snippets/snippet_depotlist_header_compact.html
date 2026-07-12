@@ -23,7 +23,7 @@
     <tr class="bottom-border">
         <td></td>
         {% for product in products %}
-            {% for size in product.sizes.on_depot_list.sorted %}
+            {% for size in product.sizes.on_depot_list %}
                 <td class="small bottom-border {% if forloop.first %}left-border{% endif %}{% if forloop.parentloop.last and forloop.last %} right-border{% endif %}">{{ size.name }}</td>
             {% empty %}
                 <td class="small bottom-border left-border"></td>
@@ -33,7 +33,7 @@
     <tr class="horz-center">
         <td class="horz-left">{% trans "TOTAL" %}:</td>
         {% for product in products %}
-            {% for size in product.sizes.on_depot_list.sorted %}
+            {% for size in product.sizes.on_depot_list %}
                 <td>{{ subscriptions|by_depot:depot|parts_by_size:size|active_on:date|count }}</td>
             {% empty %}
                 <td></td>
