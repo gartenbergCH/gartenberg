@@ -6,6 +6,8 @@ import os
 
 from juntagrico.defaults import richtextfield_config
 
+from gartenberg.depot_lists import DEPOT_LISTS
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -272,6 +274,8 @@ IMPORT_EXPORT_EXPORT_PERMISSION_CODE = 'view'
 
 # Disable automatic depot list generation as this can be done manually since Juntagrico 1.6
 DEPOT_LIST_GENERATION_DAYS = []
+
+# DEPOT_LISTS: siehe gartenberg/depot_lists.py (oben importiert)
 
 # Needed if you use sqlite to display certain sites
 if os.environ.get('JUNTAGRICO_DATABASE_ENGINE', 'django.db.backends.sqlite3') == 'django.db.backends.sqlite3':
