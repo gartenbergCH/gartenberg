@@ -1,0 +1,43 @@
+{% load juntagrico.depot_extras %}
+{% load i18n %}
+{% load juntagrico.config %}
+{% vocabulary "depot" as v_depot %}
+<html>
+<head>
+    <title>{% blocktrans %}{{ v_depot }}-Listen{% endblocktrans %}</title>
+    <meta charset="utf-8">
+    <style>{% include "./snippets/snippet_depotlist_style_landscape.css" %}</style>
+</head>
+
+<body>
+<div id="header_content" class="gendate">
+    {% trans "Erstellt am" %} {% now "d.m.Y H:i" %},
+    {% trans "Stichtag" %} {{ date|date:"d.m.Y" }}
+</div>
+<div id="footer_content">
+    {% for message in messages %}
+        <div class="message">{{ message }}</div>
+    {% endfor %}
+</div>
+
+{% for depot in depots %}
+    {% include "./snippets/snippet_depotlist_header_compact.html" with first=True %}
+    {% for sub in subscriptions|by_depot:depot %}
+        <tr class="bottom-border">
+            <td class="namecol top-border left-border horz-left">
+                {% include "juntagrico/snippets/subscription/recipients.html" with subscription=sub %}
+            </td>
+            {% for product in products %}
+                {% for size in product.sizes.on_depot_list.sorted %}
+                    <td class="top-border left-border{% if forloop.parentloop.last and forloop.last %} right-border{% endif %}">{{ sub|parts_by_size:size|active_on:date|count|default:'' }}</td>
+                {% empty %}
+                    <td class="top-border left-border"></td>
+                {% endfor %}
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </table>
+    <div class="page-break"></div>
+{% endfor %}
+</body>
+</html>

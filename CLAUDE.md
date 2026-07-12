@@ -28,3 +28,12 @@ directly. This ensures a consistent environment without requiring a local Python
 Available commands:
 - `tooling/docker.sh test`            — run the Django test suite
 - `tooling/docker.sh manage ...`      — arbitrary Django management command
+
+For one-off scripts outside these commands (e.g. `docker run ... manage.py shell`), watch out for:
+- Bind-mounting a script into a path already inside the project's own mount (a second `-v` under
+  `/opt`) makes Docker create an empty file at that path on the **host** as a mount-point side
+  effect. Pipe the script via stdin instead (`cat script.py | docker run -i ...`).
+- Plain `docker run` (not through this wrapper) executes as root, so anything Django writes
+  (`gartenberg.db`, `gartenberg.log`) lands root-owned in the repo and can't be `rm`'d without
+  another container. Point `JUNTAGRICO_DATABASE_NAME` at a path outside `/opt` (e.g.
+  `/tmp/preview.db`) for throwaway runs.
