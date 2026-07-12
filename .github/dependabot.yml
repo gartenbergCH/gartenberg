@@ -21,3 +21,13 @@ updates:
     open-pull-requests-limit: 10
     reviewers:
       - "patrickuhlmann"
+
+  # Base image of the app's Dockerfiles. Dependabot matches any filename containing
+  # "dockerfile" (case-insensitive), so this also covers DockerfileTestsystem.
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    reviewers:
+      - "patrickuhlmann"
