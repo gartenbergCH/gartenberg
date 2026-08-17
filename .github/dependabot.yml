@@ -31,3 +31,12 @@ updates:
     open-pull-requests-limit: 10
     reviewers:
       - "patrickuhlmann"
+
+  # GitHub Actions used in .github/workflows/*.yml.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    reviewers:
+      - "patrickuhlmann"
