@@ -42,7 +42,7 @@ jobs:
         docker compose -f e2e/compose-e2e.yml up --build --force-recreate --exit-code-from playwright --abort-on-container-exit
     - name: Upload test report
       if: always()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: playwright-report
         path: |
