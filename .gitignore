@@ -10,3 +10,4 @@ ssl/*
 gartenberg.log*
 build.log
 data/dump.sql
+internal_files/

@@ -1,6 +1,7 @@
 import datetime
+from unittest.mock import patch
 
-from django.core.files.storage import default_storage
+from django.core.files.storage import InMemoryStorage
 from django.core.management import call_command
 from django.template.loader import get_template
 from django.test import RequestFactory, TestCase, override_settings
@@ -166,13 +167,19 @@ class DepotListsPerCategoryTest(TestCase):
             self.assertCountEqual(empty_context['products'], [])
 
     def test_generate_depot_list_command_creates_all_category_pdfs(self):
-        call_command('generate_depot_list', '--force', '--no-future')
+        # juntagrico legt die PDFs im 'internal' Storage ab (juntagrico.util.pdf.internal_storage),
+        # nicht im default Storage. Da dieser LazyObject-Wrapper seinen Storage beim ersten Zugriff
+        # cached, lässt er sich nicht über die STORAGES-Settings umbiegen — deshalb hier ersetzen,
+        # sonst würden die PDFs ins Verzeichnis internal_files/ im Repo geschrieben.
+        internal_storage = InMemoryStorage()
+        with patch('juntagrico.util.pdf.internal_storage', internal_storage):
+            call_command('generate_depot_list', '--force', '--no-future')
         file_names = (
             'depotlist', 'depot_overview', 'amount_overview',
             'depotlist_kartoffeln', 'depotlist_mehl', 'depotlist_alpkaese',
         )
         for file_name in file_names:
-            self.assertTrue(default_storage.exists(f'{file_name}.pdf'), f'{file_name}.pdf wurde nicht erzeugt')
+            self.assertTrue(internal_storage.exists(f'{file_name}.pdf'), f'{file_name}.pdf wurde nicht erzeugt')
 
     def test_mehl_und_alpkaese_verwenden_kompaktes_template(self):
         # Mehl (10 Produktgrössen) und Glarner Alpkäse (8) sprengen das Standard-Layout mit
