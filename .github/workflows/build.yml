@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v7
     - name: Set up Python 3.11
       uses: actions/setup-python@v2
       with:
@@ -36,7 +36,7 @@ jobs:
     needs: build
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v7
     - name: Run E2E tests
       run: |
         docker compose -f e2e/compose-e2e.yml up --build --force-recreate --exit-code-from playwright --abort-on-container-exit
