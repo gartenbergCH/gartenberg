@@ -1,0 +1,5 @@
+{% load juntagrico.config %}
+============
+{% if footer %}{{ footer }}
+{% endif %}
+{% organisation_website "url" %}
