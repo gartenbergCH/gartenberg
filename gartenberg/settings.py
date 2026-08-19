@@ -203,6 +203,15 @@ ALLOW_JOB_UNSUBSCRIBE = False
 # Wieviele Anteilscheine werden bei einer Anmeldung zwingend benötigt (unabhängig von der notwendigen Anzahl für ein Abo)?
 REQUIRED_SHARES = 0
 
+# Wie ein Abo-Bestandteil (SubscriptionPart) angezeigt wird, z.B. in der Liste der
+# pendenten Abo-Änderungen. Der juntagrico-Standard ist nur '{bundle}' (= Name des
+# Abo-Pakets), womit alle Mehl-/Kartoffel-/Käse-Bestandteile identisch aussehen.
+# Mit '{type}' wird zusätzlich die bestellte Produktgrösse angezeigt,
+# z.B. "Mehl Weizenmehl Ruch 1kg" statt nur "Mehl".
+SUB_OVERVIEW_FORMAT = {
+    'part_format': '{bundle} {type}',
+}
+
 BUSINESS_REGULATIONS = 'https://gartenberg.ch/wp-content/uploads/2024/06/2024_03_21_betriebsreglement-1.pdf'
 BYLAWS = 'https://gartenberg.ch/wp-content/uploads/2023/02/statuten.pdf'
 FAQ_DOC = 'https://gartenberg.ch/faq'
