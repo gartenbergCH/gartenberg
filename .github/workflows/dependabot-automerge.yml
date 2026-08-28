@@ -1,0 +1,34 @@
+name: Dependabot auto-merge
+
+# Aktiviert GitHub-Auto-Merge für Dependabot-PRs, sobald alle Checks des
+# Build-Workflows grün sind. Majors bleiben bewusst manuell.
+#
+# Voraussetzungen im Repo (nur mit Admin-Rechten setzbar):
+#   1. Settings -> General -> Pull Requests -> "Allow auto-merge"
+#   2. Ruleset/Branch protection auf main mit "build" und "e2e" als
+#      Required status checks. Ohne blockierende Checks lehnt GitHub das
+#      Aktivieren von Auto-Merge ab (PR ist bereits mergebar).
+
+on: pull_request
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  dependabot:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+
+    steps:
+    - name: Dependabot metadata
+      id: metadata
+      uses: dependabot/fetch-metadata@v2
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Enable auto-merge for patch and minor updates
+      if: steps.metadata.outputs.update-type != 'version-update:semver-major'
+      run: gh pr merge --auto --squash "$PR_URL"
+      env:
+        PR_URL: ${{ github.event.pull_request.html_url }}
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
