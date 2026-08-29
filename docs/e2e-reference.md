@@ -291,6 +291,42 @@ count = int(cell_values[0])
 
 ---
 
+## DataTables: leere Tabelle hat trotzdem eine `<tr>`
+
+Ist eine DataTables-Tabelle leer, rendert DataTables eine Platzhalterzeile mit einer einzigen
+`colspan`-Zelle ("Keine Daten vorhanden"). `#filter-table tbody tr` liefert dann `1` statt `0`
+— eine Assertion wie "nach dem Veröffentlichen ist die Liste leer" schlägt fehl, obwohl sie
+inhaltlich stimmt.
+
+**Fix:** Nur Zeilen mit mehr als einer Zelle zählen:
+
+```python
+return self.page.locator("#filter-table tbody tr:has(td:nth-child(2))").count()
+```
+
+---
+
+## juntagrico-billing: Rechnungserzeugung braucht den Settings-Singleton
+
+`create_bills_for_items()` liest den MwSt-Satz über `Settings.objects.first().vat_percent`.
+Fehlt der Buchhaltungs-Einstellungs-Singleton, endet `POST /jb/bills_generate` in einem
+`AttributeError: 'NoneType' object has no attribute 'vat_percent'` (HTTP 500). Weder
+`generate_testdata` noch die Billing-Migrationen legen ihn an.
+
+Beim Anlegen über den Admin gibt es eine Reihenfolge-Abhängigkeit: `Settings.default_paymenttype`
+und `Settings.balancing_paymenttype` sind zwar `null=True`, aber **nicht** `blank=True` — im
+Admin-Formular sind sie damit Pflichtfelder. Es muss also zuerst eine `PaymentType` existieren:
+
+```python
+page.ensure_payment_type("E2E Bank")   # zuerst
+page.ensure_accounting_settings()      # danach
+```
+
+Ausserdem braucht es ein `BusinessYear` **mit Namen** — `bills_setyear` legt den Namen in der
+Session ab und `BusinessYear.objects.by_name()` liest ihn wieder aus.
+
+---
+
 ## DataTables: alphabetische Sortierung ist nicht chronologisch
 
 Die Jobs-Tabelle (`#filter-table`) hat keine `data-order`-Attribute auf den Datumszellen. DataTables sortiert deshalb alphabetisch nach dem Zellentext (`"D d.m.Y"`, z.B. `"Di 01.06.2027"`). Das Tageskürzel steht vorne — `"Di"` (Dienstag) < `"Do"` (Donnerstag) — daher landet ein Dienstag-2027-Job **vor** einem Donnerstag-2026-Job in der sortierten Tabelle.

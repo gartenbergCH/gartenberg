@@ -38,7 +38,9 @@ erDiagram
     JOB ||--o{ ASSIGNMENT : "wird geleistet als"
     MEMBER ||--o{ ASSIGNMENT : "leistet"
     MEMBER ||--o{ ASSIGNMENT_REQUEST : "meldet"
-    ACTIVITY_AREA ||--o{ ASSIGNMENT_REQUEST : "beurteilt"
+    MEMBER |o--o{ ASSIGNMENT_REQUEST : "ist Ansprechperson für"
+    ACTIVITY_AREA |o--o{ ASSIGNMENT_REQUEST : "ordnet ein"
+    ASSIGNMENT_REQUEST ||--o| ASSIGNMENT : "führt bei Bestätigung zu"
     MEMBER }o--o{ ACTIVITY_AREA : "arbeitet mit in"
 ```
 
@@ -313,16 +315,24 @@ Anrechnung eines geleisteten Einsatzes an ein Mitglied.
 
 ### ASSIGNMENT_REQUEST
 
-Meldung eines Mitglieds über selbständig geleistete Arbeit, die zur Anrechnung beurteilt wird.
+Meldung eines Mitglieds über selbständig geleistete Arbeit, die von einer Ansprechperson beurteilt wird.
 
-| Attribute        | Description                                                     | Data Type | Length/Precision | Validation Rules |
-|------------------|-----------------------------------------------------------------|-----------|------------------|------------------|
-| id               | Eindeutiger Schlüssel                                           | Long      | 19               | Primary Key, Sequence |
-| member_id        | Mitglied, das den Einsatz gemeldet hat                          | Long      | 19               | Not Null, Foreign Key (MEMBER.id) |
-| activityarea_id  | Tätigkeitsbereich, der die Meldung beurteilt                    | Long      | 19               | Not Null, Foreign Key (ACTIVITY_AREA.id) |
-| job_time         | Zeitpunkt, zu dem die Arbeit geleistet wurde                    | DateTime  | -                | Not Null |
-| description      | Beschreibung der geleisteten Arbeit                             | String    | 4000             | Not Null |
-| status           | Stand der Beurteilung: pendent, genehmigt oder abgelehnt        | String    | 20               | Not Null, Values: pendent, genehmigt, abgelehnt |
+| Attribute       | Description                                                                        | Data Type | Length/Precision | Validation Rules |
+|-----------------|------------------------------------------------------------------------------------|-----------|------------------|------------------|
+| id              | Eindeutiger Schlüssel                                                              | Long      | 19               | Primary Key, Sequence |
+| member_id       | Mitglied, das den Einsatz gemeldet hat                                             | Long      | 19               | Not Null, Foreign Key (MEMBER.id) |
+| approver_id     | Ansprechperson, an die die Anfrage gerichtet ist                                   | Long      | 19               | Optional, Foreign Key (MEMBER.id) |
+| activityarea_id | Tätigkeitsbereich, dem die Arbeit zugeordnet wird                                  | Long      | 19               | Optional, Foreign Key (ACTIVITY_AREA.id) |
+| assignment_id   | Anrechnung, die bei der Bestätigung entsteht                                       | Long      | 19               | Optional, Unique, Foreign Key (ASSIGNMENT.id) |
+| job_time        | Zeitpunkt, zu dem die Arbeit geleistet wurde                                       | DateTime  | -                | Not Null |
+| amount          | Anzahl der beantragten Einsätze                                                    | Decimal   | 10,2             | Not Null, Min: 0 |
+| duration        | Dauer der Arbeit in Stunden                                                        | Decimal   | 4,2              | Not Null, Min: 0 |
+| location        | Ort, an dem die Arbeit geleistet wurde                                             | String    | 100              | Optional |
+| description     | Beschreibung der geleisteten Arbeit                                                | String    | 1000             | Optional |
+| request_date    | Datum der Meldung                                                                  | Date      | -                | Optional |
+| response_date   | Datum der Beurteilung                                                              | Date      | -                | Optional |
+| status          | Stand der Beurteilung: RE beantragt, CO bestätigt, NO abgelehnt                    | String    | 2                | Not Null, Values: RE, CO, NO |
+| response        | Rückmeldung der Ansprechperson an das Mitglied                                     | String    | 4000             | Optional |
 
 ### BUSINESS_YEAR
 

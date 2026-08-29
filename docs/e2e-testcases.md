@@ -64,5 +64,8 @@ Assertions, sondern um einen schnellen Überblick, was grob getestet wird.
 - **Depot-Listen** (`test_admin_list.py`): Depot-Listen erzeugen und abrufen.
 - **E-Mail-Versand** (`test_admin_mail.py`): realer Mailversand inkl. Regressionsschutz für den
   `EmailAuditMiddleware` (Eintrag im EmailAuditLog).
-- **Rechnungen** (`test_admin_billing.py`): offene Rechnungen einsehen.
+- **Rechnungen** (`test_admin_billing.py`): anstehende Rechnungen einsehen; kompletter
+  Rechnungslauf — Stammdaten (Zahlungsart, Buchhaltungs-Einstellungen, Geschäftsjahr) anlegen,
+  Rechnungen erzeugen, freigeben, in den offenen Rechnungen wiederfinden, Zahlung über den
+  vollen Betrag verbuchen und den Ausgleich prüfen.
 - **SQL-Konsole** (`test_admin_pg.py`): DB-Abfrage über die jpg-Admin-Konsole ausführen.

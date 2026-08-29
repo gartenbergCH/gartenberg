@@ -3,6 +3,7 @@ left to right direction
 
 actor "Interessent/in" as prospect
 actor "Mitglied" as member
+actor "Einsatzverantwortliche/r" as approver
 actor "Administrator/in" as admin
 
 rectangle "GartenBerg (juntagrico-Anpassungen)" {
@@ -14,6 +15,7 @@ rectangle "GartenBerg (juntagrico-Anpassungen)" {
     usecase "UC-006\nMailversand nachvollziehen" as UC006
     usecase "UC-007\nRechnungen bearbeiten" as UC007
     usecase "UC-008\nAbo-Situation eines Mitglieds abklären" as UC008
+    usecase "UC-009\nGemeldete Einsätze beurteilen" as UC009
 }
 
 prospect --> UC001
@@ -21,6 +23,8 @@ prospect --> UC002
 
 member --> UC002
 member --> UC003
+
+approver --> UC009
 
 admin --> UC004
 admin --> UC005
