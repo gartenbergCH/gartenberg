@@ -1,0 +1,31 @@
+@startuml Use Cases Overview
+left to right direction
+
+actor "Interessent/in" as prospect
+actor "Mitglied" as member
+actor "Administrator/in" as admin
+
+rectangle "GartenBerg (juntagrico-Anpassungen)" {
+    usecase "UC-001\nMitgliedschaft beantragen" as UC001
+    usecase "UC-002\nKontakt zur Genossenschaft aufnehmen" as UC002
+    usecase "UC-003\nArbeitseinsätze erbringen und anrechnen lassen" as UC003
+    usecase "UC-004\nDepotlisten erstellen" as UC004
+    usecase "UC-005\nRundmail an Mitgliedergruppen versenden" as UC005
+    usecase "UC-006\nMailversand nachvollziehen" as UC006
+    usecase "UC-007\nRechnungen bearbeiten" as UC007
+    usecase "UC-008\nAbo-Situation eines Mitglieds abklären" as UC008
+}
+
+prospect --> UC001
+prospect --> UC002
+
+member --> UC002
+member --> UC003
+
+admin --> UC004
+admin --> UC005
+admin --> UC006
+admin --> UC007
+admin --> UC008
+
+@enduml
