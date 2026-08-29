@@ -31,6 +31,10 @@ Assertions, sondern um einen schnellen Überblick, was grob getestet wird.
 - **Job-Anmeldung** (`test_jobs.py`): Job-Detail (Titel, Zeit, Beschreibung), Anmeldung erhöht
   belegte Slots.
 - **Einsatz melden** (`test_assignment_request.py`): Mitglied meldet einen geleisteten Einsatz.
+- **Gemeldete Einsätze beurteilen** (`test_admin_assignment_request.py`): verantwortliche Person
+  bestätigt bzw. lehnt eine Meldung ab; geprüft werden der Wechsel von der offenen Liste ins
+  Archiv, die Anrechnung (Verlinkung auf den erzeugten Einsatz) nur bei Bestätigung sowie
+  Entscheid und Rückmeldung in der Sicht des Mitglieds.
 - **Tätigkeitsbereiche** (`test_areas.py`): Bereichsliste und -detail, Bereich beitreten und wieder
   verlassen.
 

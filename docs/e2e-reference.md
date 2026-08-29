@@ -291,6 +291,32 @@ count = int(cell_values[0])
 
 ---
 
+## Einsatzmeldungs-Listen: zwei `<tr>` pro Anfrage
+
+`assignment_request/list.html` und `request.html` rendern pro Anfrage **zwei** Zeilen: die
+Datenzeile (Datum, Status, Aktionen) und darunter eine Zeile `tr.ar-assignment-request-description`
+mit Beschreibung und Antwort. Eine Anfrage lässt sich also nicht über die Datenzeile
+identifizieren — die eindeutige Beschreibung steht in der *nächsten* Zeile.
+
+CSS kennt keinen Vorgänger-Selektor, deshalb per XPath von der Beschreibung zurückgehen:
+
+```python
+description_row = page.locator(
+    "xpath=//tr[contains(@class, 'ar-assignment-request-description')]"
+    f'[contains(., "{description}")]'
+)
+data_row = description_row.locator("xpath=preceding-sibling::tr[1]")
+```
+
+Damit das eindeutig bleibt, im Test eine Beschreibung mit `uuid` erzeugen.
+
+Die Statusspalte hat je nach Liste einen anderen Index: in der Sicht der verantwortlichen
+Person `td` Nr. 4 (Einsatz vom | Von | Abgesprochen mit | Status), beim Mitglied Nr. 3
+(ohne Spalte "Von"). Ist eine Anfrage bestätigt, ist der Status ein Link auf den automatisch
+erzeugten Einsatz — ein guter Beleg dafür, dass die Anrechnung wirklich entstanden ist.
+
+---
+
 ## DataTables: leere Tabelle hat trotzdem eine `<tr>`
 
 Ist eine DataTables-Tabelle leer, rendert DataTables eine Platzhalterzeile mit einer einzigen
