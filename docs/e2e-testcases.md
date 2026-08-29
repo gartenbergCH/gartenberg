@@ -65,6 +65,10 @@ Assertions, sondern um einen schnellen Überblick, was grob getestet wird.
   beendet sie wieder.
 - **Wiederkehrende Einsätze** (`test_admin_jobs.py`): Admin legt einen wiederkehrenden Job an,
   Member findet ihn und meldet sich an.
+- **Einsatz-Teilnehmerliste** (`test_admin_jobs_participants.py`): Adminmenü-Eintrag führt auf die
+  Liste der künftigen Einsätze; eingeschriebene Person mit Name und E-Mail in der Zeile ihres
+  Einsatzes, Hinweis bei Einsätzen ohne Anmeldungen, Einschränkung auf Tätigkeitsbereich und auf
+  einzelne Einsatzart.
 - **Depot-Listen** (`test_admin_list.py`): Depot-Listen erzeugen und abrufen.
 - **E-Mail-Versand** (`test_admin_mail.py`): realer Mailversand inkl. Regressionsschutz für den
   `EmailAuditMiddleware` (Eintrag im EmailAuditLog).

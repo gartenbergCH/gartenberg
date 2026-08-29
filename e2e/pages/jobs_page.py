@@ -17,33 +17,38 @@ class JobsPage:
         self.page.goto("/my/jobs")
         self.page.wait_for_load_state("networkidle")
 
-    def _nearest_future_job_href(self) -> str:
-        """Return the href of the job with the nearest future date (date > today).
+    def future_job_hrefs(self) -> list[str]:
+        """Return the hrefs of all future jobs (date > today), earliest first.
 
         DataTables sorts the table alphabetically by the "D d.m.Y" string, which
         is NOT chronological order — e.g. "Di 01.06.2027" (Tuesday) sorts before
-        "Do 07.05.2026" (Thursday) because "Di" < "Do" lexicographically.  Picking
-        the *first* DOM row therefore picks the wrong job when the day-of-week prefix
-        differs.  Scanning all rows and picking the minimum future date is robust
-        against any DataTables sort order.
+        "Do 07.05.2026" (Thursday) because "Di" < "Do" lexicographically.  Relying
+        on the DOM order therefore yields the wrong job when the day-of-week prefix
+        differs.  Reading the dates and sorting them here is robust against any
+        DataTables sort order.
         """
         today = datetime.now(tz=_DISPLAY_TZ).date()
+        found = []
         rows = self.page.locator("#filter-table tbody tr")
-        best_date = None
-        best_href = None
         for i in range(rows.count()):
             row = rows.nth(i)
             cell_text = row.locator("td:first-child").inner_text().strip()
             for part in cell_text.split():
                 try:
                     row_date = datetime.strptime(part, "%d.%m.%Y").date()
-                    if row_date > today and (best_date is None or row_date < best_date):
-                        best_date = row_date
-                        best_href = row.locator("td:nth-child(2) a").get_attribute("href")
-                    break
                 except ValueError:
                     continue
-        return best_href or ""
+                if row_date > today:
+                    href = row.locator("td:nth-child(2) a").get_attribute("href")
+                    if href:
+                        found.append((row_date, href))
+                break
+        # stabil sortiert: bei gleichem Datum bleibt die Reihenfolge der Tabelle erhalten
+        return [href for _, href in sorted(found, key=lambda entry: entry[0])]
+
+    def _nearest_future_job_href(self) -> str:
+        hrefs = self.future_job_hrefs()
+        return hrefs[0] if hrefs else ""
 
     def first_job_name(self) -> str:
         href = self._nearest_future_job_href()

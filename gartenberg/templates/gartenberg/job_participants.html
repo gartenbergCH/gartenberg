@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block body_extra_classes %}wide-layout{% endblock %}
+
+{% block page_title %}
+    <h3>Einsatz-Teilnehmerliste</h3>
+{% endblock %}
+
+{% block content %}
+    <form method="get" id="job-participants-filter" class="form-inline mb-3">
+        <label class="mr-2" for="scope">Anzeigen:</label>
+        <select class="form-control mr-2" name="scope" id="scope">
+            <option value="">Alle Einsätze</option>
+            {% for group_label, options in scope_choices %}
+                <optgroup label="{{ group_label }}">
+                    {% for option in options %}{# Label ohne umgebende Leerzeichen, damit select_option(label=...) trifft #}
+                        <option value="{{ option.value }}"{% if option.value == selected_scope %} selected{% endif %}>{{ option.label }}</option>
+                    {% endfor %}
+                </optgroup>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-success" id="job-participants-filter-submit">Anzeigen</button>
+    </form>
+
+    {# id nicht "job-participants": base.html setzt den View-Namen als <body id> #}
+    <table class="list table" id="job-participants-table">
+        <thead>
+            <tr>
+                <th>Datum</th>
+                <th>Zeit</th>
+                <th>Einsatz</th>
+                <th>Ort</th>
+                <th>Plätze</th>
+                <th>Eingeschriebene Personen</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+                <tr data-job-id="{{ row.job.id }}"{% if row.job.canceled %} class="canceled"{% endif %}>
+                    <td>{{ row.job.time|date:"D, d.m.Y" }}</td>
+                    <td>{{ row.job.time|date:"H:i" }}&nbsp;–&nbsp;{{ row.job.end_time|date:"H:i" }}</td>
+                    <td>
+                        <a class="job-name" href="{% url 'job' row.job.id %}">{{ row.job.type.get_name }}</a>
+                        {% if row.job.canceled %}
+                            <span class="badge badge-danger">abgesagt</span>
+                        {% endif %}
+                        <div class="job-area text-muted">{{ row.job.type.activityarea.name }}</div>
+                    </td>
+                    <td>{{ row.job.type.location }}</td>
+                    <td>{{ row.job.occupied_slots }}&nbsp;/&nbsp;{{ row.job.slots_display }}</td>
+                    <td class="job-participants">
+                        {% if row.participants %}
+                            <table class="table table-sm mb-0">
+                                <tbody>
+                                    {% for participant in row.participants %}
+                                        <tr>
+                                            <td>
+                                                {{ participant.member.last_name }}, {{ participant.member.first_name }}
+                                                {% if participant.slots > 1 %}
+                                                    ({{ participant.slots }} Plätze)
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if participant.member.get_phone %}
+                                                    <a href="tel:{{ participant.member.get_phone }}">{{ participant.member.get_phone }}</a>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <a href="mailto:{{ participant.member.email }}">{{ participant.member.email }}</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <em class="text-muted">noch niemand eingeschrieben</em>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr id="job-participants-empty">
+                    <td colspan="6">
+                        Für die gewählte Auswahl gibt es keine künftigen Einsätze.
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

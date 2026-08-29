@@ -16,8 +16,12 @@ from django.urls import include, re_path, path
 from django.contrib import admin
 import juntagrico
 
+from gartenberg.views import job_participants
+
 urlpatterns = [
     re_path(r'^admin/', admin.site.urls),
+    # GartenBerg-eigene Seiten vor dem juntagrico-Catch-all (r'^')
+    path('einsatzliste/', job_participants, name='job-participants'),
     re_path(r'^', include('juntagrico.urls')),
     re_path(r'^impersonate/', include('impersonate.urls')),
     re_path(r'', include('juntagrico_assignment_request.urls')),

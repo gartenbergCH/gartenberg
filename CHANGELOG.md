@@ -1,5 +1,15 @@
 # Changelog
 
+## Unveröffentlicht
+
+Arbeitseinsätze
+* Neue Seite "Einsatz-Teilnehmerliste" im Adminmenü: listet alle künftigen Einsätze chronologisch
+  mit den eingeschriebenen Personen samt Telefonnummer und E-Mail-Adresse auf. Über eine Auswahl
+  lässt sich die Liste auf einen Tätigkeitsbereich oder eine einzelne Einsatzart einschränken —
+  etwa auf die Verteilfahrten oder die Setzlingsfahrten. Damit entfallen die parallel geführten
+  Excel-Listen der Ernteverteil-Koordination. Sichtbar für alle, die Einsatzanmeldungen einsehen
+  dürfen. Siehe [UC-010](docs/use_cases/UC-010-einsatzteilnehmende-einsehen.md).
+
 ## 4.0.0 - 10.08.2025
 
 * Bump Juntagrico to 1.7.0

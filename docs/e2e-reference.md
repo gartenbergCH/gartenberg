@@ -361,6 +361,30 @@ Die Jobs-Tabelle (`#filter-table`) hat keine `data-order`-Attribute auf den Datu
 
 ---
 
+## `<body id>` ist der View-Name — Element-ids dürfen nicht gleich heissen
+
+`base.html` rendert `<body id="{{ request|view_name }}">`, also den URL-Namen der View. Eine
+eigene Seite unter `path(..., name='job-participants')` darf ihrer Tabelle deshalb nicht
+`id="job-participants"` geben — der Selektor `#job-participants` trifft dann zwei Elemente und
+Playwright bricht mit "strict mode violation" ab.
+
+```python
+# Nicht: <table id="job-participants">  → kollidiert mit <body id="job-participants">
+page.locator("#job-participants-table")
+```
+
+## Adminmenü-Einträge stehen zweimal im DOM
+
+`base.html` bindet `juntagrico/menu/navigation.html` zweimal ein: eingeklappt in der Navbar
+(`d-md-none`) und in der Sidebar (`d-none d-md-block`). `.first` trifft den unsichtbaren
+Navbar-Treffer und läuft in einen Klick-Timeout ("element is not visible"). Nur der sichtbare
+Treffer ist anklickbar — und ein `id` im Menü-Template wäre ohnehin doppelt vergeben, deshalb
+eine Klasse verwenden:
+
+```python
+page.locator(".menu-job-participants:visible").first.click()
+```
+
 # Juntagrico 2.0 Upgrade (von 1.7)
 
 Erkenntnisse aus der Migration der E2E-Tests von Juntagrico 1.7.x auf 2.0.7.

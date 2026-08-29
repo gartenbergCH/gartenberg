@@ -5,3 +5,27 @@
     width: 580px;
     height: 300px;
 }
+
+/* Einsatz-Teilnehmerliste (UC-010): die Eingeschriebenen stehen als verschachtelte
+   Tabelle in der letzten Spalte. Ohne diese Regeln bricht die Telefonnummer über
+   mehrere Zeilen um und die doppelten Zellrahmen machen die Zeile unruhig. */
+#job-participants-table > tbody > tr > td {
+    vertical-align: top;
+}
+
+#job-participants-table td.job-participants table {
+    margin-bottom: 0;
+}
+
+#job-participants-table td.job-participants td {
+    border: 0;
+    padding: 0 1rem 0 0;
+    white-space: nowrap;
+}
+
+#job-participants-table > tbody > tr > td:nth-child(1),
+#job-participants-table > tbody > tr > td:nth-child(2),
+#job-participants-table > tbody > tr > td:nth-child(4),
+#job-participants-table > tbody > tr > td:nth-child(5) {
+    white-space: nowrap;
+}
