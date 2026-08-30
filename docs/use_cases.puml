@@ -17,6 +17,7 @@ rectangle "GartenBerg (juntagrico-Anpassungen)" {
     usecase "UC-008\nAbo-Situation eines Mitglieds abklären" as UC008
     usecase "UC-009\nGemeldete Einsätze beurteilen" as UC009
     usecase "UC-010\nTeilnehmende der Einsätze einsehen" as UC010
+    usecase "UC-011\nMitgliedschaft und Abo kündigen" as UC011
 }
 
 prospect --> UC001
@@ -24,6 +25,7 @@ prospect --> UC002
 
 member --> UC002
 member --> UC003
+member --> UC011
 
 approver --> UC009
 approver --> UC010
@@ -34,5 +36,6 @@ admin --> UC006
 admin --> UC007
 admin --> UC008
 admin --> UC010
+admin --> UC011
 
 @enduml
