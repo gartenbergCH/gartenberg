@@ -16,10 +16,12 @@ RUN pip install --no-cache-dir -r requirements.txt \
 	&& ./manage.py createsuperuser --noinput --username $juntagrico_username --email $juntagrico_email \
 	&& ./manage.py create_member_for_superusers \
 	&& ./manage.py generate_testdata \
-	# Settings-Singleton + Zahlungstyp für juntagrico-billing (Werte wie in der Produktion);
-	# ohne diese Objekte schlägt die Rechnungsseite der Mitglieder (/jb/user_bills) fehl.
-	# juntagrico-billing bringt dafür zwar 'generate_billing_testdata' mit, das benötigte
-	# Fixture billing.json fehlt im Release 2.0.0 aber im Paket -> eigenes Fixture.
+	# Settings-Singleton, Zahlungstyp und Geschäftsjahr für juntagrico-billing; ohne
+	# diese Objekte schlägt die Rechnungsseite der Mitglieder (/jb/user_bills) fehl.
+	&& ./manage.py generate_billing_testdata \
+	# Das Upstream-Fixture bringt 8.1% MWST und eine fremde IBAN mit. Beides mit den
+	# produktionsnahen Werten von GartenBerg überschreiben (gleiche PKs, loaddata
+	# aktualisiert die bestehenden Objekte); das Geschäftsjahr von oben bleibt erhalten.
 	&& ./manage.py loaddata billing_testdata \
 	&& ./manage.py collectstatic
 ENV JUNTAGRICO_SECRET_KEY $juntagrico_secret_key
