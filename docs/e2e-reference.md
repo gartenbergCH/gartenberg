@@ -119,6 +119,22 @@ page.wait_for_load_state("networkidle")
 
 ---
 
+## Das Benutzermenü wird zweimal gerendert
+
+`base.html` bindet `juntagrico/menu/navigation.html` zweimal ein: einmal in der zugeklappten
+Navbar für kleine Bildschirme (`d-md-none`) und einmal in der Seitenleiste (`d-none d-md-block`).
+Ein Menü-Locator trifft damit immer zwei Elemente; `.first` ist das **ausgeblendete** aus der
+Navbar. `inner_text()` funktioniert darauf noch, `click()` läuft in einen 30s-Timeout
+("element is not visible").
+
+**Fix:** Im Selektor auf sichtbare Elemente einschränken:
+
+```python
+page.locator(".main-menu a[href='/jb/user_bills']:visible").first.click()
+```
+
+---
+
 ## Django ForeignKey-Select: Index 0 ist die Leer-Option
 
 Wenn ein Formularfeld ein `ForeignKey` mit `blank=True, null=True` ist, rendert Django automatisch eine leere Option als erste Wahl:

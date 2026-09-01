@@ -132,6 +132,16 @@ class AdminBillingPage:
         # /admin/juntagrico_billing/bill/<id>/change/
         return link.get_attribute("href").rstrip("/").split("/")[-2]
 
+    def first_bill_impersonation_url(self) -> str:
+        """Adresse des Impersonate-Links aus derselben Zeile wie first_bill_id().
+
+        Die Mitglieder-Spalte rendert über display_linked.html einen Link zur
+        Sitzungsübernahme. Er trägt target="_blank"; statt ihn zu klicken (und einen
+        zweiten Tab zu erhalten) wird die Adresse ausgelesen und im selben Tab aufgerufen."""
+        link = self.page.locator("#filter-table tbody tr").first.locator("a.impersonate-action")
+        link.wait_for(state="attached", timeout=10000)
+        return link.get_attribute("href")
+
     def lists_bill(self, bill_id: str) -> bool:
         return self.page.locator(
             f"#filter-table tbody a[href*='/admin/juntagrico_billing/bill/{bill_id}/']"

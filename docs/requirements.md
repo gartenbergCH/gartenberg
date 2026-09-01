@@ -80,6 +80,7 @@ Plattformabläufe, auf denen sie aufbauen — nicht der übrige Funktionsumfang 
 | FR-039 | Zahlungen verbuchen            | Als Administrator/in möchte ich Zahlungseingänge mit Datum, Betrag und Zahlungsart auf einer Rechnung verbuchen, damit der offene Betrag jederzeit stimmt.                                       | UC-007 | Hoch      | Verifiziert   |
 | FR-040 | Differenzen ausgleichen        | Als Administrator/in möchte ich Über- und Unterzahlungen mit einer Ausgleichsposition bereinigen und den Mehrwertsteuersatz einer Rechnung nachträglich setzen, damit die Rechnung aufgeht.       | UC-007 | Mittel    | Implementiert |
 | FR-041 | Position ohne Abo-Bezug        | Als Administrator/in möchte ich eine Rechnung um eine Position eines eigenen Positionstyps ergänzen, damit ich auch Beträge ohne Abo-Bezug verrechnen kann.                                       | UC-007 | Mittel    | Implementiert |
+| FR-051 | Eigene Rechnungen einsehen     | Als Mitglied möchte ich meine freigegebenen Rechnungen mit Positionen, Zahlungsstand, Einzahlungsschein und PDF selbst einsehen, damit ich sie ohne Rückfrage bei der Koordination bezahlen und ablegen kann. | UC-012 | Mittel    | Verifiziert   |
 
 ### Abo-Verwaltung
 
@@ -150,8 +151,9 @@ durch keine Use-Case-Spezifikation abgedeckt (siehe [Offene Punkte](#offene-punk
 ## Offene Punkte
 
 - **Fehlender Use Case:** FR-050 (Depotwechsel) ist konfiguriert und durch E2E-Tests abgedeckt, aber in
-  keiner `UC-*.md` spezifiziert. Er ist als UC-012 nachzuführen und anschliessend im Use-Case-Diagramm
-  ([use_cases.puml](use_cases.puml)) zu ergänzen.
+  keiner `UC-*.md` spezifiziert. Er ist als UC-013 nachzuführen und anschliessend im Use-Case-Diagramm
+  ([use_cases.puml](use_cases.puml)) zu ergänzen. (UC-012 ist mit den eigenen Rechnungen der Mitglieder
+  belegt.)
 - **Fehlende Test Cases:** `CLAUDE.md` verweist auf `docs/test_cases/`; dieses Verzeichnis existiert noch
   nicht. Die in [e2e-testcases.md](e2e-testcases.md) beschriebene Abdeckung ist als `TC-*.md` zu
   formalisieren, damit NFR-011 nachweisbar wird.

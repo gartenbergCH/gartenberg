@@ -11,6 +11,7 @@ Siehe [Changelog](CHANGELOG.md)
 * Preis pro Anteilschein
 * Link zu Betriebsreglement und Statuten
 * Logo
+* Mitglieder sehen ihre eigenen Rechnungen im Benutzermenü (BILLS_USERMENU)
 
 Angepasste Seiten
 * signup.html -> Hinweis auf Probekorb

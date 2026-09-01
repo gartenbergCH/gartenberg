@@ -43,6 +43,12 @@ Assertions, sondern um einen schnellen Überblick, was grob getestet wird.
 - **Depot-Details** (`test_depot.py`): Depot-Detailseite mit Abschnittslabels und konkretem
   Depot-Namen.
 - **Anteilscheine** (`test_shares.py`): zusätzlichen Anteilschein bestellen, Status „unbezahlt“.
+- **Eigene Rechnungen** (`test_bills.py`, UC-012): Menüeintrag „Rechnungen“ im Benutzermenü,
+  Aufruf der eigenen Rechnungsliste über das Menü, Aufbau der Rechnungstabelle (für das
+  frisch angemeldete Testmitglied leer — Alternativablauf A1). Am verrechneten Mitglied
+  aus den Testdaten — Sitzung über den Impersonate-Link der Rechnungszeile übernommen —
+  zusätzlich: freigegebene Rechnung in der Liste, Detailseite mit offenem Betrag und
+  QR-Einzahlungsschein, Bezug des Rechnungs-PDFs.
 
 ## Kontakt & E-Mail
 
