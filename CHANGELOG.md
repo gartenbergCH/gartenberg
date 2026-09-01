@@ -2,6 +2,12 @@
 
 ## Unveröffentlicht
 
+Rechnungen
+* juntagrico-billing kommt neu aus dem Branch `gartenberg` des eigenen Forks statt aus PyPI. Er
+  enthält den Upstream-Stand plus zwei dort noch offene Pull Requests: den Fix für den
+  AttributeError bei Abo-Positionen ohne Langnamen (PR #77) und das Stornieren von Rechnungen
+  (PR #78). Siehe [docs/upstream-juntagrico-billing.md](docs/upstream-juntagrico-billing.md).
+
 Arbeitseinsätze
 * Neue Seite "Einsatz-Teilnehmerliste" im Adminmenü: listet alle künftigen Einsätze chronologisch
   mit den eingeschriebenen Personen samt Telefonnummer und E-Mail-Adresse auf. Über eine Auswahl

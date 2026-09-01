@@ -5,12 +5,18 @@ gunicorn==26.2.0
 psycopg==3.3.4
 whitenoise==6.12.0
 juntagrico-assignment-request==2.0.0
-juntagrico-billing==2.0.0
+# juntagrico-billing kommt aus dem eigenen Fork-Branch 'gartenberg'. Er entspricht dem
+# upstream-main plus den beiden noch offenen Pull Requests, die GartenBerg schon braucht:
+#   PR #77 fix/subscriptiontype-size-attribute (AttributeError in BillItem.__str__)
+#   PR #78 feature/cancel-bills (Rechnungen stornieren)
+# Sobald beide upstream gemergt und released sind, kann hier wieder ein Release stehen.
+# Siehe docs/upstream-juntagrico-billing.md.
+juntagrico-billing @ git+https://github.com/patrickuhlmann/juntagrico-billing.git@gartenberg
 juntagrico-pg==2.0.0
 
-# juntagrico-billing 2.0.0 importiert requests (util/bexio_api.py), deklariert es in seinen
-# Metadaten aber nicht (upstream erst nach dem Release nachgezogen). Ohne diesen Eintrag
-# scheitert schon der Import von juntagrico_billing.urls und damit jeder manage.py-Aufruf.
+# requests wird von juntagrico-billing (util/bexio_api.py) benutzt. Der Fork-Branch deklariert
+# die Abhängigkeit inzwischen selbst (dem Release 2.0.0 fehlt sie noch); der Pin bleibt hier,
+# damit Dependabot Upgrades weiterhin über die CI führt.
 requests==2.34.2
 
 # transitive dependency (pyHanko <- xhtml2pdf), pinned so Dependabot gates upgrades via CI
