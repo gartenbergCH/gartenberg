@@ -2,7 +2,7 @@
 juntagrico==2.0.9
 
 gunicorn==26.2.0
-psycopg==3.3.4
+psycopg==3.3.5
 whitenoise==6.12.0
 juntagrico-assignment-request==2.0.0
 # juntagrico-billing kommt aus dem eigenen Fork-Branch 'gartenberg'. Er entspricht dem
