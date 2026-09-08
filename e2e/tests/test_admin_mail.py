@@ -28,7 +28,7 @@ def test_admin_can_send_email(admin_page):
     # Regressions-Schutz für den gartenberg-eigenen EmailAuditMiddleware: Der reale
     # juntagrico-Versand muss einen EmailAuditLog-Eintrag erzeugen. Dieser Integrations-
     # check (echtes Formular -> Middleware -> Log) erkennt, wenn juntagrico die Mail-
-    # URLs/Feldnamen ändert — was die isolierten Unit-Tests (gartenberg/tests.py) nicht
+    # URLs/Feldnamen ändert — was die isolierten Unit-Tests (gartenberg/tests/test_email_audit.py) nicht
     # können, da sie gegen hartkodierte POST-Daten prüfen.
     admin_page.goto("/admin/gartenberg/emailauditlog/")
     admin_page.wait_for_load_state("networkidle")
