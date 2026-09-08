@@ -1,0 +1,101 @@
+name: Release
+
+# Manuell ausloesbarer Release: erzeugt Tag und GitHub-Release. Der Text der
+# Release-Notes wird aus den Conventional Commits seit dem letzten v*-Tag
+# generiert (siehe tooling/release-notes.sh, laesst sich auch lokal aufrufen).
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version, z.B. 5.1.0 (das v wird automatisch ergaenzt)'
+        required: true
+        type: string
+      prerelease:
+        description: 'Als Vorabversion markieren'
+        required: false
+        default: false
+        type: boolean
+      dry_run:
+        description: 'Nur Release-Notes anzeigen, kein Tag und kein Release'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        fetch-depth: 0
+
+    - name: Version pruefen
+      id: version
+      env:
+        INPUT_VERSION: ${{ inputs.version }}
+      run: |
+        version="${INPUT_VERSION#v}"
+        if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+          echo "::error::Ungueltige Version '$INPUT_VERSION'. Erwartet wird z.B. 5.1.0 oder 5.1.0-rc.1."
+          exit 1
+        fi
+        tag="v$version"
+        if git rev-parse -q --verify "refs/tags/$tag" >/dev/null; then
+          echo "::error::Tag $tag existiert bereits."
+          exit 1
+        fi
+        echo "version=$version" >> "$GITHUB_OUTPUT"
+        echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+    - name: Release-Notes erzeugen
+      id: notes
+      run: |
+        previous="$(git describe --tags --abbrev=0 --match 'v*' HEAD 2>/dev/null || true)"
+        echo "previous=$previous" >> "$GITHUB_OUTPUT"
+
+        tooling/release-notes.sh "$previous" HEAD > release-notes.md
+
+        if [ -n "$previous" ]; then
+          {
+            echo
+            echo "**Vollständiger Vergleich**: https://github.com/${GITHUB_REPOSITORY}/compare/${previous}...${TAG}"
+          } >> release-notes.md
+        fi
+
+        {
+          echo "## Release-Notes für ${TAG}"
+          echo
+          echo "Basis: ${previous:-erster Commit}"
+          echo
+          cat release-notes.md
+        } >> "$GITHUB_STEP_SUMMARY"
+      env:
+        TAG: ${{ steps.version.outputs.tag }}
+
+    - name: Tag erstellen und pushen
+      if: ${{ !inputs.dry_run }}
+      env:
+        TAG: ${{ steps.version.outputs.tag }}
+      run: |
+        git config user.name 'github-actions[bot]'
+        git config user.email 'github-actions[bot]@users.noreply.github.com'
+        git tag -a "$TAG" -m "Release $TAG"
+        git push origin "$TAG"
+
+    - name: GitHub-Release erstellen
+      if: ${{ !inputs.dry_run }}
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TAG: ${{ steps.version.outputs.tag }}
+        PRERELEASE: ${{ inputs.prerelease }}
+      run: |
+        args=(--title "$TAG" --notes-file release-notes.md)
+        if [ "$PRERELEASE" = 'true' ]; then
+          args+=(--prerelease)
+        fi
+        gh release create "$TAG" "${args[@]}"

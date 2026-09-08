@@ -83,3 +83,22 @@ Develop in the container
 * Abo kündigen. Informiert Koordi per Mail
 * Mitgliedschaft kündigen. Informiert Koordi per Mail
 * Listen erzeugen mit Stichtag
+
+## Release
+
+Releases werden über den Workflow **Release** in GitHub Actions ausgelöst
+(Actions → Release → *Run workflow*):
+
+* **version** — z.B. `5.1.0`; das Tag `v5.1.0` wird daraus erzeugt.
+* **prerelease** — markiert das Release als Vorabversion.
+* **dry_run** — erzeugt nur die Release-Notes in der Job-Zusammenfassung, ohne
+  Tag und Release anzulegen.
+
+Der Text des Releases wird aus den Conventional Commits seit dem letzten
+`v*`-Tag generiert und nach Typ gruppiert (Breaking Changes, Features, Fixes,
+…). Lokal lässt sich der Text vorab prüfen mit:
+
+```
+tooling/release-notes.sh            # seit dem letzten Tag
+tooling/release-notes.sh v5.0.0     # ab einem bestimmten Tag
+```
