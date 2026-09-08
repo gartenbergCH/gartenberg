@@ -1,3 +1,5 @@
+from django.db.models.functions import Lower
+
 from juntagrico import defaults
 
 
@@ -11,7 +13,12 @@ def _product_depotlist_context(product_name):
         subscriptions = Subscription.objects.filter(
             parts__type__bundle__product_sizes__product__name=product_name,
             parts__type__bundle__product_sizes__show_on_depot_list=True,
-        ).active_on(context['date']).distinct()
+        ).active_on(context['date']).order_by(
+            # Subscription hat keine Meta.ordering; ohne dieses order_by kämen die Zeilen in
+            # beliebiger DB-Reihenfolge. Gleiche Sortierung wie juntagrico.util.depot_list,
+            # dessen Basis-Kontext hier überschrieben wird.
+            Lower('primary_member__first_name'), Lower('primary_member__last_name'),
+        ).distinct()
         return dict(products=products, subscriptions=subscriptions)
     return extra_context
 

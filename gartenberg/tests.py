@@ -130,6 +130,11 @@ class DepotListsPerCategoryTest(TestCase):
         cls.category = SubscriptionCategory.objects.create(name='Kategorie')
         cls.gemuese_sub = cls._make_subscriber('Gemüse')
         cls.kartoffeln_sub = cls._make_subscriber('Kartoffeln')
+        # Absichtlich nicht-alphabetisch angelegt, damit die Sortierung nicht zufällig
+        # mit der Einfügereihenfolge übereinstimmt
+        cls.gemuese_zora = cls._add_subscriber_to_product('Gemüse', 'Zora')
+        cls.gemuese_anna = cls._add_subscriber_to_product('Gemüse', 'anna')
+        cls.gemuese_bea = cls._add_subscriber_to_product('Gemüse', 'Bea')
 
     @classmethod
     def _make_subscriber(cls, product_name):
@@ -151,6 +156,31 @@ class DepotListsPerCategoryTest(TestCase):
         member.join_subscription(subscription, True)
         return subscription
 
+    @classmethod
+    def _add_subscriber_to_product(cls, product_name, first_name):
+        sub_type = SubscriptionType.objects.get(name=f'{product_name}-Typ')
+        today = datetime.date.today()
+        member = Member.objects.create(
+            first_name=first_name, last_name='Testperson',
+            email=f'{first_name.lower()}@e2e-test.local',
+            addr_street='Teststrasse 1', addr_zipcode='5000', addr_location='Aarau',
+            phone='079 000 00 00', confirmed=True, reachable_by_email=False,
+        )
+        subscription = Subscription.objects.create(depot=cls.depot, activation_date=today, start_date=today)
+        SubscriptionPart.objects.create(subscription=subscription, type=sub_type, activation_date=today)
+        member.join_subscription(subscription, True)
+        return subscription
+
+    def test_subscriptions_sind_alphabetisch_sortiert(self):
+        # Regression: der produktgefilterte extra_context überschreibt den Basis-Kontext von
+        # juntagrico.util.depot_list.depot_list_data und verlor dabei dessen Sortierung, wodurch
+        # die Personenliste pro Depot in beliebiger DB-Reihenfolge erschien.
+        context = {'date': datetime.date.today()}
+        gemuese_context = DEPOT_LISTS['depotlist']['extra_context'](context)
+        first_names = [sub.primary_member.first_name for sub in gemuese_context['subscriptions']]
+        # Sortierung case-insensitiv, wie in juntagrico
+        self.assertEqual(first_names, ['anna', 'Bea', 'Gemüse', 'Zora'])
+
     def test_extra_context_filters_by_product(self):
         context = {'date': datetime.date.today()}
 
@@ -162,7 +192,10 @@ class DepotListsPerCategoryTest(TestCase):
         # damit sie durch die Hofprodukte-Kategorien nicht überladen werden
         for list_name in ('depotlist', 'depot_overview', 'amount_overview'):
             gemuese_context = DEPOT_LISTS[list_name]['extra_context'](context)
-            self.assertCountEqual(gemuese_context['subscriptions'], [self.gemuese_sub])
+            self.assertCountEqual(
+                gemuese_context['subscriptions'],
+                [self.gemuese_sub, self.gemuese_zora, self.gemuese_anna, self.gemuese_bea],
+            )
             self.assertCountEqual(gemuese_context['products'].values_list('name', flat=True), ['Gemüse'])
 
         # Kategorien ohne Bestellungen liefern eine leere Liste statt eines Fehlers
