@@ -78,6 +78,7 @@ class DepotListsPerCategoryTest(TestCase):
         return subscription
 
     def test_subscriptions_sind_alphabetisch_sortiert(self):
+        # FR-051 / UC-004 GR-007: Bezüger/innen je Depot alphabetisch.
         # Regression: der produktgefilterte extra_context überschreibt den Basis-Kontext von
         # juntagrico.util.depot_list.depot_list_data und verlor dabei dessen Sortierung, wodurch
         # die Personenliste pro Depot in beliebiger DB-Reihenfolge erschien.

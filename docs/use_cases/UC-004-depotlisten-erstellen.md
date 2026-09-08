@@ -21,7 +21,7 @@
 3. Die Administratorin trägt den Stichtag ein, für den die Listen gelten sollen.
 4. Die Administratorin löst die Erzeugung aus.
 5. Das System ermittelt je Liste die am Stichtag aktiven Abos, die einen Bestandteil des jeweiligen Produkts enthalten, und beschränkt die Spalten auf die Produktgrössen dieses Produkts.
-6. Das System erzeugt die Listen als druckfertige Dokumente, gruppiert nach Depot mit Abholtag, Adresse, Kontakt und Abholzeitfenster, und weist je Produktgrösse die Bezugsmenge pro Abo sowie eine Gesamtsumme aus.
+6. Das System erzeugt die Listen als druckfertige Dokumente, gruppiert nach Depot mit Abholtag, Adresse, Kontakt und Abholzeitfenster, listet die Abos innerhalb eines Depots alphabetisch auf und weist je Produktgrösse die Bezugsmenge pro Abo sowie eine Gesamtsumme aus.
 7. Das System meldet die erfolgreiche Erzeugung und stellt die Listen zum Abruf bereit.
 8. Die Administratorin ruft die gewünschte Liste ab und druckt sie für die Verteilung aus.
 
@@ -58,6 +58,7 @@
 
 - Für jede definierte Liste liegt ein druckfertiges Dokument zum gewählten Stichtag vor und ist abrufbar.
 - Die Hauptliste sowie die Depot- und Mengenübersicht enthalten ausschliesslich Gemüse; die Hofprodukte sind auf ihre eigenen Listen verteilt.
+- Innerhalb jedes Depots sind die Bezüger/innen alphabetisch aufgeführt.
 
 ### Fehlerfall
 
@@ -88,3 +89,7 @@ Auf den Listen erscheinen nur Produktgrössen, die für die Depotliste freigegeb
 ### GR-006: Stichtagsbezug
 
 Auf einer Liste erscheint ein Abo nur, wenn es am gewählten Stichtag aktiv ist. Das Erstellungsdatum und der Stichtag werden auf jeder Liste ausgewiesen.
+
+### GR-007: Alphabetische Reihenfolge der Bezüger/innen
+
+Innerhalb eines Depots sind die Abos alphabetisch nach der Hauptbezügerin sortiert, gross-/kleinschreibungsunabhängig zuerst nach Vor-, dann nach Nachname. Beim Verteilen wird die Liste als Nachschlagewerk für einen einzelnen Namen benutzt; ohne festgelegte Reihenfolge erscheinen die Zeilen in beliebiger Datenbankreihenfolge und der Name lässt sich nur durch Absuchen der ganzen Seite finden. Die Regel gilt für alle Listen aus GR-002 und GR-003. Sie ergänzt GR-005, die nur die Reihenfolge der Spalten festlegt.

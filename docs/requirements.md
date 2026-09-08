@@ -60,6 +60,7 @@ Plattformabläufe, auf denen sie aufbauen — nicht der übrige Funktionsumfang 
 | FR-029 | Hauptlisten nur mit Gemüse       | Als Administrator/in möchte ich Hauptliste, Depot- und Mengenübersicht auf das Produkt Gemüse beschränkt haben, damit die Übersichten durch die Hofprodukte nicht unlesbar werden.               | UC-004 | Hoch      | Implementiert |
 | FR-030 | Eigene Liste je Hofprodukt       | Als Administrator/in möchte ich für Kartoffeln, Mehl und Glarner Alpkäse je eine eigene Liste, damit im Depot pro Produkt ersichtlich ist, wer welche Grösse bezieht.                            | UC-004 | Hoch      | Implementiert |
 | FR-031 | Kompaktes Layout breiter Sortimente | Als Administrator/in möchte ich Mehl und Glarner Alpkäse im Querformat ohne Kontrollspalten gedruckt bekommen, damit alle Produktgrössen auf die Seite passen.                                | UC-004 | Mittel    | Implementiert |
+| FR-051 | Bezüger/innen alphabetisch sortiert | Als Depotverantwortliche/r möchte ich die Bezüger/innen je Depot alphabetisch aufgelistet haben, damit ich beim Verteilen einen einzelnen Namen finde, ohne die Seite abzusuchen.                | UC-004 | Hoch      | Implementiert |
 
 ### Rundmail und Versandprotokoll
 
