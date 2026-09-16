@@ -1,6 +1,21 @@
 from django.contrib import admin
 
-from .models import EmailAuditLog
+from juntagrico.entity.subtypes import SubscriptionType
+from juntagrico.util import addons
+
+from .models import EmailAuditLog, SubscriptionTypeProductSize
+
+
+class SubscriptionTypeProductSizeInline(admin.TabularInline):
+    model = SubscriptionTypeProductSize
+    extra = 0
+    max_num = 1
+
+
+# Wie juntagrico-billing: Inline am juntagrico-Admin des Abo-Typs anhängen, statt
+# dessen ModelAdmin neu zu registrieren. Funktioniert, weil 'gartenberg' in
+# INSTALLED_APPS vor 'juntagrico' steht und dieses Modul daher früher geladen wird.
+addons.config.register_model_inline(SubscriptionType, SubscriptionTypeProductSizeInline)
 
 
 @admin.register(EmailAuditLog)

@@ -1,7 +1,7 @@
 # Entity Model
 
 Datenmodell im Umfeld der GartenBerg-Anpassungen an der juntagrico-Plattform. Enthalten sind
-die von GartenBerg selbst definierte Entität `EMAIL_AUDIT_LOG` sowie jene Entitäten der
+die von GartenBerg selbst definierten Entitäten `EMAIL_AUDIT_LOG` und `SUBSCRIPTION_TYPE_PRODUCT_SIZE` sowie jene Entitäten der
 Plattform und der eingesetzten Erweiterungen (Rechnungen, Einsatzmeldungen), auf denen die
 GartenBerg-spezifischen Anpassungen — Depotlisten je Produkt, Anmeldeprozess, Bezeichnung der
 Abo-Bestandteile, Mailversand-Protokoll — unmittelbar aufbauen. Nicht abgebildet ist der
@@ -24,6 +24,8 @@ erDiagram
     SUBSCRIPTION_BUNDLE ||--o{ SUBSCRIPTION_BUNDLE_PRODUCT_SIZE : "enthält"
     PRODUCT_SIZE ||--o{ SUBSCRIPTION_BUNDLE_PRODUCT_SIZE : "wird gebündelt in"
     SUBSCRIPTION_PRODUCT ||--o{ PRODUCT_SIZE : "wird angeboten als"
+    SUBSCRIPTION_TYPE ||--o| SUBSCRIPTION_TYPE_PRODUCT_SIZE : "bezieht auf Depotliste"
+    PRODUCT_SIZE ||--o{ SUBSCRIPTION_TYPE_PRODUCT_SIZE : "wird gezählt für"
     MEMBER ||--o{ SHARE : "zeichnet"
     MEMBER ||--o{ BILL : "erhält"
     BUSINESS_YEAR ||--o{ BILL : "rechnet ab"
@@ -160,6 +162,18 @@ Zuordnung einer Produktgrösse zu einem Abo-Paket; dieselbe Grösse kann mehrfac
 | id              | Eindeutiger Schlüssel                | Long      | 19               | Primary Key, Sequence |
 | bundle_id       | Zugeordnetes Abo-Paket               | Long      | 19               | Not Null, Foreign Key (SUBSCRIPTION_BUNDLE.id) |
 | product_size_id | Zugeordnete Produktgrösse            | Long      | 19               | Not Null, Foreign Key (PRODUCT_SIZE.id) |
+
+### SUBSCRIPTION_TYPE_PRODUCT_SIZE
+
+Produktgrösse, die ein Abo-Typ auf den Depotlisten bezieht (GartenBerg-eigene Entität, UC-004 GR-008/GR-009).
+Nötig, wenn das Abo-Paket des Typs mehrere Grössen desselben Produkts enthält (Mehl, Glarner Alpkäse):
+Ohne Zuordnung zählt juntagrico den Bestandteil in jeder Grösse des Pakets. Gepflegt im Admin beim Abo-Typ.
+
+| Attribute            | Description                                   | Data Type | Length/Precision | Validation Rules |
+|----------------------|-----------------------------------------------|-----------|------------------|------------------|
+| id                   | Eindeutiger Schlüssel                         | Long      | 19               | Primary Key, Sequence |
+| subscription_type_id | Zugeordneter Abo-Typ                          | Long      | 19               | Not Null, Unique, Foreign Key (SUBSCRIPTION_TYPE.id) |
+| product_size_id      | Auf der Depotliste gezählte Produktgrösse     | Long      | 19               | Not Null, Foreign Key (PRODUCT_SIZE.id), muss im Abo-Paket des Typs enthalten sein |
 
 ### SUBSCRIPTION_CATEGORY
 

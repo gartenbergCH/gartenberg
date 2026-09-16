@@ -6,20 +6,33 @@ from juntagrico import defaults
 def _product_depotlist_context(product_name):
     """Builds an extra_context function that restricts a depotlist.html export to one product."""
     def extra_context(context):
-        from juntagrico.entity.subs import Subscription
+        from juntagrico.entity.subs import Subscription, SubscriptionPart
         from juntagrico.entity.subtypes import SubscriptionProduct
 
+        from gartenberg.templatetags.gartenberg.depot_extras import ambiguous_types
+
         products = SubscriptionProduct.objects.filter(name=product_name).on_depot_list()
+        # Massgebend ist, ob der Bestandteil des Produkts am Stichtag aktiv ist, nicht das Abo:
+        # sonst erscheinen Abos mit nur bestelltem oder bereits deaktiviertem Bestandteil
+        # (z.B. ein aktives Gemüse-Abo mit wartendem Mehl) als leere Zeile.
+        # Gekündigte, aber noch nicht deaktivierte Bestandteile bleiben aktiv und erscheinen.
+        active_parts = SubscriptionPart.objects.filter(
+            type__bundle__product_sizes__product__name=product_name,
+            type__bundle__product_sizes__show_on_depot_list=True,
+        ).active_on(context['date'])
         subscriptions = Subscription.objects.filter(
-            parts__type__bundle__product_sizes__product__name=product_name,
-            parts__type__bundle__product_sizes__show_on_depot_list=True,
-        ).active_on(context['date']).order_by(
+            id__in=active_parts.values('subscription_id'),
+        ).order_by(
             # Subscription hat keine Meta.ordering; ohne dieses order_by kämen die Zeilen in
             # beliebiger DB-Reihenfolge. Gleiche Sortierung wie juntagrico.util.depot_list,
             # dessen Basis-Kontext hier überschrieben wird.
             Lower('primary_member__first_name'), Lower('primary_member__last_name'),
         ).distinct()
-        return dict(products=products, subscriptions=subscriptions)
+        messages = list(context.get('messages', [])) + [
+            f'Abo-Typ "{sub_type}" hat keine Produktgrösse auf Depotliste zugeordnet und wird nicht gezählt.'
+            for sub_type in ambiguous_types(product_name).filter(subscription_parts__in=active_parts).distinct()
+        ]
+        return dict(products=products, subscriptions=subscriptions, messages=messages)
     return extra_context
 
 

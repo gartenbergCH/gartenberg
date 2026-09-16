@@ -77,9 +77,17 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'juntagrico.context_processors.vocabulary',
             ],
+            # Zählt auf den Depotlisten die Zuordnung Abo-Typ → Produktgrösse mit (UC-004 GR-008),
+            # siehe gartenberg/templatetags/gartenberg/depot_extras.py
+            'libraries': {
+                'juntagrico.depot_extras': 'gartenberg.templatetags.gartenberg.depot_extras',
+            },
         },
     },
 ]
+
+# Die Doppelbelegung von 'juntagrico.depot_extras' in TEMPLATES ist gewollt (Override).
+SILENCED_SYSTEM_CHECKS = ['templates.W003']
 
 WSGI_APPLICATION = 'gartenberg.wsgi.application'
 
