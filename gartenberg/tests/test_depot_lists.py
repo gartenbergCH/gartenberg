@@ -369,6 +369,16 @@ class DepotListProductSizeTest(TestCase):
         extra_context = DEPOT_LISTS['depotlist_mehl']['extra_context'](context)
         self.assertEqual(extra_context['messages'], ['Bitte Taschen zurückbringen'])
 
+    def test_einheiten_der_mengenuebersicht_zaehlen_nur_gemuese(self):
+        # UC-004 GR-002: Das Total der Mengenübersicht zählte bisher auch die Hofprodukte, und
+        # zwar je Mehl-Bestandteil die Einheiten aller Grössen im Paket (hier 4 × 4 + 1 = 17).
+        context = {'date': self.STICHTAG, 'tours': [], 'tour_days': {}}
+        extra_context = DEPOT_LISTS['amount_overview']['extra_context'](context)
+        html = get_template('exports/amount_overview.html').render(context | extra_context)
+        alle = re.search(r'<b>Alle</b></td>([\s\S]*?)</tr>', html).group(1)
+        # Total, dann die Gemüse-Grösse "Ganz"
+        self.assertEqual(re.findall(r'<td class="text-right">(?:<b>)?([^<]*)', alle), ['1', '1'])
+
     @override_settings(STORAGES={
         'default': {'BACKEND': 'django.core.files.storage.InMemoryStorage'},
         'staticfiles': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},

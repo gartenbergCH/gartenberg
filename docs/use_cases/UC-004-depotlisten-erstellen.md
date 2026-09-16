@@ -82,7 +82,7 @@ Depotlisten werden nicht automatisch an festen Wochentagen erzeugt, sondern auss
 
 ### GR-002: Hauptlisten nur mit Gemüse
 
-Hauptliste, Depotübersicht und Mengenübersicht enthalten nur das Produkt Gemüse. Ohne diese Einschränkung würden die Hofprodukte-Kategorien die Übersichten unlesbar machen.
+Hauptliste, Depotübersicht und Mengenübersicht enthalten nur das Produkt Gemüse. Ohne diese Einschränkung würden die Hofprodukte-Kategorien die Übersichten unlesbar machen. Das gilt auch für die Einheiten-Spalte (Total) der Übersichten: Sie summiert je Gemüse-Grösse deren Einheiten mal die Anzahl Bestandteile dieser Grösse (GR-008). Hofprodukte zählen nicht mit; ein Mehl-Bestandteil darf das Gemüse-Total nicht erhöhen.
 
 ### GR-003: Eigene Liste je Hofprodukt
 

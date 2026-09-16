@@ -2,6 +2,9 @@ from django.db.models.functions import Lower
 
 from juntagrico import defaults
 
+# Produkt der Haupt-, Depot- und Mengenübersicht (UC-004 GR-002)
+MAIN_PRODUCT_NAME = 'Gemüse'
+
 
 def _product_depotlist_context(product_name):
     """Builds an extra_context function that restricts a depotlist.html export to one product."""
@@ -41,15 +44,15 @@ DEPOT_LISTS = defaults.DEPOT_LISTS | {
     # die Hofprodukte-Kategorien unübersichtlich werden.
     'depotlist': {
         'template': 'exports/depotlist.html',
-        'extra_context': _product_depotlist_context('Gemüse'),
+        'extra_context': _product_depotlist_context(MAIN_PRODUCT_NAME),
     },
     'depot_overview': {
         'template': 'exports/depot_overview.html',
-        'extra_context': _product_depotlist_context('Gemüse'),
+        'extra_context': _product_depotlist_context(MAIN_PRODUCT_NAME),
     },
     'amount_overview': {
         'template': 'exports/amount_overview.html',
-        'extra_context': _product_depotlist_context('Gemüse'),
+        'extra_context': _product_depotlist_context(MAIN_PRODUCT_NAME),
     },
     'depotlist_kartoffeln': {
         'name': 'Kartoffeln-Liste',
