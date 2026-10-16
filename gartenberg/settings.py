@@ -157,6 +157,7 @@ STATIC_URL = '/static/'
 
 IMPERSONATE = {
     'REDIRECT_URL': '/my/profile',
+    'REQUIRE_SUPERUSER': True,  # sonst kann jeder Staff-Benutzer andere Benutzer imitieren
 }
 
 LOGIN_REDIRECT_URL = "/"
