@@ -29,6 +29,7 @@
 ### A1: Frage betrifft mehrere Mitglieder
 
 **Auslöser:** Die Abklärung lässt sich nicht an einem einzelnen Abo beantworten, etwa bei einer Auswertung über alle Mitglieder (Schritt 4)  
+**Hinweis:** Die Abfragekonsole (juntagrico-pg) ist standardmässig deaktiviert und wird nur bei Bedarf aktiviert (siehe README).  
 **Ablauf:**
 
 1. Die Administratorin ruft die Abfragekonsole der Verwaltung auf und formuliert eine lesende Auswertung auf den Betriebsdaten.

@@ -26,5 +26,6 @@ urlpatterns = [
     re_path(r'^impersonate/', include('impersonate.urls')),
     re_path(r'', include('juntagrico_assignment_request.urls')),
     path('', include('juntagrico_billing.urls')),
-    path('', include('juntagrico_pg.urls')),
+    # SQL-Konsole, nur bei Bedarf aktivieren (siehe README)
+    # path('', include('juntagrico_pg.urls')),
 ]

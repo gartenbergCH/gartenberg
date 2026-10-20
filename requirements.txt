@@ -12,7 +12,7 @@ juntagrico-assignment-request==2.0.0
 # Sobald beide upstream gemergt und released sind, kann hier wieder ein Release stehen.
 # Siehe docs/upstream-juntagrico-billing.md.
 juntagrico-billing @ git+https://github.com/patrickuhlmann/juntagrico-billing.git@gartenberg
-juntagrico-pg==2.0.0
+juntagrico-pg==2.0.0  # SQL-Konsole, standardmässig deaktiviert (siehe README)
 
 # requests wird von juntagrico-billing (util/bexio_api.py) benutzt. Der Fork-Branch deklariert
 # die Abhängigkeit inzwischen selbst (dem Release 2.0.0 fehlt sie noch); der Pin bleibt hier,

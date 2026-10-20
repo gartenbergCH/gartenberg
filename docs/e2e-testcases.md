@@ -82,4 +82,5 @@ Assertions, sondern um einen schnellen Überblick, was grob getestet wird.
   Rechnungslauf — Stammdaten (Zahlungsart, Buchhaltungs-Einstellungen, Geschäftsjahr) anlegen,
   Rechnungen erzeugen, freigeben, in den offenen Rechnungen wiederfinden, Zahlung über den
   vollen Betrag verbuchen und den Ausgleich prüfen.
-- **SQL-Konsole** (`test_admin_pg.py`): DB-Abfrage über die jpg-Admin-Konsole ausführen.
+- **SQL-Konsole** (`test_admin_pg.py`): DB-Abfrage über die jpg-Admin-Konsole ausführen. Übersprungen,
+  solange die Konsole deaktiviert ist (siehe README).

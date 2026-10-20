@@ -4,7 +4,7 @@ This repository sets up a project to be used with juntagrico.science as hosting.
 
 ## Vorgenommene Anpassungen/Konfigurationen
 
-* Assignment Request, Billing und Postgres Plugin installiert
+* Assignment Request und Billing Plugin installiert, Postgres Plugin (SQL-Konsole) installiert aber deaktiviert
 * Name, Adresse, Bankverbindungsdaten
 * Preis pro Anteilschein
 * Link zu Betriebsreglement und Statuten
@@ -14,6 +14,26 @@ This repository sets up a project to be used with juntagrico.science as hosting.
 Angepasste Seiten
 * signup.html -> Hinweis auf Probekorb
 * createsubscription -> select_start_date.html -> Hinweis auf sofort möglichen Start
+
+### SQL-Konsole (juntagrico-pg) bei Bedarf aktivieren
+
+Die SQL-Konsole führt beliebiges SQL mit dem Datenbank-Benutzer der Applikation aus. Wer sie benutzen darf,
+kann alle Daten lesen und ändern, Sessions anderer Benutzer übernehmen und sich selbst zum Superuser machen.
+Sie ist deshalb standardmässig deaktiviert und wird nur kurz eingeschaltet, z. B. um Daten bei einer
+Migration zu prüfen oder zu korrigieren.
+
+Aktivieren (das Paket `juntagrico-pg` ist bereits in `requirements.txt`):
+
+1. In `gartenberg/settings.py` die Zeile `'juntagrico_pg',` in `INSTALLED_APPS` und den Logger
+   `'juntagrico_pg'` in `LOGGING` einkommentieren. Der Logger protokolliert jedes Statement mit Benutzer.
+2. In `gartenberg/urls.py` die Zeile `path('', include('juntagrico_pg.urls')),` einkommentieren.
+3. Deployen. Die Konsole ist dann für Superuser im Admin-Menü unter «juntagrico-pg» bzw. unter `/jpg/home`
+   erreichbar. Die Berechtigung `juntagrico_pg.can_sql` keinem anderen Benutzer geben.
+
+Danach die drei Stellen wieder auskommentieren und erneut deployen.
+
+Lokal lässt sich die Konsole ohne Codeänderung nicht einschalten. Für einen kurzen Test die beiden Dateien wie
+oben anpassen und die Änderung nicht committen.
 
 ## Linux
 

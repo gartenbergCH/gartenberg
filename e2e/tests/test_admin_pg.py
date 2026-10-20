@@ -1,9 +1,12 @@
 import re
 
+import pytest
+
 from conftest import shot
 from pages.admin_pg_page import AdminPgPage
 
 
+@pytest.mark.skip(reason="SQL-Konsole (juntagrico-pg) ist standardmässig deaktiviert, siehe README")
 def test_admin_can_execute_sql_query(admin_page):
     page = AdminPgPage(admin_page)
     page.navigate()

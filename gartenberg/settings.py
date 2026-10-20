@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     'gartenberg',
     'juntagrico_billing',
     'juntagrico_assignment_request',
-    'juntagrico_pg',
+    # 'juntagrico_pg',  # SQL-Konsole, nur bei Bedarf aktivieren (siehe README)
     'juntagrico',
     'import_export',  # benötigt ab 1.6
     'impersonate',
@@ -295,6 +295,13 @@ LOGGING = {
             'propagate': True,
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO')
         },
+        # SQL-Konsole, nur bei Bedarf aktivieren (siehe README). Protokolliert jedes Statement mit Benutzer
+        # (ab juntagrico-pg mit https://github.com/juntagrico/juntagrico-pg/pull/6)
+        # 'juntagrico_pg': {
+        #     'handlers': ['file', 'console'],
+        #     'propagate': True,
+        #     'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO')
+        # },
     },
 }
 

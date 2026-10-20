@@ -94,7 +94,7 @@ Plattformabläufe, auf denen sie aufbauen — nicht der übrige Funktionsumfang 
 | FR-043 | Eindeutige Abo-Bestandteile      | Als Administrator/in möchte ich jeden Abo-Bestandteil mit Abo-Paket und bestellter Produktgrösse bezeichnet sehen, damit sich die verschiedenen Mehl-, Kartoffel- und Käsegrössen unterscheiden lassen. | UC-008 | Hoch | Implementiert |
 | FR-044 | Jüngste Abo-Änderungen           | Als Administrator/in möchte ich die Abo-Änderungen eines wählbaren Zeitraums einsehen, damit ich eine Rückfrage zum Verlauf eines Abos beantworten kann.                                        | UC-008 | Mittel    | Verifiziert   |
 | FR-045 | Mitgliedersicht übernehmen       | Als Administrator/in möchte ich die Sicht eines Mitglieds übernehmen und wieder beenden, damit ich sehe, was das Mitglied sieht, wenn es eine Frage stellt.                                     | UC-008 | Mittel    | Verifiziert   |
-| FR-046 | Lesende Ad-hoc-Auswertung        | Als Administrator/in möchte ich über eine Abfragekonsole lesende Auswertungen auf den Betriebsdaten ausführen, damit ich Fragen über mehrere Mitglieder hinweg beantworten kann.                | UC-008 | Niedrig   | Verifiziert   |
+| FR-046 | Lesende Ad-hoc-Auswertung        | Als Administrator/in möchte ich über eine Abfragekonsole lesende Auswertungen auf den Betriebsdaten ausführen, damit ich Fragen über mehrere Mitglieder hinweg beantworten kann.                | UC-008 | Niedrig   | Deaktiviert   |
 
 ### Kündigungen
 
@@ -136,7 +136,7 @@ durch keine Use-Case-Spezifikation abgedeckt (siehe [Offene Punkte](#offene-punk
 | ID    | Titel                          | Rahmenbedingung                                                                                                                                | Kategorie   | Priorität | Status        |
 |-------|--------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|-------------|-----------|---------------|
 | C-001 | Plattformbasis juntagrico      | Die Lösung baut auf juntagrico auf (aktuell 2.0.9); ein Fork der Plattform wird nicht geführt.                                                    | Technical   | Hoch      | Implementiert |
-| C-002 | Eingesetzte Erweiterungen      | Rechnungsstellung, Einsatzmeldungen und Abfragekonsole stammen aus juntagrico-billing, juntagrico-assignment-request und juntagrico-pg (je 2.0.0). | Technical   | Hoch      | Implementiert |
+| C-002 | Eingesetzte Erweiterungen      | Rechnungsstellung, Einsatzmeldungen und Abfragekonsole stammen aus juntagrico-billing, juntagrico-assignment-request und juntagrico-pg (je 2.0.0); die Abfragekonsole ist standardmässig deaktiviert (README). | Technical   | Hoch      | Implementiert |
 | C-003 | Art der Anpassungen            | GartenBerg-Anpassungen erfolgen ausschliesslich als Konfiguration, Template-Überschreibung oder eigene Django-App unter `gartenberg/`.            | Technical   | Hoch      | Implementiert |
 | C-004 | Laufzeitumgebung               | Die Anwendung läuft in einem Container auf Python 3.14.                                                                                          | Technical   | Hoch      | Implementiert |
 | C-005 | Datenhaltung                   | Produktiv wird PostgreSQL eingesetzt, lokal SQLite.                                                                                              | Technical   | Hoch      | Implementiert |
