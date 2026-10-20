@@ -3,6 +3,7 @@ Django settings for gartenberg project.
 """
 
 import os
+from datetime import timedelta
 
 from juntagrico.defaults import richtextfield_config
 
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'djrichtextfield',  # benötigt ab 2.0
     'adminsortable2',
     'polymorphic',
+    'axes',  # Brute-Force-Schutz für das Login
 
 
 ]
@@ -116,6 +118,7 @@ USE_L10N = True
 DATE_INPUT_FORMATS = ['%d.%m.%Y', ]
 
 AUTHENTICATION_BACKENDS = (
+    'axes.backends.AxesStandaloneBackend',  # muss zuerst stehen
     'juntagrico.util.auth.AuthenticateWithEmail',
     'django.contrib.auth.backends.ModelBackend'
 )
@@ -131,7 +134,26 @@ MIDDLEWARE = [
     'django.contrib.sites.middleware.CurrentSiteMiddleware',
     'impersonate.middleware.ImpersonateMiddleware',
     'gartenberg.middleware.EmailAuditMiddleware',
+    'axes.middleware.AxesMiddleware',  # muss zuletzt stehen
 ]
+
+"""
+     Brute-Force-Schutz (django-axes)
+     Nach 5 fehlgeschlagenen Logins wird die IP für 30 Minuten gesperrt (Login und Admin-Login).
+     Sperren aufheben: im Admin unter «Axes» → «Access attempts» löschen oder
+     `manage.py axes_reset_ip <ip>` bzw. `manage.py axes_reset`.
+"""
+AXES_FAILURE_LIMIT = 5
+AXES_COOLOFF_TIME = timedelta(minutes=30)
+# Pro IP statt pro Benutzername: verhindert auch das Durchprobieren vieler Konten, und Dritte können
+# ein fremdes Konto nicht durch absichtliche Fehlversuche sperren.
+AXES_LOCKOUT_PARAMETERS = ['ip_address']
+# Letzter X-Forwarded-For-Eintrag (vom nginx gesetzt), siehe gartenberg/auth.py
+AXES_CLIENT_IP_CALLABLE = 'gartenberg.auth.client_ip'
+AXES_RESET_ON_SUCCESS = True
+# Erfolgreiche Logins nicht protokollieren (Datensparsamkeit), Fehlversuche werden weiterhin gespeichert
+AXES_DISABLE_ACCESS_LOG = True
+AXES_LOCKOUT_TEMPLATE = 'gartenberg/lockout.html'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

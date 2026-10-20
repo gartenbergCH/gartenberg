@@ -15,6 +15,19 @@ Angepasste Seiten
 * signup.html -> Hinweis auf Probekorb
 * createsubscription -> select_start_date.html -> Hinweis auf sofort möglichen Start
 
+### Brute-Force-Schutz (django-axes)
+
+Nach 5 fehlgeschlagenen Logins wird die IP-Adresse für 30 Minuten gesperrt. Das gilt für das Mitglieder-Login
+und das Admin-Login. Ein erfolgreiches Login setzt den Zähler zurück. Gespeichert werden nur Fehlversuche, keine
+erfolgreichen Logins.
+
+Die Client-IP stammt aus dem letzten Eintrag von `X-Forwarded-For` (siehe `gartenberg/auth.py`). Das setzt voraus,
+dass genau ein Proxy (nginx) vor der Applikation steht und diesen Eintrag selbst setzt. Kommen weitere Proxies
+dazu, muss die Funktion angepasst werden, sonst teilen sich alle Benutzer eine IP und sperren sich gegenseitig.
+
+Sperre aufheben: Im Admin unter «Axes» → «Access attempts» den Eintrag löschen, oder
+`manage.py axes_reset_ip <ip>` bzw. `manage.py axes_reset` (alle).
+
 ### SQL-Konsole (juntagrico-pg) bei Bedarf aktivieren
 
 Die SQL-Konsole führt beliebiges SQL mit dem Datenbank-Benutzer der Applikation aus. Wer sie benutzen darf,

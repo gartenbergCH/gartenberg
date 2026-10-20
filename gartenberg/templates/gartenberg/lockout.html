@@ -1,0 +1,19 @@
+{% extends "no_menu_base.html" %}
+{% load juntagrico.config %}
+{% block allcontent %}
+    <div class="offset-md-3 col-md-6">
+        <div class="alert alert-danger mb-3">
+            <p>
+                Zu viele fehlgeschlagene Anmeldeversuche. Die Anmeldung ist für
+                {% widthratio cooloff_timedelta.total_seconds 60 1 %} Minuten gesperrt.
+            </p>
+            <p>
+                Passwort vergessen? <a href="{% url 'password_reset' %}">Passwort zurücksetzen</a>
+            </p>
+            <p>
+                Brauchst du Hilfe? Melde dich bei
+                <a href="mailto:{% contacts "technical" %}">{% contacts "technical" %}</a>
+            </p>
+        </div>
+    </div>
+{% endblock %}

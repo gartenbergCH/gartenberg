@@ -4,6 +4,7 @@ juntagrico==2.0.10
 gunicorn==26.2.0
 psycopg==3.3.6
 whitenoise==6.12.0
+django-axes==8.3.1  # sperrt IPs nach fehlgeschlagenen Logins (Brute-Force-Schutz)
 juntagrico-assignment-request==2.0.0
 # juntagrico-billing kommt aus dem eigenen Fork-Branch 'gartenberg'. Er entspricht dem
 # upstream-main plus den beiden noch offenen Pull Requests, die GartenBerg schon braucht:
