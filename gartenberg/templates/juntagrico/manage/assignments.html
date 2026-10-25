@@ -1,0 +1,33 @@
+{% extends "juntagrico/manage/assignments.html" %}
+
+{% comment %}
+    UC-013: Schaltfläche, die die E-Mail-Adressen der Abos mit Arbeitseinsätze-Status unter 100 %
+    kopiert. Berücksichtigt wie "E-Mails kopieren" Auswahl, Suche, Filter und die Anzeigeschalter.
+{% endcomment %}
+
+{% block datatable_constructor %}
+    {{ block.super }}
+    // Spalte "Arbeitseinsätze Status" im juntagrico-Template, z.B. "85,5%"
+    const progress_column = 5
+    function incomplete_rows(dt) {
+        return $(get_selected_or_all(dt).toArray()).filter(function () {
+            const progress = parseFloat($('td', this).eq(progress_column).text().replace(',', '.'))
+            return progress < 100
+        })
+    }
+    config.layout.topStart.features.buttons.push({
+        text: '<i class="bi bi-clipboard"></i> E-Mails unter 100 % kopieren',
+        className: 'copy-incomplete-emails',
+        init: function (dt, node, config) {
+            let that = this
+            dt.on('draw select.dt.DT deselect.dt.DT', function () {
+                that.enable(fetch_unique_from_table(incomplete_rows(dt), '.email').size > 0)
+            })
+            this.node().on('click', timed_text_class_change('<i class="bi bi-check"></i> E-Mails kopiert', 'btn-success'))
+        },
+        action: function (e, dt, node, config) {
+            let emails = fetch_unique_from_table(incomplete_rows(dt), '.email')
+            navigator.clipboard.writeText(Array.from(emails).join("\n"))
+        }
+    })
+{% endblock %}

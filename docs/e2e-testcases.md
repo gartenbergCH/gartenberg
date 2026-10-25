@@ -75,6 +75,9 @@ Assertions, sondern um einen schnellen Überblick, was grob getestet wird.
   Liste der künftigen Einsätze; eingeschriebene Person mit Name und E-Mail in der Zeile ihres
   Einsatzes, Hinweis bei Einsätzen ohne Anmeldungen, Einschränkung auf Tätigkeitsbereich und auf
   einzelne Einsatzart.
+- **Einsatzübersicht** (`test_admin_assignments.py`): «E-Mails unter 100 % kopieren» kopiert genau
+  die Adressen der Abos unter 100 %, berücksichtigt den Schalter für Mitbezüger/innen und ist ohne
+  Treffer deaktiviert (UC-013).
 - **Depot-Listen** (`test_admin_list.py`): Depot-Listen erzeugen und abrufen.
 - **E-Mail-Versand** (`test_admin_mail.py`): realer Mailversand inkl. Regressionsschutz für den
   `EmailAuditMiddleware` (Eintrag im EmailAuditLog).

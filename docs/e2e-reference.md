@@ -389,6 +389,22 @@ Playwright bricht mit "strict mode violation" ab.
 page.locator("#job-participants-table")
 ```
 
+## Zwischenablage gibt es nur im "secure context"
+
+`navigator.clipboard` existiert nur unter HTTPS oder `localhost`. Die E2E-Tests laufen über
+`http://juntagrico:8000`, dort ist `navigator.clipboard` `undefined` und jeder Kopier-Button
+(«E-Mails kopieren» usw.) wirft beim Klick einen Fehler. Auch `grant_permissions(["clipboard-read"])`
+hilft dann nicht.
+
+**Fix:** Vor dem Seitenaufruf `writeText` per Init-Script abfangen und den Text auslesen:
+
+```python
+page.add_init_script(
+    "Object.defineProperty(navigator, 'clipboard', {value: {"
+    "writeText: text => { window.__copied = text; return Promise.resolve() }}})"
+)
+```
+
 ## Adminmenü-Einträge stehen zweimal im DOM
 
 `base.html` bindet `juntagrico/menu/navigation.html` zweimal ein: eingeklappt in der Navbar
