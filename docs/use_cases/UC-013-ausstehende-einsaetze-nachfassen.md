@@ -26,8 +26,8 @@ ausgewählt werden.
 1. Die Person ruft die Einsatzübersicht der Verwaltung auf und wählt bei Bedarf den Zeitraum.
 2. Das System zeigt je Abo die Einsätze, die benötigten Einsätze und den Arbeitseinsätze-Status.
 3. Die Person klickt auf «E-Mails unter 100 % kopieren».
-4. Das System kopiert die E-Mail-Adressen aller Abos mit einem Arbeitseinsätze-Status unter 100 %
-   in die Zwischenablage, je Adresse eine Zeile, und bestätigt das Kopieren auf der Schaltfläche.
+4. Das System kopiert die E-Mail-Adressen aller noch nicht deaktivierten Abos mit einem
+   Arbeitseinsätze-Status unter 100 % in die Zwischenablage, je Adresse eine Zeile, und bestätigt das Kopieren auf der Schaltfläche.
 5. Die Person fügt die Adressen in ihr Mailprogramm ein und verschickt die Erinnerung.
 
 ## Alternativabläufe
@@ -43,7 +43,7 @@ ausgewählt werden.
 
 ### A2: Alle Abos erfüllt
 
-**Auslöser:** Kein berücksichtigtes Abo hat einen Status unter 100 % (Schritt 3)  
+**Auslöser:** Kein berücksichtigtes, noch nicht deaktiviertes Abo hat einen Status unter 100 % (Schritt 3)  
 **Ablauf:**
 
 1. Das System deaktiviert die Schaltfläche.
@@ -71,3 +71,10 @@ nicht stattgefundene Einsätze im Zeitraum. Abos ohne Einsatzpflicht gelten als 
 
 Es gelten dieselben Anzeigeschalter wie für «E-Mails kopieren»: Die Adressen der Mitbezüger/innen
 werden nur kopiert, wenn «MitabonnentInnen anzeigen» eingeschaltet ist.
+
+### GR-003: Bereits deaktivierte Abos werden nicht angeschrieben
+
+Ist ein Abo bereits deaktiviert (Deaktivierungsdatum erreicht, Abo-Status «inaktiv»), wurden die
+offenen Einsätze in der Regel direkt mit dem Mitglied geklärt; seine Adressen werden nicht kopiert.
+Gekündigte Abos, die noch laufen, werden weiterhin angeschrieben. Ein erst künftiges
+Deaktivierungsdatum gilt noch nicht als deaktiviert.

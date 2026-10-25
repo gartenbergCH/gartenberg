@@ -5,7 +5,8 @@ class AdminAssignmentsPage:
     """Einsatzübersicht der Verwaltung mit "E-Mails unter 100 % kopieren" (UC-013)."""
 
     URL = "/manage/assignments"
-    # Spalte "Arbeitseinsätze Status" im juntagrico-Template
+    # Spalten "Abo-Status" und "Arbeitseinsätze Status" im juntagrico-Template
+    STATUS_COLUMN = 2
     PROGRESS_COLUMN = 5
 
     def __init__(self, page: Page):
@@ -41,11 +42,13 @@ class AdminAssignmentsPage:
     def search(self, text: str):
         self.page.locator("#filter-table_wrapper input[type='search']").fill(text)
 
-    def rows(self) -> list[tuple[set[str], float]]:
-        """Je Abo die angezeigten E-Mail-Adressen (Spalte BezieherInnen) und den Status in %."""
+    def rows(self) -> list[tuple[set[str], float, bool]]:
+        """Je Abo die angezeigten E-Mail-Adressen (Spalte BezieherInnen), den Status in % und
+        ob das Abo bereits deaktiviert ist (Abo-Status "inaktiv")."""
         result = []
         for row in self.page.locator("#filter-table tbody tr:has(td:nth-child(2))").all():
             emails = {e.strip() for e in row.locator("td").first.locator(".email").all_inner_texts()}
             progress = row.locator("td").nth(self.PROGRESS_COLUMN).inner_text().strip()
-            result.append((emails, float(progress.rstrip("%").replace(",", "."))))
+            deactivated = row.locator("td").nth(self.STATUS_COLUMN).inner_text().strip().startswith("inaktiv")
+            result.append((emails, float(progress.rstrip("%").replace(",", ".")), deactivated))
         return result

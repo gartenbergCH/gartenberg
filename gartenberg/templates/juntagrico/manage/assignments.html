@@ -2,17 +2,23 @@
 
 {% comment %}
     UC-013: Schaltfläche, die die E-Mail-Adressen der Abos mit Arbeitseinsätze-Status unter 100 %
-    kopiert. Berücksichtigt wie "E-Mails kopieren" Auswahl, Suche, Filter und die Anzeigeschalter.
+    kopiert, ausser das Abo ist bereits deaktiviert. Berücksichtigt wie "E-Mails kopieren" Auswahl, Suche, Filter und die Anzeigeschalter.
 {% endcomment %}
 
 {% block datatable_constructor %}
     {{ block.super }}
-    // Spalte "Arbeitseinsätze Status" im juntagrico-Template, z.B. "85,5%"
+    // Spalten im juntagrico-Template: Abo-Status mit Admin-Link auf das Abo und
+    // "Arbeitseinsätze Status", z.B. "85,5%"
+    const status_column = 2
     const progress_column = 5
+    // Bereits deaktivierte Abos sind mit dem Mitglied erledigt, gekündigte nicht (GR-003)
+    const deactivated_subscriptions = new Set([{% for subscription in object_list %}{% if subscription.state != 'waiting' and subscription.state != 'active' %}'{{ subscription.id }}', {% endif %}{% endfor %}])
     function incomplete_rows(dt) {
         return $(get_selected_or_all(dt).toArray()).filter(function () {
-            const progress = parseFloat($('td', this).eq(progress_column).text().replace(',', '.'))
-            return progress < 100
+            const cells = $('td', this)
+            const id = (cells.eq(status_column).find('a').attr('href') || '').match(/subscription\/(\d+)\//)
+            const progress = parseFloat(cells.eq(progress_column).text().replace(',', '.'))
+            return progress < 100 && !(id && deactivated_subscriptions.has(id[1]))
         })
     }
     config.layout.topStart.features.buttons.push({

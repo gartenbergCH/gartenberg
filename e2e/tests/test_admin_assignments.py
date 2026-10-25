@@ -3,7 +3,7 @@ from pages.admin_assignments_page import AdminAssignmentsPage
 
 
 def _expected(rows) -> set[str]:
-    return set().union(*(emails for emails, progress in rows if progress < 100))
+    return set().union(*(emails for emails, progress, deactivated in rows if progress < 100 and not deactivated))
 
 
 def test_kopiert_e_mails_der_abos_unter_100_prozent(admin_page):
@@ -15,12 +15,14 @@ def test_kopiert_e_mails_der_abos_unter_100_prozent(admin_page):
     expected = _expected(rows)
     assert expected, f"Die Testdaten sollten Abos unter 100 % enthalten: {rows}"
 
-    # EX-AA01: Kopiert genau die Adressen der Abos unter 100 % (UC-013 Hauptablauf)
+    # EX-AA01: Kopiert genau die Adressen der Abos unter 100 %, ausser bereits deaktivierte
+    # (UC-013 Hauptablauf, GR-003)
     copied = page.copy_incomplete_emails()
     shot(admin_page, "admin_assignments_02_copied")
     assert copied == expected, f"Kopiert: {copied}, erwartet: {expected}"
-    complete = set().union(*(emails for emails, progress in rows if progress >= 100))
-    assert not (copied & (complete - expected)), "Abos mit 100 % oder mehr dürfen nicht dabei sein"
+    excluded = set().union(*(emails for emails, progress, deactivated in rows if progress >= 100 or deactivated))
+    assert not (copied & (excluded - expected)), \
+        "Abos mit 100 % oder mehr und deaktivierte Abos dürfen nicht dabei sein"
 
     # EX-AA02: Mit eingeschaltetem Schalter kommen die Mitbezüger/innen dazu (GR-002)
     page.show_co_members()

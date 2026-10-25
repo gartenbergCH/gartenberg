@@ -39,16 +39,17 @@ class ManageAssignmentsViewTest(TestCase):
         sub_type = SubscriptionType.objects.create(name='Gemüse-Typ', bundle=bundle, required_assignments=4, price=100)
 
         start = start_of_business_year()
-        subscription = Subscription.objects.create(depot=depot, activation_date=start, start_date=start)
-        SubscriptionPart.objects.create(subscription=subscription, type=sub_type, activation_date=start)
-        cls.anna = Member.objects.create(
-            first_name='Anna', last_name='Zwahlen', email='anna@e2e-test.local',
-            addr_street='Teststrasse 1', addr_zipcode='5000', addr_location='Aarau',
-            phone='079 111 11 11', confirmed=True, reachable_by_email=False,
-        )
-        cls.anna.join_subscription(subscription, True)
-        # Einsätze zählen nur ab dem Beitritt zum Abo
-        subscription.subscriptionmembership_set.update(join_date=start)
+        today = datetime.date.today()
+        cls.anna, cls.anna_sub = cls._make_subscriber('Anna', 'Zwahlen', depot, sub_type, start)
+        # Gekündigt, aber noch nicht deaktiviert: soll weiterhin angeschrieben werden
+        _, cls.gekuendigt = cls._make_subscriber('Gerda', 'Kuendig', depot, sub_type, start)
+        cls.gekuendigt.cancellation_date = today
+        cls.gekuendigt.save()
+        # Bereits deaktiviert: mit dem Mitglied direkt gelöst (GR-003)
+        _, cls.deaktiviert = cls._make_subscriber('Dieter', 'Weg', depot, sub_type, start)
+        cls.deaktiviert.cancellation_date = today - datetime.timedelta(days=1)
+        cls.deaktiviert.deactivation_date = today - datetime.timedelta(days=1)
+        cls.deaktiviert.save()
 
         job_type = JobType.objects.create(
             name='Abpacken', activityarea=ActivityArea.objects.create(name='Ernteverteilung'),
@@ -67,20 +68,46 @@ class ManageAssignmentsViewTest(TestCase):
         cls.admin.is_superuser = True
         cls.admin.save()
 
-    def test_zeigt_schaltflaeche_fuer_e_mails_unter_100_prozent(self):
+    @classmethod
+    def _make_subscriber(cls, first_name, last_name, depot, sub_type, start):
+        subscription = Subscription.objects.create(depot=depot, activation_date=start, start_date=start)
+        SubscriptionPart.objects.create(subscription=subscription, type=sub_type, activation_date=start)
+        member = Member.objects.create(
+            first_name=first_name, last_name=last_name, email=f'{first_name.lower()}@e2e-test.local',
+            addr_street='Teststrasse 1', addr_zipcode='5000', addr_location='Aarau',
+            phone='079 111 11 11', confirmed=True, reachable_by_email=False,
+        )
+        member.join_subscription(subscription, True)
+        # Einsätze zählen nur ab dem Beitritt zum Abo
+        subscription.subscriptionmembership_set.update(join_date=start)
+        return member, subscription
+
+    def _content(self):
         self.client.force_login(self.admin)
-        content = self.client.get(self.url).content.decode()
+        return self.client.get(self.url).content.decode()
+
+    def test_zeigt_schaltflaeche_fuer_e_mails_unter_100_prozent(self):
+        content = self._content()
         self.assertIn('E-Mails unter 100 % kopieren', content)
         # Die Schaltfläche ergänzt die bestehenden, ersetzt sie aber nicht
         self.assertIn('email_copy_button()', content)
 
-    def test_statusspalte_liegt_an_der_im_skript_erwarteten_position(self):
-        # Das Skript liest den Status aus der 6. Spalte (Index 5) und parst das deutsche
-        # Dezimalkomma. Ändert juntagrico das Template, soll dieser Test anschlagen (GR-001).
-        self.client.force_login(self.admin)
-        content = self.client.get(self.url).content.decode()
+    def test_spalten_liegen_an_den_im_skript_erwarteten_positionen(self):
+        # Das Skript liest die Abo-Id aus dem Admin-Link der 3. Spalte (Index 2) und den Status
+        # aus der 6. Spalte (Index 5) mit deutschem Dezimalkomma. Ändert juntagrico das
+        # Template, soll dieser Test anschlagen (GR-001, GR-003).
+        content = self._content()
+        self.assertIn('const status_column = 2', content)
         self.assertIn('const progress_column = 5', content)
-        row = re.search(r'<tbody>\s*<tr>(.*?)</tr>', content, re.S).group(1)
+        row = next(
+            r for r in re.findall(r'<tr>(.*?)</tr>', content, re.S) if 'anna@e2e-test.local' in r
+        )
         cells = re.findall(r'<td[^>]*>(.*?)</td>', row, re.S)
-        self.assertIn('anna@e2e-test.local', cells[0])
+        self.assertRegex(cells[2], rf'href="[^"]*subscription/{self.anna_sub.id}/')
         self.assertEqual(cells[5].strip(), '37,5%')
+
+    def test_nur_bereits_deaktivierte_abos_werden_ausgenommen(self):
+        # GR-003: deaktiviert -> ausgenommen, gekündigt oder aktiv -> weiterhin dabei
+        content = self._content()
+        deactivated = re.search(r'const deactivated_subscriptions = new Set\(\[(.*?)\]\)', content).group(1)
+        self.assertEqual(re.findall(r"'(\d+)'", deactivated), [str(self.deaktiviert.id)])
