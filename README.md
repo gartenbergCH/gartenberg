@@ -123,10 +123,9 @@ Develop in the container
 Releases werden über den Workflow **Release** in GitHub Actions ausgelöst
 (Actions → Release → *Run workflow*):
 
-* **version** — z.B. `5.1.0`; das Tag `v5.1.0` wird daraus erzeugt.
-* **prerelease** — markiert das Release als Vorabversion.
-* **dry_run** — erzeugt nur die Release-Notes in der Job-Zusammenfassung, ohne
-  Tag und Release anzulegen.
+* **bump** — `patch` (Standard), `minor` oder `major`. Die neue Version wird
+  aus dem höchsten `vX.Y.Z`-Tag berechnet, z.B. von `v5.1.2` zu `v5.1.3`,
+  `v5.2.0` bzw. `v6.0.0`.
 
 Der Text des Releases wird aus den Conventional Commits seit dem letzten
 `v*`-Tag generiert und nach Typ gruppiert (Breaking Changes, Features, Fixes,
