@@ -57,6 +57,7 @@ The following environment variables can be defined:
 | --------------- | --------------- | --------------- |
 | JUNTAGRICO_SECRET_KEY | Used by Django for cryptographic signing | - |
 | JUNTAGRICO_DEBUG | Enables the debug mode of the instance (should not be used in production) | False |
+| JUNTAGRICO_HTTPS_ONLY | Sends session and CSRF cookies only via HTTPS (when not in debug mode). Set to False for test systems that run via plain HTTP | True |
 | JUNTAGRICO_DATABASE_ENGINE | The database engine to be used | django.db.backends.sqlite3 |
 | JUNTAGRICO_DATABASE_NAME | The name of the database | 'gartenberg.db' |
 | JUNTAGRICO_DATABASE_USER | The user to connect to the database | - |

@@ -9,6 +9,7 @@ services:
       environment:
         - JUNTAGRICO_EMAIL_HOST=mailhog
         - JUNTAGRICO_EMAIL_PORT=1025
+        - JUNTAGRICO_HTTPS_ONLY=False  # läuft über HTTP
         #- JUNTAGRICO_DEBUG=false
 
       depends_on: 

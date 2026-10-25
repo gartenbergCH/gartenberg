@@ -20,6 +20,13 @@ DEBUG = os.environ.get("JUNTAGRICO_DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = ['my.gartenberg.ch', 'gartenberg.juntagrico.science', 'localhost', '127.0.0.1', 'juntagrico', 'gartenberg-staging.juntagrico.science']
 
+# Produktion läuft nur über HTTPS: Session- und CSRF-Cookie nur über HTTPS senden.
+# Die lokalen Testsysteme (compose*.yml, E2E) laufen über HTTP und setzen JUNTAGRICO_HTTPS_ONLY=False.
+# HSTS und die Weiterleitung auf HTTPS setzt der nginx des Hostings.
+if not DEBUG and os.environ.get('JUNTAGRICO_HTTPS_ONLY', 'True') == 'True':
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
 
 # Application definition
 
@@ -125,12 +132,14 @@ AUTHENTICATION_BACKENDS = (
 
 
 MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',  # nosniff, Referrer-Policy, COOP
     'whitenoise.middleware.WhiteNoiseMiddleware', # Serve static files
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',  # X-Frame-Options: DENY gegen Clickjacking
     'django.contrib.sites.middleware.CurrentSiteMiddleware',
     'impersonate.middleware.ImpersonateMiddleware',
     'gartenberg.middleware.EmailAuditMiddleware',
