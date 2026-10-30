@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+from datetime import date
 
 from conftest import shot
 from pages.assignment_request_page import AssignmentRequestPage
@@ -9,9 +9,10 @@ def test_report_assignment(member_page):
     request_page.navigate()
     shot(member_page, "assignment_request_01_form")
 
-    next_week = (date.today() + timedelta(days=7)).strftime("%Y-%m-%dT09:00")
+    # Gemeldet wird geleistete Arbeit: das Formular lehnt Daten in der Zukunft ab
+    today = date.today().strftime("%Y-%m-%dT00:00")
     request_page.submit_request(
-        job_time=next_week,
+        job_time=today,
         description="E2E Testeinsatz: selbständige Gartenarbeit",
     )
     shot(member_page, "assignment_request_02_after_submit")

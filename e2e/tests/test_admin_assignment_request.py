@@ -1,5 +1,5 @@
 import uuid
-from datetime import date, timedelta
+from datetime import date
 
 from conftest import shot
 from pages.admin_assignment_request_page import AdminAssignmentRequestPage
@@ -7,7 +7,8 @@ from pages.assignment_request_page import AssignmentRequestPage
 
 # Im laufenden Geschäftsjahr, damit die beurteilte Anfrage auf der Mitgliederliste
 # sichtbar bleibt (dort werden neben offenen nur Anfragen dieser Saison angezeigt).
-_JOB_TIME = (date.today() + timedelta(days=3)).strftime("%Y-%m-%dT14:00")
+# Heute 00:00, weil das Formular Daten in der Zukunft ablehnt.
+_JOB_TIME = date.today().strftime("%Y-%m-%dT00:00")
 
 
 def _report_assignment(member_page, description: str) -> AssignmentRequestPage:

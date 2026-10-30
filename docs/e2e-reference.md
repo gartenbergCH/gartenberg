@@ -333,6 +333,18 @@ erzeugten Einsatz — ein guter Beleg dafür, dass die Anrechnung wirklich entst
 
 ---
 
+## Einsatzmeldung: Datum darf nicht in der Zukunft liegen
+
+Seit juntagrico-assignment-request 2.0.1 lehnt das Formular ein `job_time` in der Zukunft ab
+("Das Datum darf nicht in der Zukunft liegen."). Der Submit führt dann zu keinem Redirect, und
+`expect_response` auf den GET 200 läuft in einen Timeout statt einer sprechenden Fehlermeldung.
+
+**Fix:** Als Datum heute 00:00 verwenden (`date.today().strftime("%Y-%m-%dT00:00")`). Das liegt
+immer in der Vergangenheit und — anders als "gestern" — auch am ersten Tag des Geschäftsjahrs
+noch in der laufenden Saison, sodass die beurteilte Anfrage in der Mitgliederliste sichtbar bleibt.
+
+---
+
 ## DataTables: leere Tabelle hat trotzdem eine `<tr>`
 
 Ist eine DataTables-Tabelle leer, rendert DataTables eine Platzhalterzeile mit einer einzigen
