@@ -21,4 +21,4 @@ juntagrico-pg==2.0.0  # SQL-Konsole, standardmässig deaktiviert (siehe README)
 requests==2.34.2
 
 # transitive dependency (pyHanko <- xhtml2pdf), pinned so Dependabot gates upgrades via CI
-tzlocal==5.4.4
+tzlocal==5.4.5
