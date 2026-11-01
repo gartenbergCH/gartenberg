@@ -27,6 +27,12 @@ if not DEBUG and os.environ.get('JUNTAGRICO_HTTPS_ONLY', 'True') == 'True':
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
 
+# Djangos Default 'same-origin' schickt bei Cross-Origin-Requests keinen Referer mit. Ohne Referer
+# blockieren die OSM-Tile-Server die Kartenkacheln der Depotkarten ("Access blocked") und die
+# Statistik (statistics.gartenberg.ch) beantwortet script.js mit 403.
+# Siehe https://github.com/juntagrico/juntagrico/issues/958
+SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+
 
 # Application definition
 

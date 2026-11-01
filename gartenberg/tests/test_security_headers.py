@@ -19,7 +19,7 @@ class SecurityHeadersTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['X-Frame-Options'], 'DENY')
         self.assertEqual(response['X-Content-Type-Options'], 'nosniff')
-        self.assertEqual(response['Referrer-Policy'], 'same-origin')
+        self.assertEqual(response['Referrer-Policy'], 'strict-origin-when-cross-origin')
 
 
 class SecureCookieSettingsTest(TestCase):
