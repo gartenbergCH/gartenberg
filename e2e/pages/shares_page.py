@@ -13,7 +13,12 @@ class SharesPage:
         # bootstrap-input-spinner wraps the input; use the + button to increment
         for _ in range(count):
             self.page.locator(".btn-increment").first.click()
-        self.page.get_by_role("button", name="Bestellen").click()
+        # Auf die Form-Submit-Navigation (POST → 302 → GET) warten, bevor der
+        # Test weiter navigiert: ein sofortiges goto() kollidiert sonst mit der
+        # noch laufenden Navigation und das "load"-Event bleibt aus (Timeout).
+        with self.page.expect_navigation():
+            self.page.get_by_role("button", name="Bestellen").click()
+        self.page.wait_for_load_state("networkidle")
 
     def shares_count(self) -> int:
         return self.page.locator("#filter-table tbody tr").count()

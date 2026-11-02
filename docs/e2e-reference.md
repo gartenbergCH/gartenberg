@@ -512,3 +512,18 @@ Zwei Fallstricke nach erfolgreichem Submit (POST → 302):
 Der gartenberg-eigene `EmailAuditMiddleware` (`gartenberg/middleware.py`) hängt an den Mail-Versand-POSTs. In 2.0 änderten sich URLs (`/email/write/`, `/email/{to,depot,area,job}/<id>/`) **und** Feldnamen (`from_email` statt `sender`; Empfänger via `to_list`/`to_members`/`to_areas`/`to_jobs`/`to_depots`/`copy` statt `all*`/`recipients`). Echte Sends erkennt man am Submit-Feld `submit` im POST (Vorbefüll-POSTs mit `members` haben das nicht).
 
 **Regressions-Erkennung — zwei Ebenen nötig:** Die Unit-Tests (`gartenberg/tests/test_email_audit.py`) prüfen die Middleware-Logik isoliert gegen **hartkodierte** POST-Daten — sie fangen Code-Fehler, aber **nicht** ein erneutes stilles Ändern der juntagrico-Mailform. Dafür braucht es den **Integrationscheck** in `tests/test_admin_mail.py`: nach dem realen Versand das EmailAuditLog-Admin-Changelist (`/admin/gartenberg/emailauditlog/`) öffnen und den Betreff verifizieren (echtes Formular → Middleware → Log).
+
+## Form-Submit + sofortiges `goto()` → Timeout auf "load"
+
+Ein Submit per `click()` wartet **nicht** auf die ausgelöste Navigation (POST → 302 → GET). Ruft der Test
+direkt danach `page.goto(...)` auf (z. B. zum "Neuladen" derselben Seite), kollidieren die beiden
+Navigationen: Server-seitig sind beide GETs mit 200 beantwortet, aber das `load`-Event des `goto()` kommt
+nie → `Page.goto: Timeout 30000ms exceeded` (flaky, z. B. `test_order_additional_share`).
+
+**Fix:** Den Klick in `expect_navigation()` wickeln, damit die Submit-Navigation abgeschlossen ist:
+
+```python
+with page.expect_navigation():
+    page.get_by_role("button", name="Bestellen").click()
+page.wait_for_load_state("networkidle")
+```
