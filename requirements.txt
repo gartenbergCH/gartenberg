@@ -6,18 +6,11 @@ psycopg==3.3.6
 whitenoise==6.12.0
 django-axes==8.3.1  # sperrt IPs nach fehlgeschlagenen Logins (Brute-Force-Schutz)
 juntagrico-assignment-request==2.0.1
-# juntagrico-billing kommt aus dem eigenen Fork-Branch 'gartenberg'. Er entspricht dem
-# upstream-main plus den beiden noch offenen Pull Requests, die GartenBerg schon braucht:
-#   PR #77 fix/subscriptiontype-size-attribute (AttributeError in BillItem.__str__)
-#   PR #78 feature/cancel-bills (Rechnungen stornieren)
-# Sobald beide upstream gemergt und released sind, kann hier wieder ein Release stehen.
-# Siehe docs/upstream-juntagrico-billing.md.
-juntagrico-billing @ git+https://github.com/patrickuhlmann/juntagrico-billing.git@gartenberg
+juntagrico-billing==2.0.1
 juntagrico-pg==2.0.1  # SQL-Konsole, standardmässig deaktiviert (siehe README)
 
-# requests wird von juntagrico-billing (util/bexio_api.py) benutzt. Der Fork-Branch deklariert
-# die Abhängigkeit inzwischen selbst (dem Release 2.0.0 fehlt sie noch); der Pin bleibt hier,
-# damit Dependabot Upgrades weiterhin über die CI führt.
+# requests wird von juntagrico-billing (util/bexio_api.py) benutzt und von dessen Release 2.0.1
+# auch deklariert; der Pin bleibt hier, damit Dependabot Upgrades weiterhin über die CI führt.
 requests==2.34.2
 
 # transitive dependency (pyHanko <- xhtml2pdf), pinned so Dependabot gates upgrades via CI

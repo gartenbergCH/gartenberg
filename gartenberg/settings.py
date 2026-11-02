@@ -287,7 +287,7 @@ STORAGES = {
 """
 # Fügt den Eintrag "Rechnungen" (/jb/user_bills) zum Benutzermenü hinzu, damit Mitglieder ihre
 # eigenen Rechnungen einsehen und als PDF herunterladen können. Sichtbar sind dort nur
-# veröffentlichte (und nicht stornierte) Rechnungen.
+# veröffentlichte Rechnungen.
 # Voraussetzung: In der Admin-UI muss ein juntagrico-billing "Settings"-Objekt mit
 # Standard-Zahlungstyp existieren, sonst schlägt die Rechnungsseite fehl.
 BILLS_USERMENU = True

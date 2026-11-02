@@ -55,9 +55,9 @@
 2. Der Einzahlungsschein lautet auf den offenen Betrag statt auf den Rechnungsbetrag.
 3. Der Use Case wird bei Schritt 7 fortgesetzt.
 
-### A4: Zugriff auf eine fremde oder stornierte Rechnung
+### A4: Zugriff auf eine fremde Rechnung
 
-**Auslöser:** Das Mitglied ruft eine Rechnung auf, die einem anderen Mitglied gehört oder storniert wurde (Schritt 3)  
+**Auslöser:** Das Mitglied ruft eine Rechnung auf, die einem anderen Mitglied gehört (Schritt 3)  
 **Ablauf:**
 
 1. Das System verweigert den Zugriff.
@@ -80,7 +80,7 @@
 
 ### GR-001: Sichtbarkeit erst nach Freigabe
 
-Dem Mitglied werden ausschliesslich freigegebene Rechnungen angezeigt. Erzeugte, aber noch nicht freigegebene Rechnungen sind nicht Teil der Liste; stornierte Rechnungen sind für das Mitglied weder sichtbar noch abrufbar.
+Dem Mitglied werden ausschliesslich freigegebene Rechnungen angezeigt. Erzeugte, aber noch nicht freigegebene Rechnungen sind nicht Teil der Liste.
 
 ### GR-002: Zugriff nur auf eigene Rechnungen
 
