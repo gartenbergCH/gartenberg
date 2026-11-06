@@ -298,6 +298,14 @@ BILLS_USERMENU = True
 #    'd_changed': 'gartenberg_emails/member/depot_changed.txt',
 #}
 
+# Logdatei nur verwenden, wenn sie geschrieben werden kann. Das Hosting führt z.B. `migrate`
+# in einem temporären Container mit read-only Dateisystem aus; dort wird nur auf die Konsole geloggt.
+LOG_FILE = os.getenv('GARTENBERG_LOG_FILE', 'gartenberg.log')
+LOG_HANDLERS = ['console']
+if (os.access(LOG_FILE, os.W_OK) if os.path.exists(LOG_FILE)
+        else os.access(os.path.dirname(os.path.abspath(LOG_FILE)), os.W_OK)):
+    LOG_HANDLERS.insert(0, 'file')
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -311,7 +319,8 @@ LOGGING = {
         'file': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': 'gartenberg.log',
+            'filename': LOG_FILE,
+            'delay': True,
             'maxBytes': 1024*1024*5, # 5 MB
             'backupCount': 5,
             'formatter': 'timestamped',
@@ -323,19 +332,19 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['file', 'console'],
+            'handlers': LOG_HANDLERS,
             'propagate': True,
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO')
         },
         'juntagrico.mailer': {
-            'handlers': ['file', 'console'],
+            'handlers': LOG_HANDLERS,
             'propagate': True,
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO')
         },
         # SQL-Konsole, nur bei Bedarf aktivieren (siehe README). Protokolliert jedes Statement mit Benutzer
         # (ab juntagrico-pg mit https://github.com/juntagrico/juntagrico-pg/pull/6)
         # 'juntagrico_pg': {
-        #     'handlers': ['file', 'console'],
+        #     'handlers': LOG_HANDLERS,
         #     'propagate': True,
         #     'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO')
         # },
