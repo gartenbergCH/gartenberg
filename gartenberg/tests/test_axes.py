@@ -59,6 +59,27 @@ class LoginLockoutTest(TestCase):
         # auch das richtige Passwort wird während der Sperre abgewiesen
         self.assertEqual(self.login(self.password).status_code, 429)
 
+    def admin_login(self, password, ip='203.0.113.7'):
+        return self.client.post('/admin/login/', {'username': 'anna@example.com', 'password': password},
+                                HTTP_X_FORWARDED_FOR=ip)
+
+    def test_admin_login_locks_ip_after_five_failures(self):
+        for _ in range(4):
+            self.assertEqual(self.admin_login('falsch').status_code, 200)
+        response = self.admin_login('falsch')
+        self.assertEqual(response.status_code, 429)
+        self.assertContains(response, 'Zu viele fehlgeschlagene Anmeldeversuche', status_code=429)
+        self.assertEqual(self.admin_login(self.password).status_code, 429)
+
+    def test_failures_are_counted_across_member_and_admin_login(self):
+        # Fehlversuche zählen pro IP über beide Login-Formulare; ein Wechsel aufs andere Formular umgeht die Sperre nicht
+        for _ in range(3):
+            self.login('falsch')
+        for _ in range(2):
+            self.admin_login('falsch')
+        self.assertEqual(self.login(self.password).status_code, 429)
+        self.assertEqual(self.admin_login(self.password).status_code, 429)
+
     def test_spoofed_forwarded_for_does_not_bypass_lockout(self):
         for i in range(5):
             self.login('falsch', ip=f'198.51.100.{i}, 203.0.113.7')
