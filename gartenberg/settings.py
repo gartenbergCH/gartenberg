@@ -5,6 +5,7 @@ Django settings for gartenberg project.
 import os
 from datetime import timedelta
 
+from juntagrico import defaults
 from juntagrico.defaults import richtextfield_config
 
 from gartenberg.depot_lists import DEPOT_LISTS
@@ -192,9 +193,15 @@ WHITELIST_EMAILS = ['info@gartenberg.ch', 'gartenberg-test@uhlme.ch']
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
+# Impersonate nur für Mitglieder der Gruppe «impersonators» (Gruppe ohne Berechtigungen anlegen)
+# und nur gegenüber Konten ohne Rechte (keine Admins/Mitarbeiter, keine Koordinator:innen).
+allow_impersonate = defaults.allow_group('impersonators')
+
 IMPERSONATE = {
     'REDIRECT_URL': '/my/profile',
     'REQUIRE_SUPERUSER': True,  # sonst kann jeder Staff-Benutzer andere Benutzer imitieren
+    'CUSTOM_ALLOW': 'gartenberg.settings.allow_impersonate',
+    'CUSTOM_USER_QUERYSET': 'juntagrico.defaults.unprivileged_only',
 }
 
 LOGIN_REDIRECT_URL = "/"

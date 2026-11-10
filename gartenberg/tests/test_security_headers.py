@@ -44,3 +44,13 @@ class SecureCookieSettingsTest(TestCase):
     def test_no_secure_cookies_in_debug_mode(self):
         settings = self.load_settings(JUNTAGRICO_DEBUG='True')
         self.assertNotIn('SESSION_COOKIE_SECURE', settings)
+
+
+class ImpersonateSettingsTest(TestCase):
+    """Impersonate nur für die Gruppe «impersonators» und nur gegenüber Konten ohne Rechte."""
+
+    def test_impersonate_ist_eingeschraenkt(self):
+        from django.conf import settings
+        self.assertEqual(settings.IMPERSONATE['CUSTOM_ALLOW'], 'gartenberg.settings.allow_impersonate')
+        self.assertEqual(settings.IMPERSONATE['CUSTOM_USER_QUERYSET'], 'juntagrico.defaults.unprivileged_only')
+        self.assertTrue(settings.IMPERSONATE['REQUIRE_SUPERUSER'])

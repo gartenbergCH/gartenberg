@@ -387,6 +387,12 @@ class DepotListProductSizeTest(TestCase):
         from django.contrib.auth.models import User
         from django.urls import reverse
         admin_user = User.objects.create_superuser('admin', 'admin@e2e-test.local', 'pw')
+        # Seit juntagrico 2.0.11 verlangt der Login zu jedem User ein Member
+        Member.objects.create(
+            user=admin_user, first_name='Ad', last_name='Min', email='admin@e2e-test.local',
+            addr_street='Teststrasse 1', addr_zipcode='5000', addr_location='Aarau',
+            phone='079 000 00 00', reachable_by_email=False,
+        )
         self.client.force_login(admin_user)
         response = self.client.get(
             reverse('admin:juntagrico_subscriptiontype_change', args=[self.types['Weizenmehl Ruch 1kg'].pk])
