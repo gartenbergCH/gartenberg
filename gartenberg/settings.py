@@ -323,15 +323,6 @@ LOGGING = {
         },
     },
     'handlers': {
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': LOG_FILE,
-            'delay': True,
-            'maxBytes': 1024*1024*5, # 5 MB
-            'backupCount': 5,
-            'formatter': 'timestamped',
-        },
         'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'timestamped',
@@ -357,6 +348,19 @@ LOGGING = {
         # },
     },
 }
+
+# Den Datei-Handler nur dann konfigurieren, wenn er auch verwendet wird: dictConfig instanziiert
+# jeden definierten Handler, auch wenn er nirgends referenziert ist (read-only Dateisystem im Hosting).
+if 'file' in LOG_HANDLERS:
+    LOGGING['handlers']['file'] = {
+        'level': 'INFO',
+        'class': 'logging.handlers.RotatingFileHandler',
+        'filename': LOG_FILE,
+        'delay': True,
+        'maxBytes': 1024*1024*5,  # 5 MB
+        'backupCount': 5,
+        'formatter': 'timestamped',
+    }
 
 IMPORT_EXPORT_EXPORT_PERMISSION_CODE = 'view'
 
