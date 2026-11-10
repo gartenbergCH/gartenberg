@@ -15,6 +15,8 @@ RUN pip install --no-cache-dir -r requirements.txt \
 	&& export DJANGO_SUPERUSER_PASSWORD=$juntagrico_password \
 	&& ./manage.py createsuperuser --noinput --username $juntagrico_username --email $juntagrico_email \
 	&& ./manage.py create_member_for_superusers \
+	# Impersonate ist auf die Gruppe «impersonators» beschränkt (siehe settings.py)
+	&& ./manage.py shell -c "from django.contrib.auth.models import Group, User; User.objects.get(username='$juntagrico_username').groups.add(Group.objects.get_or_create(name='impersonators')[0])" \
 	&& ./manage.py generate_testdata \
 	# Settings-Singleton, Zahlungstyp und Geschäftsjahr für juntagrico-billing; ohne
 	# diese Objekte schlägt die Rechnungsseite der Mitglieder (/jb/user_bills) fehl.

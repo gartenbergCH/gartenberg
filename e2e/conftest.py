@@ -36,6 +36,9 @@ MEMBER_EMAIL = f"e2e.{uuid.uuid4().hex[:8]}@gartenberg-e2e.local"
 MEMBER_FIRST = "E2E"
 MEMBER_LAST = "Testperson"
 
+# Vom Signup generiertes Passwort des Test-Mitglieds (wird im member_context-Fixture gesetzt)
+MEMBER_CREDENTIALS: dict = {}
+
 
 def _decode_body(part: dict) -> str:
     body = part.get("Body", "")
@@ -182,6 +185,7 @@ def member_context(playwright: Playwright) -> BrowserContext:
     # Retrieve auto-generated password and confirmation link from welcome email
     email_body = wait_for_email(MEMBER_EMAIL)
     password = extract_password(email_body)
+    MEMBER_CREDENTIALS["password"] = password
     confirm_path = extract_confirm_path(email_body)
 
     page.goto(confirm_path)
