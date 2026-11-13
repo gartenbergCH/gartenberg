@@ -2,7 +2,7 @@
 juntagrico==2.0.11
 
 gunicorn==26.2.0
-psycopg==3.3.7
+psycopg==3.3.8
 whitenoise==6.12.0
 django-axes==9.0.0  # sperrt IPs nach fehlgeschlagenen Logins (Brute-Force-Schutz)
 juntagrico-assignment-request==2.0.1
