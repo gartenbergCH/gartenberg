@@ -69,3 +69,32 @@ For one-off scripts outside these commands (e.g. `docker run ... manage.py shell
   (`gartenberg.db`, `gartenberg.log`) lands root-owned in the repo and can't be `rm`'d without
   another container. Point `JUNTAGRICO_DATABASE_NAME` at a path outside `/opt` (e.g.
   `/tmp/preview.db`) for throwaway runs.
+
+## Wegwerf-Testinstanz (manuelles Testen)
+
+Für einen manuellen Test im Browser, ohne Postgres-Dump (siehe README für die Variante mit Dump):
+
+1. MailHog starten: `docker run -d --rm --name gb-mailhog -p 127.0.0.1:8025:8025 mailhog/mailhog`.
+   Mails lesen unter http://localhost:8025.
+2. SQLite-DB unter `/data` anlegen (`.docker-cache/data/gartenberg/`) und Demo-Daten per
+   `tooling/docker.sh gartenberg manage shell < script.py` einspielen (stdin geht, kein eigenes `docker run`).
+   `JUNTAGRICO_DATABASE_NAME=/data/preview.db` setzen, `migrate`, Benutzer `test`/`test` anlegen
+   (`createsuperuser --noinput` mit `DJANGO_SUPERUSER_*`; existiert er schon, Passwort in der Shell setzen).
+3. Server starten: `JUNTAGRICO_DATABASE_NAME=/data/preview.db JUNTAGRICO_EMAIL_HOST=<mailhog-ip> JUNTAGRICO_EMAIL_PORT=1025 JUNTAGRICO_HTTPS_ONLY=False tooling/docker.sh gartenberg runserver 8000`
+   (im Hintergrund starten, Log umleiten).
+4. Aufräumen: `docker stop juntagrico-tooling-gartenberg-8000 gb-mailhog`.
+
+Fallstricke:
+- **SMTP-Host:** `172.17.0.1` stimmt nicht zwingend. Die Container laufen im Bridge-Netz, dessen Gateway
+  hier `10.200.0.1` ist, und der Host-Weg war blockiert (Timeout, der Versand "hängt"). Zuverlässig ist die
+  IP des MailHog-Containers im selben Netz: `docker inspect gb-mailhog -f '{{.NetworkSettings.Networks.bridge.IPAddress}}'`.
+- **Whitelist:** `runserver` läuft mit DEBUG, dann versendet das Mail-Backend nur an `WHITELIST_EMAILS`
+  (`settings.py`). Demo-Mitglieder mit anderen Adressen ergeben "E-Mail(s) konnten nicht gesendet werden".
+  Demo-Mitglieder deshalb mit einer Adresse aus der Whitelist anlegen. Die Empfängerzahl am Senden-Button
+  zählt trotzdem alle, der Filter greift erst beim Versand.
+- **Standarddaten:** Ein frisches `migrate` legt von juntagrico die Kategorie "Kategorie 1" mit dem Paket
+  "Normales Abo" an; sie erscheint in Auswahlfeldern, in der Produktion nicht.
+- **Abo-Testdaten:** juntagrico validiert Datumsangaben streng (Enddatum braucht Kündigungsdatum, Bestandteile
+  müssen zum Aktivierungsdatum des Abos passen, ein nicht gekündigtes Abo braucht einen aktiven Bestandteil).
+  `gartenberg/tests/test_email_category.py` zeigt funktionierende Beispiele.
+- Für automatisierte Browser-Tests stattdessen `e2e/run.sh` (eigener Compose-Stack mit MailHog).
