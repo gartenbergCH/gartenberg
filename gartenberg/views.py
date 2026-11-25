@@ -7,10 +7,15 @@ werden diese Angaben parallel in Excel geführt.
 """
 from django.shortcuts import render
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 
 from juntagrico.entity.jobs import ActivityArea, Job, JobType
-from juntagrico.view_decorators import any_permission_required
+from juntagrico.util.string import int_array_decompress
+from juntagrico.view_decorators import any_permission_required, requires_permission_to_contact
+from juntagrico.views.email import count_recipients, email_view
 from juntagrico_assignment_request.models import AssignmentRequest
+
+from gartenberg.email_forms import CategoryEmailForm, CategoryRecipientsForm
 
 # Präfixe der Filterwerte im Auswahlfeld. Tätigkeitsbereiche und Einsatzarten teilen sich
 # ein einziges Feld (GR-003), deshalb muss der Wert seine Art mittragen.
@@ -96,3 +101,26 @@ def job_participants(request):
         'scope_choices': _scope_choices(),
         'selected_scope': f'{scope}:{scope_id}' if scope else '',
     })
+
+
+# --- Rundmail nach Abokategorie (UC-005, FR-057) ---------------------------------------
+
+@requires_permission_to_contact
+@csrf_exempt
+def email_write(request):
+    """Wie juntagrico.views.email.write, aber mit dem Feld "Abokategorien"."""
+    initial = dict(
+        to_jobs=[request.GET.get('job')],
+        to_members=int_array_decompress(request.GET.get('members', '') or request.POST.get('members', ''))
+    )
+    if 'members' in request.POST:
+        # Vorbefüllen per POST verhält sich wie GET (Vorgabe von juntagrico, kein Versand)
+        request.method = 'GET'
+    return email_view(request, CategoryEmailForm, initial)
+
+
+@requires_permission_to_contact
+@csrf_exempt
+def email_count_recipients(request):
+    form = CategoryRecipientsForm(request.user.member, data=request.GET or request.POST)
+    return count_recipients(request, form)

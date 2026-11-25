@@ -75,6 +75,7 @@ Plattformabläufe, auf denen sie aufbauen — nicht der übrige Funktionsumfang 
 | FR-035 | Versandprotokoll auswerten     | Als Administrator/in möchte ich das Protokoll neueste-zuerst sehen sowie nach Absender und Versandweg filtern und nach Absender und Betreff durchsuchen, damit ich eine Rückfrage rasch klären kann. | UC-006 | Hoch | Implementiert |
 | FR-036 | Protokoll schreibgeschützt     | Als Administrator/in möchte ich Protokolleinträge weder anlegen noch ändern können, damit das Protokoll als Beleg taugt.                                                                     | UC-006 | Hoch      | Implementiert |
 | FR-056 | Ausstehende Einsätze anschreiben | Als Administrator/in möchte ich auf der Einsatzübersicht die E-Mail-Adressen aller noch nicht deaktivierten Abos mit Arbeitseinsätze-Status unter 100 % mit einem Klick kopieren, damit ich sie gezielt an offene Einsätze erinnern kann. | UC-013 | Mittel | Implementiert |
+| FR-057 | Rundmail nach Abokategorie | Als Administrator/in möchte ich eine Nachricht an alle Abo-Bezieher/innen einer Abokategorie (z.B. Gemüse oder Hofprodukte) senden, damit ich nur die betroffenen Mitglieder informiere. | UC-005 | Hoch | Entwurf |
 
 ### Rechnungen
 

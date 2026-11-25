@@ -23,6 +23,8 @@ class EmailAuditMiddleware:
             to_list = request.POST.getlist('to_list')
             if 'all_subscriptions' in to_list:
                 groups.append('Abo-BezieherInnen')
+            if request.POST.getlist('to_categories'):
+                groups.append('Abo-BezieherInnen nach Abokategorie')
             if 'all_shares' in to_list:
                 groups.append('Anteilsschein-BesitzerInnen')
             if request.POST.getlist('to_members'):

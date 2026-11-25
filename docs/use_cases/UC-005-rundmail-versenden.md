@@ -6,7 +6,7 @@
 **Use-Case-Name:** Rundmail an Mitgliedergruppen versenden  
 **Primärer Akteur:** Administrator/in  
 **Ziel:** Die Koordination informiert eine gezielt ausgewählte Gruppe von Mitgliedern und hinterlässt dabei einen nachvollziehbaren Beleg, wer wann was an wen verschickt hat.  
-**Status:** Implementiert
+**Status:** Geprüft
 
 ## Vorbedingungen
 
@@ -16,7 +16,7 @@
 ## Hauptablauf
 
 1. Die Administratorin ruft das Formular für den Versand an Mitgliedergruppen auf.
-2. Die Administratorin wählt die Empfängergruppen aus: alle Abo-Bezieher/innen, alle Anteilschein-Besitzer/innen, einzelne Mitglieder, Tätigkeitsbereiche, Einsätze oder Depots.
+2. Die Administratorin wählt die Empfängergruppen aus: alle Abo-Bezieher/innen, Abo-Bezieher/innen einer oder mehrerer Abokategorien (z.B. Gemüse oder Hofprodukte), alle Anteilschein-Besitzer/innen, einzelne Mitglieder, Tätigkeitsbereiche, Einsätze oder Depots.
 3. Das System zeigt die Anzahl der so erreichten Empfänger/innen an.
 4. Die Administratorin erfasst Absenderadresse, Betreff und Nachrichtentext und entscheidet, ob sie eine Kopie an sich selbst erhalten will.
 5. Die Administratorin löst den Versand aus.
@@ -33,6 +33,15 @@
 1. Die Administratorin lässt die Empfängerauswahl in das Formular übernehmen, ohne den Versand auszulösen.
 2. Das System füllt das Formular vor und legt keinen Protokolleintrag an.
 3. Der Use Case wird bei Schritt 4 fortgesetzt.
+
+### A4: Auswahl erreicht niemanden
+
+**Auslöser:** Die gewählten Gruppen enthalten keine Empfänger/innen, z.B. eine Abokategorie ohne aktive Abos (Schritt 3)  
+**Ablauf:**
+
+1. Das System zeigt keine Empfängerzahl an.
+2. Die Administratorin passt die Empfängerauswahl an.
+3. Der Use Case wird bei Schritt 2 fortgesetzt.
 
 ### A2: Angaben zur Nachricht unvollständig
 
@@ -75,7 +84,7 @@ Festgehalten werden Zeitpunkt, Absenderadresse, Betreff, die angeschriebenen Emp
 
 ### GR-003: Bezeichnung der Empfängergruppen
 
-Die Empfängergruppen werden im Protokoll in der Sprache der Genossenschaft festgehalten: Abo-BezieherInnen, Anteilsschein-BesitzerInnen, Einzelne Mitglieder, Tätigkeitsbereiche, Einsätze, Depots sowie die Kopie an den Absender. Fehlt eine Angabe, wird ein Platzhalter eingetragen.
+Die Empfängergruppen werden im Protokoll in der Sprache der Genossenschaft festgehalten: Abo-BezieherInnen, Abo-BezieherInnen nach Abokategorie, Anteilsschein-BesitzerInnen, Einzelne Mitglieder, Tätigkeitsbereiche, Einsätze, Depots sowie die Kopie an den Absender. Fehlt eine Angabe, wird ein Platzhalter eingetragen.
 
 ### GR-004: Protokollierung darf den Versand nicht verhindern
 
@@ -88,3 +97,7 @@ Auf der Staging-Umgebung werden Nachrichten nicht zugestellt, damit Tests keine 
 ### GR-006: Signatur ausgehender Nachrichten
 
 Jede versendete Nachricht wird um die Signatur der Genossenschaft ergänzt (siehe UC-002 GR-004).
+
+### GR-007: Empfänger/innen einer Abokategorie
+
+Die Auswahl nach Abokategorie steht nur Personen mit dem allgemeinen Recht zum Versand an Mitgliedergruppen zur Verfügung, nicht Koordinator/innen, die nur ihre eigenen Depots oder Tätigkeitsbereiche anschreiben dürfen. Wählt die Administratorin eine oder mehrere Abokategorien, erhalten die Nachricht alle aktiven Mitglieder, die ein aktives Abo mit mindestens einem aktiven Abo-Bestandteil aus einer dieser Kategorien haben. Mehrere Kategorien wirken als Vereinigung; wer mehrfach zutrifft oder zusätzlich über eine andere Gruppe gewählt ist, erhält die Nachricht nur einmal. Pakete ohne Kategorie (nicht bestellbar) gehören zu keiner Kategorie.

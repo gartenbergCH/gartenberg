@@ -16,12 +16,15 @@ from django.urls import include, re_path, path
 from django.contrib import admin
 import juntagrico
 
-from gartenberg.views import job_participants
+from gartenberg.views import job_participants, email_write, email_count_recipients
 
 urlpatterns = [
     re_path(r'^admin/', admin.site.urls),
     # GartenBerg-eigene Seiten vor dem juntagrico-Catch-all (r'^')
     path('einsatzliste/', job_participants, name='job-participants'),
+    # Rundmail mit Empfängerauswahl nach Abokategorie (UC-005); überschreibt juntagrico
+    path('email/write/', email_write, name='email-write'),
+    path('email/write/recipients/count', email_count_recipients, name='gartenberg-email-count-recipients'),
     re_path(r'^', include('juntagrico.urls')),
     re_path(r'^impersonate/', include('impersonate.urls')),
     re_path(r'', include('juntagrico_assignment_request.urls')),

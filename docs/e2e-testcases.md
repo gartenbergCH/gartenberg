@@ -80,7 +80,9 @@ Assertions, sondern um einen schnellen Überblick, was grob getestet wird.
   Treffer deaktiviert (UC-013).
 - **Depot-Listen** (`test_admin_list.py`): Depot-Listen erzeugen und abrufen.
 - **E-Mail-Versand** (`test_admin_mail.py`): realer Mailversand inkl. Regressionsschutz für den
-  `EmailAuditMiddleware` (Eintrag im EmailAuditLog).
+  `EmailAuditMiddleware` (Eintrag im EmailAuditLog). Zusätzlich Versand an eine Abokategorie
+  (UC-005 GR-007): Feld «Kategorien» wählbar, Versand erreicht die Bestätigungsseite und die
+  Gruppe «Abo-BezieherInnen nach Abokategorie» steht im Audit-Log.
 - **Rechnungen** (`test_admin_billing.py`): anstehende Rechnungen einsehen; kompletter
   Rechnungslauf — Stammdaten (Zahlungsart, Buchhaltungs-Einstellungen, Geschäftsjahr) anlegen,
   Rechnungen erzeugen, freigeben, in den offenen Rechnungen wiederfinden, Zahlung über den

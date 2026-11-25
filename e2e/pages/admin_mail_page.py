@@ -36,3 +36,22 @@ class AdminMailPage:
 
     def reached_sent_page(self) -> bool:
         return "/email/sent" in self.page.url
+
+    def select_first_category(self):
+        # UC-005 GR-007: gartenberg-eigenes Select2-Mehrfachfeld "Kategorien".
+        container = self.page.locator("#div_id_to_categories")
+        container.locator(".select2-selection").click()
+        option = self.page.locator(".select2-results__option").first
+        label = option.inner_text()
+        option.click()
+        return label
+
+    def send(self, subject: str, body: str):
+        self.page.locator("input[name='subject']").fill(subject)
+        self.page.evaluate(f"tinymce.activeEditor.setContent('<p>{body}</p>')")
+        self.page.evaluate("tinymce.triggerSave()")
+        with self.page.expect_response(
+            lambda r: "/email/sent" in r.url and r.request.method == "GET" and r.status == 200
+        ):
+            self.page.locator("#submit-id-submit").click()
+        self.page.wait_for_load_state("networkidle")
