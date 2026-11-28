@@ -21,17 +21,21 @@
             return progress < 100 && !(id && deactivated_subscriptions.has(id[1]))
         })
     }
+    // Gleicher Aufbau wie juntagrico.js email_copy_button() (Signaturen seit juntagrico 2.1)
+    const incomplete_text = '<i class="bi bi-clipboard"></i> E-Mails unter 100 % kopieren'
     config.layout.topStart.features.buttons.push({
-        text: '<i class="bi bi-clipboard"></i> E-Mails unter 100 % kopieren',
+        text: incomplete_text,
         className: 'copy-incomplete-emails',
         init: function (dt, node, config) {
             let that = this
             dt.on('draw select.dt.DT deselect.dt.DT', function () {
-                that.enable(fetch_unique_from_table(incomplete_rows(dt), '.email').size > 0)
+                const count = fetch_unique_from_table(incomplete_rows(dt), '.email').size
+                that.enable(count > 0)
+                that.text(with_count(incomplete_text, count))
             })
-            this.node().on('click', timed_text_class_change('<i class="bi bi-check"></i> E-Mails kopiert', 'btn-success'))
         },
         action: function (e, dt, node, config) {
+            timed_text_class_change(this, dt, node, '<i class="bi bi-check"></i> E-Mails kopiert', 'btn-success')
             let emails = fetch_unique_from_table(incomplete_rows(dt), '.email')
             navigator.clipboard.writeText(Array.from(emails).join("\n"))
         }
