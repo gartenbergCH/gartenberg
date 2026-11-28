@@ -36,11 +36,13 @@ def test_member_is_logged_in_after_signup(member_context: BrowserContext):
         assert MEMBER_EMAIL in content, \
             f"E-Mail '{MEMBER_EMAIL}' fehlt auf der Profilseite nach dem Signup"
 
-        # EX-R02: membership-status block exists and confirms active membership
+        # EX-R02: membership-status block exists and shows the requested membership
+        # (UC-001 Nachbedingung: bestätigte Beitrittserklärung = beantragte Mitgliedschaft;
+        # seit juntagrico 2.1 aktiviert die Administration sie erst)
         status = page.locator(".membership-status")
         assert status.count() > 0, "Membership-Status-Block fehlt auf der Profilseite"
         status_text = status.inner_text()
-        assert "aktiv" in status_text.lower(), \
-            f"Membership-Status sollte 'aktiv' enthalten, war: '{status_text}'"
+        assert "beantragt" in status_text.lower(), \
+            f"Membership-Status sollte 'beantragt' enthalten, war: '{status_text}'"
     finally:
         page.close()
