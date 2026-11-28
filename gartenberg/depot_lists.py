@@ -22,7 +22,7 @@ def _product_depotlist_context(product_name):
         active_parts = SubscriptionPart.objects.filter(
             type__bundle__product_sizes__product__name=product_name,
             type__bundle__product_sizes__show_on_depot_list=True,
-        ).active_on(context['date'])
+        ).served_on(context['date'])
         subscriptions = Subscription.objects.filter(
             id__in=active_parts.values('subscription_id'),
         ).order_by(

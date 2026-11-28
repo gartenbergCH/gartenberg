@@ -56,4 +56,4 @@ def count_units(subs, date=None):
     if not isinstance(subs, Subscription) and not (isinstance(subs, QuerySet) and subs.model is Subscription):
         return 0.0
     sizes = ProductSize.objects.filter(product__name=MAIN_PRODUCT_NAME).on_depot_list()
-    return float(sum(size.units * parts_by_size(subs, size).active_on(date).count() for size in sizes))
+    return float(sum(size.units * parts_by_size(subs, size).served_on(date).count() for size in sizes))

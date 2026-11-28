@@ -6,7 +6,7 @@
 **Use-Case-Name:** Mitgliedschaft beantragen  
 **Primärer Akteur:** Interessent/in  
 **Ziel:** Eine interessierte Person meldet sich mit einem passenden Abo bei der Genossenschaft GartenBerg an und weiss dabei, ob sie eine Probe-Mitgliedschaft oder eine volle Mitgliedschaft mit Anteilscheinen eingeht.  
-**Status:** Implementiert
+**Status:** Genehmigt
 
 ## Vorbedingungen
 
@@ -25,11 +25,12 @@
 7. Das System zeigt das reguläre Startdatum zum nächsten Geschäftsjahr an und erläutert, dass wegen freier Plätze auch ein Start auf den nächsten Monatsbeginn möglich ist.
 8. Die Interessentin trägt das gewünschte Startdatum ein.
 9. Die Interessentin erfasst optional Mitbezüger/innen oder fährt ohne solche fort.
-10. Die Interessentin bestellt die für ihre Abo-Bestandteile benötigten Anteilscheine; bei einer Probe-Mitgliedschaft bleibt die Anzahl bei null.
-11. Das System zeigt eine Zusammenfassung der Bestellung.
-12. Die Interessentin bestätigt die Bestellung verbindlich.
-13. Das System legt Mitgliedschaft, Abo und allfällige Anteilscheine an, versendet die Begrüssungsnachricht mit Zugangsdaten und Bestätigungslink und zeigt die Willkommensseite.
-14. Die Interessentin bestätigt ihre E-Mail-Adresse über den Bestätigungslink und meldet sich an.
+10. Das System zeigt die Beitrittserklärung zur Genossenschaft an und weist darauf hin, ob sie für die gewählten Abo-Bestandteile erforderlich oder freiwillig ist; die Interessentin bestätigt die Beitrittserklärung.
+11. Die Interessentin bestellt die für ihre Abo-Bestandteile benötigten Anteilscheine; bei einer Probe-Mitgliedschaft bleibt die Anzahl bei null.
+12. Das System zeigt eine Zusammenfassung der Bestellung.
+13. Die Interessentin bestätigt die Bestellung verbindlich.
+14. Das System legt Mitgliedschaft, Abo und allfällige Anteilscheine an, versendet die Begrüssungsnachricht mit Zugangsdaten und Bestätigungslink und zeigt die Willkommensseite.
+15. Die Interessentin bestätigt ihre E-Mail-Adresse über den Bestätigungslink und meldet sich an.
 
 ## Alternativabläufe
 
@@ -44,12 +45,12 @@
 
 ### A2: Zu wenige Anteilscheine bestellt
 
-**Auslöser:** Die bestellte Anzahl Anteilscheine unterschreitet die für die gewählten Abo-Bestandteile nötige Anzahl (Schritt 10)  
+**Auslöser:** Die bestellte Anzahl Anteilscheine unterschreitet die für die gewählten Abo-Bestandteile nötige Anzahl (Schritt 11)  
 **Ablauf:**
 
 1. Das System weist auf die fehlenden Anteilscheine hin und lässt die Bestellung nicht zu.
 2. Die Interessentin erhöht die Anzahl oder wechselt zu einer Probe-Variante.
-3. Der Use Case wird bei Schritt 10 fortgesetzt.
+3. Der Use Case wird bei Schritt 11 fortgesetzt.
 
 ### A3: Gewünschtes Startdatum nicht zulässig
 
@@ -62,24 +63,42 @@
 
 ### A4: Anmeldung abgebrochen
 
-**Auslöser:** Die Interessentin bricht den Anmeldeprozess ab (Schritt 5 bis 11)  
+**Auslöser:** Die Interessentin bricht den Anmeldeprozess ab (Schritt 5 bis 12)  
 **Ablauf:**
 
 1. Das System verwirft die begonnene Anmeldung.
 2. Der Use Case endet.
+
+### A5: Beitrittserklärung bei regulärem Abo nicht bestätigt
+
+**Auslöser:** Die Interessentin hat reguläre Abo-Bestandteile gewählt und fährt fort, ohne die Beitrittserklärung zu bestätigen (Schritt 10)  
+**Ablauf:**
+
+1. Das System weist darauf hin, dass die Beitrittserklärung für die gewählten Abo-Bestandteile erforderlich ist, und lässt die Anmeldung nicht weiter.
+2. Die Interessentin bestätigt die Beitrittserklärung oder wechselt zu einer Probe-Variante.
+3. Der Use Case wird bei Schritt 10 fortgesetzt.
+
+### A6: Probe-Mitgliedschaft ohne Beitrittserklärung
+
+**Auslöser:** Die Interessentin hat ausschliesslich Probe-Varianten gewählt und bestätigt die freiwillige Beitrittserklärung nicht (Schritt 10)  
+**Ablauf:**
+
+1. Das System führt die Anmeldung ohne Beitrittserklärung weiter.
+2. Der Use Case wird bei Schritt 11 fortgesetzt.
 
 ## Nachbedingungen
 
 ### Erfolgsfall
 
 - Mitglied, Abo mit den gewählten Bestandteilen und gewünschtem Startdatum sowie die bestellten Anteilscheine sind erfasst.
+- Eine bestätigte Beitrittserklärung ist als beantragte Mitgliedschaft erfasst.
 - Das Mitglied hat Zugangsdaten erhalten und seine E-Mail-Adresse bestätigt.
 - Die Koordination ist über die neue Anmeldung und allfällige neue Anteilscheine informiert.
 - Ein bei der Anmeldung hinterlassener Kommentar ist am Mitglied gespeichert.
 
 ### Fehlerfall
 
-- Es werden weder Mitglied noch Abo noch Anteilscheine angelegt.
+- Es werden weder Mitglied noch Abo noch Anteilscheine noch eine beantragte Mitgliedschaft angelegt.
 - Die Person bleibt nicht angemeldet und kann die Anmeldung erneut starten.
 
 ## Geschäftsregeln
@@ -107,3 +126,7 @@ Reguläres Startdatum ist der Beginn des nächsten Geschäftsjahres, das bei Gar
 ### GR-006: Zustimmung zu Statuten und Betriebsreglement
 
 Vor dem Absenden der Personendaten müssen Statuten und Betriebsreglement zur Kenntnis genommen und die Bedingungen bestätigt werden. Beide Dokumente sind von der Anmeldeseite aus verlinkt.
+
+### GR-007: Beitrittserklärung
+
+Wer reguläre Abo-Bestandteile bestellt, muss die Beitrittserklärung zur Genossenschaft bestätigen. Bei einer Probe-Mitgliedschaft ist sie freiwillig. Die Beitrittserklärung selbst verlangt keinen zusätzlichen Anteilschein (siehe GR-002) und keinen Jahresbeitrag.

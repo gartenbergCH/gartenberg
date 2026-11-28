@@ -167,6 +167,12 @@ def member_context(playwright: Playwright) -> BrowserContext:
     page.wait_for_url("**/subscription/create/comembers/")
     page.locator("a[href='?next']").first.click()
 
+    # Step 5b: Beitrittserklärung (seit juntagrico 2.1, UC-001 GR-007) — für reguläre Abo-Typen
+    # wie 'Normales Abo' Pflicht. Checkbox ist wie 'agb' visuell versteckt.
+    page.wait_for_url("**/subscription/create/membership/")
+    page.locator("input[name='membership']").check(force=True)
+    page.locator("#submit-id-submit").click()
+
     # Step 6: Shares — in 2.0 the spinner is no longer pre-set to the subscription's
     # required amount (initial = REQUIRED_SHARES = 0), but ShareOrderForm.clean()
     # still requires >= the subscription's shares (testdata subtype 'Normales Abo'

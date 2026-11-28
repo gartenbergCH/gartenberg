@@ -527,3 +527,19 @@ with page.expect_navigation():
     page.get_by_role("button", name="Bestellen").click()
 page.wait_for_load_state("networkidle")
 ```
+
+## juntagrico 2.1: neue Signup-, Kündigungs- und Bereichs-Mechanik
+
+- **Signup-Schritt "Mitglied werden"** (`/subscription/create/membership/`) zwischen Co-Members und
+  Anteilscheinen. Checkbox `input[name='membership']` ist wie `agb` versteckt → `check(force=True)`, dann
+  `#submit-id-submit`. Danach zeigt das Profil "Du hast die Mitgliedschaft beantragt." (nicht "aktiv").
+- **`/my/cancel/membership` gibt 404.** Neu ist die gemeinsame Seite `/my/cancellation`. Vorauswahl des
+  Radio `account` ist "Mitglied nach der Kündigung löschen" → in Tests immer `account=True` wählen, sonst
+  löscht ein erfolgreicher Submit das geteilte E2E-Mitglied. Abo behalten: `primary_subscription_<id>=keep`.
+- **Tätigkeitsbereich beitreten/verlassen nur noch per POST** (`@require_POST`, CSRF). `goto(".../join")`
+  gibt 405 und ändert nichts. Über das Label `label[for='area<id>']` klicken (das Input des CSS-Switches
+  liegt ausserhalb des Klickbereichs; `check(force=True)` meldet "did not change its state") und mit
+  `expect_response("**/join")` auf den AJAX-POST warten.
+- **JS-Helfer `timed_text_class_change`** hat neu die Signatur `(button, dt, node, text, class)` und wird in
+  `action` aufgerufen. Eine eigene DataTables-Schaltfläche mit der alten Signatur wirft beim Init, worauf
+  die **ganze** Button-Leiste (auch die juntagrico-Buttons) fehlt.

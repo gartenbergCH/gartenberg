@@ -255,6 +255,14 @@ MEMBERSHIP_END_NOTICE_PERIOD = 3
 ALLOW_JOB_UNSUBSCRIBE = False
 # Wieviele Anteilscheine werden bei einer Anmeldung zwingend benötigt (unabhängig von der notwendigen Anzahl für ein Abo)?
 REQUIRED_SHARES = 0
+# Mitgliedschaft (seit juntagrico 2.1, im Anmeldeprozess der Schritt "Mitglied werden"):
+# Die Beitrittserklärung verlangt keinen zusätzlichen Anteilschein und keinen Jahresbeitrag
+# (UC-001 GR-002, GR-007). Pflicht ist sie über SubscriptionType.requires_membership, das für
+# Probe-Abo-Typen ausgeschaltet ist (Migration 0005).
+MEMBERSHIP = {
+    'required_shares': 0,
+    'fee': 0,
+}
 
 # Wie ein Abo-Bestandteil (SubscriptionPart) angezeigt wird, z.B. in der Liste der
 # pendenten Abo-Änderungen. Der juntagrico-Standard ist nur '{bundle}' (= Name des

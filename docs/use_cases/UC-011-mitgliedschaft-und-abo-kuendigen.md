@@ -7,111 +7,125 @@
 **Primärer Akteur:** Mitglied  
 **Sekundäre Akteure:** Administrator/in  
 **Anforderungen:** FR-047, FR-048, FR-049  
-**Ziel:** Ein Mitglied beendet sein Engagement bei der Genossenschaft GartenBerg in der richtigen Reihenfolge — zuerst das Abo, dann die Mitgliedschaft mit den Anteilscheinen — und kennt dabei den jeweils geltenden Kündigungstermin und die Folgen der Kündigung.  
-**Status:** Implementiert
+**Ziel:** Ein Mitglied beendet sein Engagement bei der Genossenschaft GartenBerg — Abo, Mitgliedschaft und Anteilscheine gemeinsam oder einzeln — und kennt dabei den jeweils geltenden Kündigungstermin und die Folgen der Kündigung.  
+**Status:** Genehmigt
 
 ## Vorbedingungen
 
 - Das Mitglied ist angemeldet.
-- Das Mitglied ist Hauptperson eines laufenden oder künftigen Abos oder hält Anteilscheine.
+- Das Mitglied ist Hauptperson oder Mitbezüger/in eines laufenden oder künftigen Abos, hat eine beantragte oder aktive Mitgliedschaft oder hält Anteilscheine.
 - Die Kündigungstermine der Genossenschaft — Kündigungsmonat des Abos und Ende der Mitgliedschaft — sind hinterlegt.
 
 ## Hauptablauf
 
-1. Das Mitglied ruft die Übersicht seines Abos auf.
-2. Das System zeigt das Abo mit seinen Bestandteilen und die Möglichkeit zur Kündigung an.
-3. Das Mitglied ruft die Kündigung des Abos auf.
-4. Das System zeigt den nächsten regulären Kündigungstermin des Abos an.
-5. Das Mitglied erfasst eine Mitteilung an die Genossenschaft und bestätigt die Kündigung verbindlich.
-6. Das System führt das Abo samt seinen Bestandteilen als auf diesen Termin gekündigt und benachrichtigt die Koordination mit der Mitteilung des Mitglieds.
-7. Das Mitglied ruft die Mitgliedschaftsseite auf und wählt die Kündigung der Mitgliedschaft.
-8. Das System stellt fest, dass weder ein laufendes noch ein künftiges Abo besteht und keine Anteilscheine mehr für ein Abo benötigt werden, und zeigt den nächsten Kündigungstermin sowie die Folgen der Kündigung an: keine weiteren Nachrichten, Austragung aus dem Abo und Kündigung der Anteilscheine.
-9. Das Mitglied überprüft die für die Rückerstattung nötige Zahlungsverbindung und Adresse und bestätigt die Kündigung verbindlich.
-10. Das System führt die Mitgliedschaft als auf das Ende der Mitgliedschaft gekündigt, kündigt die Anteilscheine des Mitglieds auf denselben Termin und benachrichtigt die Koordination.
-11. Das System zeigt dem Mitglied auf seinem Profil die erfasste Kündigung mit dem Enddatum an, womit die Kündigung vollständig erfasst ist.
+1. Das Mitglied ruft auf seinem Profil die Kündigung auf.
+2. Das System zeigt auf einer gemeinsamen Kündigungsseite für jedes eigene Abo den nächsten regulären Kündigungstermin, die Wahl zwischen Kündigen und Behalten der Mitgliedschaft, die Anzahl kündbarer Anteilscheine, die Tätigkeitsbereiche, in denen das Mitglied bleiben möchte, sowie die für die Rückerstattung nötige Zahlungsverbindung und Adresse an.
+3. Das Mitglied wählt, was es kündigt, überprüft Zahlungsverbindung und Adresse, erfasst optional eine Mitteilung an die Genossenschaft und bestätigt die Kündigung verbindlich.
+4. Das System prüft, dass die Mitgliedschaft für kein behaltenes Abo mehr benötigt wird und genügend Anteilscheine für die behaltenen Abos verbleiben.
+5. Das System führt die gewählten Abos samt Bestandteilen als auf ihren Termin gekündigt, die Mitgliedschaft als auf das Ende der Mitgliedschaft gekündigt und die gewählten Anteilscheine als gekündigt, trägt das Mitglied aus den abgewählten Tätigkeitsbereichen aus und benachrichtigt die Koordination mit der Mitteilung des Mitglieds.
+6. Das System bestätigt dem Mitglied jede erfasste Kündigung und zeigt auf seinem Profil die gekündigte Mitgliedschaft mit dem Kündigungsdatum an, womit die Kündigung vollständig erfasst ist.
 
 ## Alternativabläufe
 
-### A1: Mitgliedschaft wegen laufendem Abo nicht kündbar
+### A1: Mitgliedschaft noch für ein behaltenes Abo benötigt
 
-**Auslöser:** Das Mitglied hat ein laufendes oder künftiges, nicht gekündigtes Abo (Schritt 8)  
+**Auslöser:** Das Mitglied kündigt die Mitgliedschaft, behält aber ein Abo, das eine Mitgliedschaft erfordert (Schritt 4)  
 **Ablauf:**
 
-1. Das System zeigt statt des Kündigungsformulars einen Hinweis an, dass die Mitgliedschaft wegen des bestehenden Abos nicht gekündigt werden kann.
-2. Das Mitglied kündigt zuerst das Abo.
+1. Das System weist darauf hin, dass die Mitgliedschaft noch für das Abo benötigt wird, und lässt die Kündigung nicht zu.
+2. Das Mitglied kündigt das Abo mit oder behält die Mitgliedschaft.
 3. Der Use Case wird bei Schritt 3 fortgesetzt.
 
-### A2: Anteilschein wird noch für ein Abo benötigt
+### A2: Anteilscheine noch für ein behaltenes Abo benötigt
 
-**Auslöser:** Die Anteilscheine des Mitglieds werden noch für ein laufendes oder künftiges Abo benötigt (Schritt 8)  
+**Auslöser:** Nach der Kündigung blieben weniger Anteilscheine, als die behaltenen Abos benötigen (Schritt 4)  
 **Ablauf:**
 
-1. Das System zeigt statt des Kündigungsformulars einen Hinweis an, dass die Anteilscheine noch für ein Abo gebunden sind.
-2. Der Use Case endet.
+1. Das System weist auf die noch benötigten Anteilscheine hin und lässt die Kündigung nicht zu.
+2. Das Mitglied verringert die Anzahl zu kündigender Anteilscheine oder kündigt das Abo mit.
+3. Der Use Case wird bei Schritt 3 fortgesetzt.
 
 ### A3: Zahlungsverbindung fehlt
 
-**Auslöser:** Für die Rückerstattung der Anteilscheine ist keine Zahlungsverbindung hinterlegt (Schritt 9)  
+**Auslöser:** Das Mitglied kündigt Anteilscheine, ohne dass eine Zahlungsverbindung und Adresse für die Rückerstattung hinterlegt sind (Schritt 4)  
 **Ablauf:**
 
-1. Das System weist die Kündigung zurück und verlangt die Zahlungsverbindung.
+1. Das System weist die Kündigung zurück und verlangt Zahlungsverbindung und Adresse.
 2. Das Mitglied trägt Zahlungsverbindung und Adresse nach.
-3. Der Use Case wird bei Schritt 9 fortgesetzt.
+3. Der Use Case wird bei Schritt 3 fortgesetzt.
 
-### A4: Kündigung nach dem Kündigungstermin
+### A4: Nichts zur Kündigung gewählt
 
-**Auslöser:** Das Mitglied kündigt das Abo nach dem Kündigungstermin des laufenden Geschäftsjahres (Schritt 4)  
+**Auslöser:** Das Mitglied bestätigt, ohne etwas zur Kündigung gewählt zu haben (Schritt 4)  
+**Ablauf:**
+
+1. Das System fordert das Mitglied auf zu wählen, was es kündigen möchte, und verwirft eine allfällige Mitteilung nicht.
+2. Der Use Case wird bei Schritt 3 fortgesetzt.
+
+### A5: Kündigung nach dem Kündigungstermin
+
+**Auslöser:** Das Mitglied kündigt das Abo nach dem Kündigungstermin des laufenden Geschäftsjahres (Schritt 2)  
 **Ablauf:**
 
 1. Das System weist als Kündigungstermin das Ende des nächsten Geschäftsjahres aus.
-2. Der Use Case wird bei Schritt 5 fortgesetzt.
+2. Der Use Case wird bei Schritt 3 fortgesetzt.
 
-### A5: Kündigung durch Mitbezüger/in
+### A6: Austritt als Mitbezüger/in
 
-**Auslöser:** Das Mitglied ist Mitbezüger/in und nicht Hauptperson des Abos (Schritt 3)  
+**Auslöser:** Das Mitglied ist Mitbezüger/in und nicht Hauptperson eines Abos (Schritt 2)  
 **Ablauf:**
 
-1. Das System bietet dem Mitglied keine Kündigung des Abos an, sondern nur den Austritt aus dem Abo.
-2. Das Mitglied trägt sich aus dem Abo aus; das Abo der übrigen Bezüger/innen bleibt bestehen.
-3. Der Use Case wird bei Schritt 7 fortgesetzt.
+1. Das System bietet für dieses Abo keine Kündigung an, sondern den Austritt auf ein wählbares Datum mit einer Mitteilung an die Hauptperson.
+2. Das Mitglied wählt den Austritt; das Abo der übrigen Bezüger/innen bleibt bestehen und die Hauptperson wird benachrichtigt.
+3. Der Use Case wird bei Schritt 3 fortgesetzt.
 
-### A6: Nur einzelner Abo-Bestandteil gekündigt
+### A7: Nur einzelner Abo-Bestandteil gekündigt
 
-**Auslöser:** Das Mitglied will nur einen Bestandteil abbestellen und das Abo behalten (Schritt 3)  
+**Auslöser:** Das Mitglied will nur einen Bestandteil abbestellen und das Abo behalten (Schritt 1)  
 **Ablauf:**
 
-1. Das Mitglied kündigt den einzelnen Abo-Bestandteil.
+1. Das Mitglied kündigt den einzelnen Abo-Bestandteil auf der Übersicht seines Abos.
 2. Das System führt den Bestandteil als gekündigt und benachrichtigt die Koordination; das übrige Abo bleibt bestehen.
 3. Der Use Case endet.
 
-### A7: Überzähligen Anteilschein kündigen
+### A8: Überzähligen Anteilschein kündigen
 
-**Auslöser:** Das Mitglied hält mehr Anteilscheine als nötig und will einen zurückgeben, ohne die Mitgliedschaft zu beenden (Schritt 7)  
+**Auslöser:** Das Mitglied will einen einzelnen Anteilschein zurückgeben, ohne die Mitgliedschaft zu beenden (Schritt 1)  
 **Ablauf:**
 
 1. Das Mitglied ruft die Übersicht seiner Anteilscheine auf.
-2. Das System bietet die Kündigung nur bei noch nicht bezahlten Anteilscheinen an, die weder für ein Abo benötigt werden noch der letzte verbleibende Anteilschein sind, und nur solange eine Zahlungsverbindung hinterlegt ist.
+2. Das System bietet die Kündigung nur bei noch nicht bezahlten Anteilscheinen an, die für kein Abo benötigt werden, und nur solange eine Zahlungsverbindung hinterlegt ist.
 3. Das Mitglied kündigt den überzähligen Anteilschein und bestätigt den angezeigten Kündigungstermin.
 4. Das System führt den Anteilschein als gekündigt und benachrichtigt die Koordination.
 5. Der Use Case endet.
 
-### A8: Kündigung rückgängig machen
+### A9: Kündigung der Mitgliedschaft zurückziehen
 
-**Auslöser:** Das Mitglied hat versehentlich gekündigt und meldet sich bei der Koordination (Schritt 11)  
+**Auslöser:** Das Mitglied hat die Mitgliedschaft gekündigt und möchte doch bleiben (Schritt 6)  
+**Ablauf:**
+
+1. Das Mitglied zieht auf seinem Profil die Kündigung der Mitgliedschaft zurück und bestätigt die Beitrittserklärung erneut.
+2. Das System führt die Mitgliedschaft wieder als ungekündigt und benachrichtigt die Koordination.
+3. Der Use Case endet.
+
+### A10: Kündigung von Abo oder Anteilschein rückgängig machen
+
+**Auslöser:** Das Mitglied hat ein Abo oder einen Anteilschein versehentlich gekündigt und meldet sich bei der Koordination (Schritt 6)  
 **Ablauf:**
 
 1. Die Administratorin entfernt das Kündigungsdatum in der Verwaltung.
-2. Das System führt Abo, Mitgliedschaft beziehungsweise Anteilschein wieder als ungekündigt.
+2. Das System führt Abo beziehungsweise Anteilschein wieder als ungekündigt.
 3. Der Use Case endet.
 
 ## Nachbedingungen
 
 ### Erfolgsfall
 
-- Abo und Abo-Bestandteile sind auf den ausgewiesenen Kündigungstermin gekündigt.
-- Die Mitgliedschaft ist auf das Ende der Mitgliedschaft gekündigt und die Anteilscheine des Mitglieds sind auf denselben Termin gekündigt.
+- Die gewählten Abos und ihre Bestandteile sind auf den ausgewiesenen Kündigungstermin gekündigt.
+- Eine gekündigte Mitgliedschaft ist auf das Ende der Mitgliedschaft gekündigt, gewählte Anteilscheine sind gekündigt.
+- Das Mitglied ist aus den abgewählten Tätigkeitsbereichen ausgetragen.
 - Die Koordination ist über jede Kündigung samt der Mitteilung des Mitglieds informiert.
-- Für die Rückerstattung der Anteilscheine liegen Zahlungsverbindung und Adresse vor.
+- Für die Rückerstattung gekündigter Anteilscheine liegen Zahlungsverbindung und Adresse vor.
 
 ### Fehlerfall
 
@@ -128,21 +142,21 @@ Ein Abo kann bis zum 30. September auf das Ende des laufenden Geschäftsjahres g
 
 Die Mitgliedschaft endet jeweils am 31. Dezember bei einer Kündigungsfrist von drei Monaten. Eine bis Ende September erklärte Kündigung wirkt somit auf das Ende desselben Jahres, eine spätere auf das Ende des Folgejahres.
 
-### GR-003: Reihenfolge von Abo- und Mitgliedschaftskündigung
+### GR-003: Mitgliedschaft und Abo
 
-Die Mitgliedschaft lässt sich erst kündigen, wenn weder ein laufendes noch ein künftiges, nicht gekündigtes Abo besteht. Andernfalls zeigt das System einen Hinweis mit dem Grund an, statt das Kündigungsformular anzubieten.
+Die Mitgliedschaft lässt sich nur kündigen, wenn kein behaltenes Abo sie erfordert; Abo und Mitgliedschaft können in derselben Kündigung gemeinsam gekündigt werden. Probe-Abos erfordern keine Mitgliedschaft (siehe UC-001 GR-007).
 
 ### GR-004: Für ein Abo gebundene Anteilscheine
 
 Anteilscheine, die für ein laufendes oder künftiges Abo benötigt werden, können nicht gekündigt werden. Wie viele Anteilscheine gebunden sind, ergibt sich aus den Bestandteilen des Abos (siehe UC-001 GR-003).
 
-### GR-005: Verbleibender Anteilschein
+### GR-005: Anteilscheine und Mitgliedschaft
 
-Solange die Mitgliedschaft besteht, bleibt mindestens ein Anteilschein bestehen. Einzeln kündbar sind nur Anteilscheine, die darüber hinausgehen und für kein Abo gebunden sind. Alle Anteilscheine werden erst mit der Kündigung der Mitgliedschaft gekündigt.
+Die Mitgliedschaft selbst bindet keinen Anteilschein (siehe UC-001 GR-002). Kündbar sind deshalb alle Anteilscheine, die für kein behaltenes Abo gebunden sind, auch wenn die Mitgliedschaft bestehen bleibt.
 
 ### GR-006: Rückerstattung der Anteilscheine
 
-Anteilscheine werden beim Austritt zum Ausgabepreis von CHF 750 zurückerstattet (siehe UC-001 GR-001). Eine Kündigung ist deshalb nur möglich, wenn Zahlungsverbindung und Adresse des Mitglieds hinterlegt sind.
+Anteilscheine werden beim Austritt zum Ausgabepreis von CHF 750 zurückerstattet (siehe UC-001 GR-001). Eine Kündigung von Anteilscheinen ist deshalb nur möglich, wenn Zahlungsverbindung und Adresse des Mitglieds hinterlegt sind.
 
 ### GR-007: Kündigung des Abos nur durch die Hauptperson
 
@@ -158,4 +172,4 @@ Eine Kündigung wirkt auf den ausgewiesenen Termin. Bis dahin bleiben Bezugsrech
 
 ### GR-010: Rücknahme einer Kündigung
 
-Eine versehentlich erfasste Kündigung kann nur die Administration rückgängig machen, indem sie das Kündigungsdatum in der Verwaltung entfernt. Das Mitglied kann seine Kündigung nicht selbst zurückziehen.
+Die Kündigung der Mitgliedschaft kann das Mitglied auf seinem Profil selbst zurückziehen. Eine versehentliche Kündigung von Abo oder Anteilschein kann nur die Administration rückgängig machen, indem sie das Kündigungsdatum in der Verwaltung entfernt.

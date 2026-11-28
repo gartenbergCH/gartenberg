@@ -13,11 +13,15 @@ Assertions, sondern um einen schnellen Überblick, was grob getestet wird.
 
 - **Signup-/Abo-Wizard** (`test_registration.py`, plus implizit über das `member_context`-Fixture
   in jedem Member-Test): kompletter Anmeldeflow — Personendaten, Abo-Bestandteile, Depotwahl,
-  Startdatum, Co-Member, Anteilscheine, Zusammenfassung, Welcome-Seite.
+  Startdatum, Co-Member, Beitrittserklärung (UC-001 GR-007, seit juntagrico 2.1), Anteilscheine,
+  Zusammenfassung, Welcome-Seite.
 - **Eingeloggt nach Signup**: gültige Session und korrekt befülltes Profil direkt nach der
   Registrierung.
-- **Mitgliedschaft kündigen** (`test_membership_cancel.py`): Kündigung wird bei aktivem/zukünftigem
-  Abo blockiert (Danger-Alert statt Formular).
+- **Mitgliedschaft kündigen** (`test_membership_cancel.py`): Auf der gemeinsamen Kündigungsseite
+  (`/my/cancellation`, seit juntagrico 2.1) wird die Kündigung der Mitgliedschaft abgewiesen, solange
+  ein behaltenes Abo sie erfordert (UC-011 A1); die Mitgliedschaft bleibt ungekündigt.
+- **Mitgliedschaft beantragt**: Nach dem Signup zeigt das Profil die Mitgliedschaft als beantragt
+  (Beitrittserklärung, UC-001 GR-007).
 
 ## Profil & Passwort
 

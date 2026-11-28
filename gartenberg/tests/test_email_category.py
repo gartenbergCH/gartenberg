@@ -83,13 +83,14 @@ class MembersInCategoryTest(TestCase):
         self.assertEqual(self._result(self.gemuese), set())
 
     def test_nur_aktiver_bestandteil_der_kategorie(self):
-        # Gemüse-Teil beendet, Hofprodukte-Teil aktiv im selben Abo
+        # Gemüse-Teil beendet, Hofprodukte-Teil aktiv im selben Abo. Der aktive Teil zuerst:
+        # juntagrico verlangt für ein nicht gekündigtes Abo mindestens einen aktiven Bestandteil.
         member = self._member('Wechsel')
         sub = Subscription.objects.create(depot=self.depot, activation_date=TODAY - 9 * DAY, start_date=TODAY)
+        SubscriptionPart.objects.create(subscription=sub, type=self.types[self.hof], activation_date=TODAY - 9 * DAY)
         SubscriptionPart.objects.create(subscription=sub, type=self.types[self.gemuese],
                                         activation_date=TODAY - 9 * DAY, deactivation_date=TODAY - DAY,
                                         cancellation_date=TODAY - 2 * DAY)
-        SubscriptionPart.objects.create(subscription=sub, type=self.types[self.hof], activation_date=TODAY - 9 * DAY)
         member.join_subscription(sub, True)
         self.assertEqual(self._result(self.gemuese), set())
         self.assertEqual(self._result(self.hof), {member})
